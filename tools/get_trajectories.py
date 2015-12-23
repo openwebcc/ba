@@ -1,0 +1,181 @@
+#!/usr/bin/python
+#
+# extract original and generalized flight paths for individual LAS files from corresponding trajectory file(s)
+#
+# Usage: python get_trajectories.py --help
+# Batch: find /home/laser/rawdata/als/hef -maxdepth 1 -mindepth 1 -type d -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --subdir {} \;
+# Batch: find /home/laser/rawdata/als/hef -maxdepth 1 -mindepth 1 -type d -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --subdir {}  --rebuild \;
+
+import re
+import os
+import sys
+
+from datetime import datetime
+from math import sqrt
+
+sys.path.append('/home/klaus/private/ba/www/lib')
+import Laser.Util.las
+
+CSV_PATH = '/home/klaus/private/ba/tools/logs/get_trajectories.csv'
+
+def get_files(subdir=None,rebuild=None):
+    """ walk through project directory and find .info.txt and .bet files """
+    files = {
+        'bet' : [],
+        'info' : [],
+    }
+    for dirpath, dirnames, filenames in os.walk(subdir):
+        for fname in filenames:
+            fpath = os.path.join(os.path.abspath(dirpath),fname)
+            if re.search('.info.txt',fpath):
+                las_name = fpath.split('/')[-1][:-9]
+                traj_path = "%s/%s.traj.txt" % (dirpath,las_name)
+                wkt_path = "%s/%s.traj.wkt" % (dirpath,las_name)
+
+                if os.path.exists(traj_path) and not args.rebuild:
+                    print "ignoring %s ..." % traj_path
+                else:
+                    files['info'].append({
+                        'info_path' : fpath,
+                        'traj_path' : traj_path,
+                        'wkt_path' : wkt_path,
+                    })
+            elif fname[-4:] == '.bet':
+                files['bet'].append(fpath)
+            else:
+                pass
+
+    return files
+
+def distance(pt1,pt2):
+    """ return distance of two points """
+    return sqrt((pt2['x'] - pt1['x'])**2 + (pt2['y'] - pt1['y'])**2 )
+
+if __name__ == '__main__':
+    """ extract original flight paths for individual LAS files from corresponding trajectory file(s) """
+
+    import argparse
+    parser = argparse.ArgumentParser(description='extract original flight paths for individual LAS files from corresponding trajectory file(s)')
+    parser.add_argument('--subdir',dest='subdir', required=True, help='input project directory')
+    parser.add_argument('--mindist',dest='mindist', default=100, help='minimum distance between two successive points in the generalized WKT geometry (in meters)')
+    parser.add_argument('--rebuild',dest='rebuild', default=False, action="store_true", help='force rebuilding of all trajectories')
+    args = parser.parse_args()
+
+    args.subdir = args.subdir.rstrip('/')
+    #print "processing %s ..." % args.subdir
+
+    util = Laser.Util.las.rawdata()
+
+    # check logging
+    if not os.path.exists(CSV_PATH):
+        with open(CSV_PATH, "w") as f:
+            f.write('traj_path;min_time;max_time;coords_traj;coords_wkt;secs_processed\n')
+
+    # log statistics as CSV
+    csv = open(CSV_PATH,'a')
+
+    # get filelist for .bet and .info.txt files
+    files = get_files(args.subdir,args.rebuild)
+    if len(files['bet']) == 0:
+        # no files to process, so stop here
+        print "INFO: No trajectory file(s) found in %s" % args.subdir
+        sys.exit(0)
+    if len(files['info']) == 0:
+        # no files to process, so stop here
+        print "INFO: No info.txt file(s) found in %s" % args.subdir
+        sys.exit(0)
+
+    # extract new trajectory from min/max gpstime and .bet file
+    for obj in sorted(files['info']):
+        start_time = datetime.now()
+
+        # read info file and get min/max gps time if any
+        parser = Laser.Util.las.lasinfo()
+        parser.read(obj['info_path'])
+        if 'minimum' in parser.meta and 'gps_time' in parser.meta['minimum']:
+            min_time = float(parser.meta['minimum']['gps_time'])
+            max_time = float(parser.meta['maximum']['gps_time'])
+
+            # prepare extraction of simplified WKT geometry
+            last_point = None
+            this_point = None
+            coords_wkt = []
+
+            # open new trajectory for writing
+            traj = open(obj['traj_path'], "w")
+
+            # loop through .bet files and keep corresponding entries in new trajectory file and simplified WKT geom
+            cnt_traj = 0
+            cnt_wkt = 0
+            for betfile in files['bet']:
+                header = None
+                print "creating %s ... " % obj['traj_path']
+                with open(betfile) as f:
+                    #print " looking %s ..." % betfile
+                    for line in f:
+                        if not header:
+                            header = line.lstrip()
+                            traj.write(header)
+                            continue
+
+                        # split up row and extract time
+                        row = util.parse_line(line)
+                        t = float(row[0])
+
+                        if t >= min_time and t <= max_time:
+                            # write to original trajectory
+                            traj.write(line)
+                            cnt_traj += 1
+
+                            # write to generalized WKT geometry
+                            if not last_point:
+                                last_point = { 'x' : float(row[1]), 'y' : float(row[2]) }
+                            else:
+                                # see if minimum distance is reached
+                                this_point = { 'x' : float(row[1]), 'y' : float(row[2]) }
+                                if distance(last_point,this_point) >= float(args.mindist):
+                                    # add this point to flight path and remember it
+                                    coords_wkt.append(this_point)
+                                    last_point = this_point
+                                else:
+                                    # skip this point
+                                    pass
+
+
+            # close trajectory file
+            traj.close()
+
+            # remove trajectory file if no points were found
+            if cnt_traj == 0:
+                os.unlink(obj['traj_path'])
+                print "WARNING: %s: no coords found" % obj['traj_path']
+
+            # write generalized trajectory to WKT file
+            if len(coords_wkt) > 0:
+                # add last point of flight path unless it was added before
+                if coords_wkt[-1] != last_point:
+                    coords_wkt.append(last_point)
+
+                # create coords of WKT geometry
+                line = []
+                for pt in coords_wkt:
+                    line.append('%s %s' % (pt['x'],pt['y']))
+
+                # write WKT geometry to file
+                print "creating %s ... " % obj['wkt_path']
+                wkt = open(obj['wkt_path'], "w")
+                wkt.write('LINESTRING(%s)\n' % ', '.join(line))
+                wkt.close()
+
+                # remember count of coords kept
+                cnt_wkt = len(line)
+
+            # log
+            secs_processed = (datetime.now() - start_time).total_seconds()
+            csv.write('%s;%s;%s;%s;%s;%s\n' % (obj['traj_path'],min_time,max_time,cnt_traj,cnt_wkt,secs_processed))
+
+        else:
+            print "WARNING: %s - no GPS-times found" % obj['info_path']
+
+    # close log
+    csv.close()
