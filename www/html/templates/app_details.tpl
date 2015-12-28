@@ -7,7 +7,7 @@
 $APP_metadata
 </pre>
 
-<h3>JSON struktur view_meta.attr</h3>
+<h3>JSON struktur view_meta.info</h3>
 <pre>
 $APP_jsondata
 </pre>
