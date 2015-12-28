@@ -76,16 +76,16 @@ def details(req, gid=None):
     (base,dbh,tpl) = Laser.base.impl().init(req)
 
     # get details data
-    dbh.execute("""SELECT gid,ptype,pname,cdate,cname,fname,fsize,points,attr,srid,datum,sensor,area,density,hull,traj,
+    dbh.execute("""SELECT gid,ptype,pname,cdate,cname,fname,fsize,points,info,srid,datum,sensor,area,density,hull,traj,
                     ST_AsGeoJSON(ST_Simplify(traj,%s),7) AS wkt_traj,
                     ST_AsGeoJSON(ST_Simplify(hull,%s),7) AS wkt_hull
                     FROM view_meta WHERE gid=%s""", (SIMPLIFY_DEG,SIMPLIFY_DEG,gid))
     for row in dbh.fetchall():
-        for col in 'gid,ptype,pname,cdate,cname,fname,fsize,points,attr,srid,datum,sensor,area,density,hull,traj'.split(','):
+        for col in 'gid,ptype,pname,cdate,cname,fname,fsize,points,info,srid,datum,sensor,area,density,hull,traj'.split(','):
             tpl.append_to_term('APP_metadata', "%s=%s\n" % (col,row[col]) )
 
         # show JSON notation
-        json = simplejson.loads(row['attr'])
+        json = simplejson.loads(row['info'])
         tpl.add_term('APP_jsondata', simplejson.dumps(json,sort_keys=True, indent=4 * ' ') )
 
         # show content of LASInfo files

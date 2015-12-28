@@ -32,18 +32,18 @@ CREATE TABLE meta (
     srid INTEGER,                    -- EPSG Code der Projektion
     hull geometry(Polygon,0),        -- Geometrie der konkaven Hülle
     traj geometry(Linestring,0),     -- Geometrie der Trajektorie
-    attr JSON                        -- JSON Objekt mit allen Attributen
+    info JSON                        -- JSON Objekt mit allen Attributen
 );
 GRANT SELECT ON meta TO GROUP web_group;
 GRANT SELECT, UPDATE ON meta_gid_seq TO GROUP intranet_group;
 GRANT SELECT, INSERT, UPDATE, DELETE ON meta TO GROUP intranet_group;
 
 CREATE VIEW view_meta AS (
-    SELECT gid,ptype,pname,cname,cdate,fname,fsize,points,attr,srid,
+    SELECT gid,ptype,pname,cname,cdate,fname,fsize,points,info,srid,
     to_date(cdate, 'YYMMDD') AS datum,
-    attr->>'system_identifier' AS sensor,
-    attr->>'point_area' AS area,
-    attr->>'point_density' AS density,
+    info->>'system_identifier' AS sensor,
+    info->>'point_area' AS area,
+    info->>'point_density' AS density,
     ST_Transform(ST_SetSRID(hull,srid),4326) AS hull,
     ST_Transform(ST_SetSRID(traj,srid),4326) AS traj
     FROM meta

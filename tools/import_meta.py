@@ -67,7 +67,7 @@ if __name__ == '__main__':
             ptype = parts[-4]                           # als
 
             # INSERT metadata
-            dbh.execute("INSERT INTO meta (ptype,pname,cname,cdate,fname,fsize,points,srid,attr) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING gid", (
+            dbh.execute("INSERT INTO meta (ptype,pname,cname,cdate,fname,fsize,points,srid,info) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING gid", (
                 ptype,pname,
                 cname,cdate,
                 meta['file_name'],meta['file_size'],
