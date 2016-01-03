@@ -6,8 +6,8 @@
 <tr>
     <th>ptype</th>
     <th>pname</th>
-    <th>cname</th>
     <th>cdate</th>
+    <th>cname</th>
     <th>files</th>
     <th>mb</th>
     <th>points</th>
