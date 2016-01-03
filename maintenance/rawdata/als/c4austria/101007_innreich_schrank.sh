@@ -4,7 +4,7 @@
 #
 
 # Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/hef/041005_hef11/{asc,las,bet,doc,meta}
+mkdir -pv /home/laser/rawdata/als/c4austria/101007_innreich_schrank/{asc,las,bet,doc,meta}
 
 # Rohdaten und Dokumentation kopieren
 cd /home/laser/rawdata/als/c4austria/101007_innreich_schrank/
