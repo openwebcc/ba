@@ -28,6 +28,8 @@ done
 txt2las -i /home/laser/rawdata/als/c4austria/111003_hocheben_reich/asc/*.ala \
         -odir /home/laser/rawdata/als/c4austria/111003_hocheben_reich/las \
         -parse txyzirn \
+        -reoffset 0 0 0 \
+        -rescale 0.01 0.01 0.01 \
         -epsg 25832 \
         -set_file_creation 276 2011 \
         -set_system_identifier "ALTM 3100"

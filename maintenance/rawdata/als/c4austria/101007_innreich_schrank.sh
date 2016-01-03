@@ -28,8 +28,10 @@ done
 txt2las -i /home/laser/rawdata/als/c4austria/101007_innreich_schrank/asc/*.ala \
         -odir /home/laser/rawdata/als/c4austria/101007_innreich_schrank/las \
         -parse txyzirn \
-        -set_file_creation 280 2010 \
+        -reoffset 0 0 0 \
+        -rescale 0.01 0.01 0.01 \
         -epsg 25832 \
+        -set_file_creation 280 2010 \
         -set_system_identifier "ALTM Gemini"
 
 # Koordinaten der Trajektorie(n) bereinigen

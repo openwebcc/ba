@@ -25,6 +25,8 @@ done
 txt2las -i /home/laser/rawdata/als/c4austria/071011_sulz_reich/asc/*.all \
         -odir /home/laser/rawdata/als/c4austria/071011_sulz_reich/las \
         -parse xyzi \
+        -reoffset 0 0 0 \
+        -rescale 0.01 0.01 0.01 \
         -epsg 25832 \
         -set_file_creation 284 2007 \
         -set_system_identifier "ALTM 3100"
