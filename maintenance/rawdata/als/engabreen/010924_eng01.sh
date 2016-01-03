@@ -15,6 +15,8 @@ cp -avu /mnt/netappa/Rohdaten/engabreen/Befliegung_24092001/readme.txt ./doc/
 txt2las -i /home/laser/rawdata/als/engabreen/010924_eng01/asc/*.all \
         -odir /home/laser/rawdata/als/engabreen/010924_eng01/las \
         -parse xyzi \
+        -reoffset 0 0 0 \
+        -rescale 0.01 0.01 0.01 \
         -epsg 32633 \
         -set_file_creation 267 2001 \
         -set_system_identifier "ALTM 1225"
