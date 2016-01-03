@@ -30,6 +30,8 @@ rm -f *.ala.gz
 txt2las -i /home/laser/rawdata/als/montafon/101015_geo01/asc/*.ala \
         -odir /home/laser/rawdata/als/montafon/101015_geo01/las \
         -parse txyzirn \
+        -reoffset 0 0 0 \
+        -rescale 0.01 0.01 0.01 \
         -epsg 25832 \
         -set_system_identifier "ALTM Gemini"
 
