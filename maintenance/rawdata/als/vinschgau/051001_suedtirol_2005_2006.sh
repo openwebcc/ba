@@ -1,6 +1,7 @@
 #!/bin/sh
 #
-# Datenmigration: Befliegung Südtirol 2005/2006 (exaktes Datum nicht bekannt, mit 1.10.2005 angenommen)
+# Datenmigration: Befliegung Südtirol 2005/2006
+# Exaktes Datum nicht bekannt. Nach Galos et al. 2015 "Mitte September". Freitag, 16.9.2005 gewählt
 #
 
 # Ordnerstruktur erstellen
@@ -23,7 +24,7 @@ do
             -parse xyzsssss \
             -reoffset 0 0 0 \
             -rescale 0.01 0.01 0.01 \
-            -set_file_creation 274 2005 \
+            -set_file_creation 259 2005 \
             -epsg 25832
 done
 
@@ -33,7 +34,7 @@ txt2las -i 3.txt \
         -parse xyz \
         -reoffset 0 0 0 \
         -rescale 0.01 0.01 0.01 \
-        -set_file_creation 274 2005 \
+        -set_file_creation 259 2005 \
         -epsg 25832 \
 
 echo "erzeuge ../las/12.las ..."
@@ -42,5 +43,5 @@ txt2las -i 12.txt \
         -parse xyzss \
         -reoffset 0 0 0 \
         -rescale 0.01 0.01 0.01 \
-        -set_file_creation 274 2005 \
+        -set_file_creation 259 2005 \
         -epsg 25832
