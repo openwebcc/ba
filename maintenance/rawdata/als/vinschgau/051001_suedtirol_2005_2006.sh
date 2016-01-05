@@ -35,7 +35,7 @@ txt2las -i 3.txt \
         -reoffset 0 0 0 \
         -rescale 0.01 0.01 0.01 \
         -set_file_creation 259 2005 \
-        -epsg 25832 \
+        -epsg 25832
 
 echo "erzeuge ../las/12.las ..."
 txt2las -i 12.txt \
