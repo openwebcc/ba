@@ -3,6 +3,7 @@
 # extract original and generalized flight paths for individual LAS files from corresponding trajectory file(s)
 #
 # Usage: python get_trajectories.py --help
+# Note: use --infofile LASFIL.info.txt to restrict to a file within the given subdirectory
 # Batch: find /home/laser/rawdata/als/hef -maxdepth 1 -mindepth 1 -type d -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --subdir {} \;
 # Batch: find /home/laser/rawdata/als/hef -maxdepth 1 -mindepth 1 -type d -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --subdir {}  --rebuild \;
 
@@ -18,7 +19,7 @@ import Laser.Util.las
 
 CSV_PATH = '/home/klaus/private/ba/tools/logs/get_trajectories.csv'
 
-def get_files(subdir=None,rebuild=None):
+def get_files(subdir=None,infofile=None,rebuild=None):
     """ walk through project directory and find .info.txt and .bet files """
     files = {
         'bet' : [],
@@ -28,6 +29,8 @@ def get_files(subdir=None,rebuild=None):
         for fname in filenames:
             fpath = os.path.join(os.path.abspath(dirpath),fname)
             if re.search('.info.txt',fpath):
+                if infofile and not re.search(infofile,fpath):
+                    continue
                 las_name = fpath.split('/')[-1][:-9]
                 traj_path = "%s/%s.traj.txt" % (dirpath,las_name)
                 wkt_path = "%s/%s.traj.wkt" % (dirpath,las_name)
@@ -57,6 +60,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='extract original flight paths for individual LAS files from corresponding trajectory file(s)')
     parser.add_argument('--subdir',dest='subdir', required=True, help='input project directory')
+    parser.add_argument('--infofile',dest='infofile', required=True, help='restrict to input infofile')
     parser.add_argument('--mindist',dest='mindist', default=100, help='minimum distance between two successive points in the generalized WKT geometry (in meters)')
     parser.add_argument('--rebuild',dest='rebuild', default=False, action="store_true", help='force rebuilding of all trajectories')
     args = parser.parse_args()
@@ -75,14 +79,17 @@ if __name__ == '__main__':
     csv = open(CSV_PATH,'a')
 
     # get filelist for .bet and .info.txt files
-    files = get_files(args.subdir,args.rebuild)
+    files = get_files(args.subdir,args.infofile,args.rebuild)
     if len(files['bet']) == 0:
         # no files to process, so stop here
         print "INFO: No trajectory file(s) found in %s" % args.subdir
         sys.exit(0)
     if len(files['info']) == 0:
         # no files to process, so stop here
-        print "INFO: No info.txt file(s) found in %s" % args.subdir
+        if args.infofile:
+            print "INFO: %s file not found in %s" % (args.infofile,args.subdir)
+        else:
+            print "INFO: No info.txt file(s) found in %s" % args.subdir
         sys.exit(0)
 
     # extract new trajectory from min/max gpstime and .bet file
