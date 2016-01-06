@@ -1,2 +1,2 @@
 # ba
-thesis related scripts
+GitHub-Repository für Skripts und HTML-Seiten die im Rahmen der Bachelorarbeit erstellt wurden
