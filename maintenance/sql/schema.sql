@@ -42,11 +42,12 @@ CREATE VIEW view_meta AS (
     SELECT gid,ptype,pname,cname,cdate,fname,fsize,points,info,srid,
     to_date(cdate, 'YYMMDD') AS datum,
     info->>'system_identifier' AS sensor,
-    info->>'point_area' AS area,
-    info->>'point_density' AS density,
+    (info->>'point_area')::numeric AS area,
+    (info->>'point_density')::numeric AS density,
     ST_Transform(ST_SetSRID(hull,srid),4326) AS hull,
     ST_Transform(ST_SetSRID(traj,srid),4326) AS traj
     FROM meta
+    WHERE ptype='als'
 );
 GRANT SELECT ON view_meta TO GROUP web_group;
 
