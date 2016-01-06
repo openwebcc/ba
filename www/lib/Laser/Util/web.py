@@ -77,9 +77,9 @@ class impl:
             )
         )
         for row in self.base.dbh.fetchall():
-            cmds.append("ln -s %s/%s/%s/%s_%s/las/%s %s/%s" % (
+            cmds.append("ln -s %s/%s/%s/%s_%s/las/%s %s/%s_%s" % (
                 RAWDATA_DIR,row['ptype'],pname,row['cdate'],cname,row['fname'],
-                DOWNLOAD_DIR,row['fname']
+                DOWNLOAD_DIR,re.sub(':','_',str(cid)),row['fname']
             ))
 
         return cmds
@@ -140,7 +140,9 @@ class impl:
             return "ERROR: the point limit of %s points to process for clipping has been execeed, please choose a smaller extent" % POINTS_LIMIT
         else:
             # build las2las command and return it along with point count
-            return "las2las -lof /tmp/files.txt -keep_xy %s %s %s %s -merged -o %s/result.%s # %s points to check" % (
+            return "las2las -lof /tmp/files.txt -keep_xy %s %s %s %s -merged -o %s/%s_%s_%s_%s_%s.%s # %s points to check" % (
                 box_extent[0],box_extent[1],box_extent[2],box_extent[3],
-                DOWNLOAD_DIR,las_extension,cnt_points
+                DOWNLOAD_DIR,re.sub(':','_',str(cid)),
+                box_extent[0],box_extent[1],box_extent[2],box_extent[3],
+                las_extension,cnt_points
             )
