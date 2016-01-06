@@ -36,6 +36,7 @@ def index(req):
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         row['cname'] = '<a href="%s/app.py/rawdata?cid=%s">%s</a>' % (APP_ROOT,cid,row['cname'])
+        row['srid'] = '<a href="http://spatialreference.org/ref/epsg/%s/">%s</a>' % (row['srid'],row['srid'])
         row['sensor'] = '-' if re.search('LAStools',row['sensor']) else row['sensor']
         tpl.append_to_term('APP_tableRows', "<tr><td>%s</td></tr>" % '</td><td>'.join([str(v) for v in row[1:]]) )
 
