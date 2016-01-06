@@ -27,7 +27,7 @@ def index(req):
 
     # populate table data
     dbh.execute("""SELECT ptype,pname,cdate,cname,count(fname) AS lasfiles,
-                   round(sum(fsize)/1000/1000,0) AS mb,sum(points) AS points,
+                   round(sum(fsize)/1000/1000,0) AS mb,sum(points) AS points,round(avg(density),2) AS density,
                    srid,sensor
                    FROM view_meta
                    GROUP BY ptype,pname,cdate,cname,srid,sensor
@@ -37,7 +37,7 @@ def index(req):
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         row['cname'] = '<a href="%s/app.py/rawdata?cid=%s">%s</a>' % (APP_ROOT,cid,row['cname'])
         row['sensor'] = '-' if re.search('LAStools',row['sensor']) else row['sensor']
-        tpl.append_to_term('APP_tableRows', "<tr><td>%s</td></tr>" % '</td><td>'.join([str(v) for v in row]) )
+        tpl.append_to_term('APP_tableRows', "<tr><td>%s</td></tr>" % '</td><td>'.join([str(v) for v in row[1:]]) )
 
     # finish
     dbh.close()
