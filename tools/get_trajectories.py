@@ -3,7 +3,7 @@
 # extract original and generalized flight paths for individual LAS files from corresponding trajectory file(s)
 #
 # Usage: python get_trajectories.py --help
-# Note: use --infofile LASFIL.info.txt to restrict to a file within the given subdirectory
+# Note: use --infofile LASFILE.info.txt to restrict to a file within the given subdirectory
 # Batch: find /home/laser/rawdata/als/hef -maxdepth 1 -mindepth 1 -type d -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --subdir {} \;
 # Batch: find /home/laser/rawdata/als/hef -maxdepth 1 -mindepth 1 -type d -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --subdir {}  --rebuild \;
 
