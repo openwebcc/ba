@@ -60,7 +60,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='extract original flight paths for individual LAS files from corresponding trajectory file(s)')
     parser.add_argument('--subdir',dest='subdir', required=True, help='input project directory')
-    parser.add_argument('--infofile',dest='infofile', required=True, help='restrict to input infofile')
+    parser.add_argument('--infofile',dest='infofile', help='restrict to input infofile')
     parser.add_argument('--mindist',dest='mindist', default=100, help='minimum distance between two successive points in the generalized WKT geometry (in meters)')
     parser.add_argument('--rebuild',dest='rebuild', default=False, action="store_true", help='force rebuilding of all trajectories')
     args = parser.parse_args()
