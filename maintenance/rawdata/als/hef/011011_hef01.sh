@@ -11,7 +11,7 @@ cd /home/laser/rawdata/als/hef/011011_hef01
 cp -avu /mnt/netappa/Rohdaten/hef/hef01_011011/str/ala/*.ala ./asc/
 cp -avu /mnt/netappa/Rohdaten/hef/hef01_011011/str/H_011011.bet ./bet/
 cp -avu /mnt/netappa/Rohdaten/hef/hef01_011011/str/H_011011.dgn ./bet/
-cp -avu /mnt/netappa/Rohdaten/hef/TopScanBefliegungsbericht_HEF2001bis2003.pdf ./doc/report.pdf
+cp -avu /mnt/netappa/Rohdaten/hef/*Befliegungsbericht*.pdf ./doc/report.pdf
 
 # ASCII Rohdaten bereinigen und nach LAS konvertieren
 cd /home/laser/rawdata/als/hef/011011_hef01/asc/
