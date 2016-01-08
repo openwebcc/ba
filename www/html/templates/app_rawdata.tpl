@@ -76,6 +76,14 @@
                 attribution : '<a href="http://www.basemap.at/" target="_blank">basemap.at</a>, <a href="http://creative commons.org/licenses/by/3.0/at/deed.de" target="_blank">CC-BY 3.0</a>'
             })
         };
+        var bozen = { // http://www.provinz.bz.it/informatik/kartografie/Geoportal.asp
+            basemap : L.tileLayer("http://sdi.provinz.bz.it/geoserver/gwc/service/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&Layer=WMTS_BASEMAP_APB-PAB&Style=default&Format=image/png8&TileMatrixSet=GoogleMapsCompatible&TileMatrix=GoogleMapsCompatible:{z}&TileRow={y}&TileCol={x}", {
+                attribution : '<a href="http://www.provinz.bz.it/informatik/kartografie/Geoportal.asp">Autonome Provinz Bozen - Südtirol | Abteilung Informationstechnik</a>'
+            }),
+            of2011 : L.tileLayer("http://sdi.provinz.bz.it/geoserver/gwc/service/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&Layer=WMTS_OF2011_APB-PAB&Style=default&Format=image/png8&TileMatrixSet=GoogleMapsCompatible&TileMatrix=GoogleMapsCompatible:{z}&TileRow={y}&TileCol={x}", {
+                attribution : '<a href="http://www.provinz.bz.it/informatik/kartografie/Geoportal.asp">Autonome Provinz Bozen - Südtirol | Abteilung Informationstechnik</a>'
+            })
+        };
         var norway = {  // http://kartverket.no/kart/gratis-kartdata/wms-tjenester/
             statkart : L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=norges_grunnkart&zoom={z}&x={x}&y={y}', {
                 attribution: '&copy; <a href="http://kartverket.no/">Kartverket</a>'
@@ -168,6 +176,8 @@
             "Geoland Basemap Grau": geoland.bmapgrau,
             //"Geoland Basemap High DPI" : geoland.bmaphidpi,
             "Geoland Basemap Orthofoto" : geoland.bmaporthofoto30cm,
+            "Südtirol Grundkarte" : bozen.basemap,
+            "Südtirol Orthofoto" : bozen.of2011,
             "Norwegian Mapping Authority" : norway.statkart
         }, {
             "Flugstreifen": lasFiles
