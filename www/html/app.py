@@ -7,6 +7,7 @@
 import sys
 import re
 import os
+import datetime
 import simplejson
 
 from mod_python import apache
@@ -57,10 +58,49 @@ def rawdata(req, cid=None):
     # split up campaign ID
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
+    # query basic data
+    dbh.execute("""SELECT ptype,pname,cdate,cname,srid,sensor,
+                   count(fname) AS files, round(sum(fsize)/1000/1000,0) AS mb,
+                   sum(points) AS points,round(avg(density),2) AS density
+                   FROM view_meta
+                   WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
+                   GROUP BY ptype,pname,cdate,cname,srid,sensor""",
+                    (ptype,pname,cdate,cname)
+                )
+    for row in dbh.fetchall():
+        # set values for template terms
+        for col in 'ptype,pname,cdate,cname,srid,sensor,files,mb,points,density'.split(','):
+            tpl.add_term('APP_val_%s' % col, row[col])
+
+    # query campaign date(s)
+    cdates = []
+    dbh.execute("""SELECT info->>'file_year' AS year,info->>'file_doy' AS doy
+                   FROM view_meta
+                   WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
+                   GROUP BY ptype,pname,cdate,cname,year,doy
+                   ORDER BY year,doy""",
+                    (ptype,pname,cdate,cname)
+                )
+    for row in dbh.fetchall():
+        cdates.append(datetime.datetime.strptime('%s %s' % (row['year'],row['doy']), '%Y %j').strftime('%d.%m'))
+        tpl.add_term('APP_val_year', row['year'])
+    tpl.add_term('APP_val_cdates', ', '.join(cdates))
+
+    # query LAS-files
+    dbh.execute("""SELECT gid,fname,round(fsize/1000/1000,1) AS mb FROM view_meta
+                   WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
+                   ORDER BY fname""",
+                    (ptype,pname,cdate,cname)
+                )
+    for row in dbh.fetchall():
+        tpl.append_to_term('APP_pulldown_files','<option value="%s">%s</option>' % (
+            row['gid'],row['fname']
+        ))
+
     # check for flight report
     rpath = "%s/doc/report.pdf" % util.path_to_campaign(cid)
     if os.path.exists(rpath):
-        tpl.add_term('APP_report','<li><a href="%s/app.py/report?cid=%s">Download Flugbericht (PDF)</a></li>' % (
+        tpl.add_term('APP_report',' | <a href="%s/app.py/report?cid=%s">Flugbericht (PDF)</a>' % (
             APP_ROOT,util.create_cid(ptype,pname,cdate,cname)
         ))
 

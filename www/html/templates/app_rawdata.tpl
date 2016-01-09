@@ -112,10 +112,15 @@
 
             drawnItems.addLayer(layer);
 
-            document.getElementById('APP_download_points').innerHTML = '<li><a href="$APP_root/app.py/points?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat + '">Download Punkte innerhalb des Rechtecks</a></li>';
-            document.getElementById('APP_download_strips').innerHTML = '<li><a href="$APP_root/app.py/strips?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat + '">Download Streifen / Kacheln die das Rechteck schneiden</a></li>';
-            document.getElementById('APP_download_points').style.display = "list-item";
-            document.getElementById('APP_download_strips').style.display = "list-item";
+            // activate download buttons
+            document.getElementById('APP_download_points').onclick = function (e) {
+                window.location = '$APP_root/app.py/points?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
+            };
+            document.getElementById('APP_download_strips').onclick = function (e) {
+                window.location = '$APP_root/app.py/strips?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
+            };
+            document.getElementById('APP_download_points').style.display = "inline";
+            document.getElementById('APP_download_strips').style.display = "inline";
 
             // TODO: maybe we will need the code below sometime ... skip it for now ...
             // select lines intersecting the rectangle
@@ -190,14 +195,36 @@
 
 <body>
 <main>
-<h1>LiDAR-Repository Geographie Innsbruck</h1>
+  <h1>LiDAR-Repository Geographie Innsbruck</h1>
+  <p>
+    <strong>Befliegung $APP_val_ptype:$APP_val_pname:$APP_val_cdate:$APP_val_cname</strong> ($APP_val_files Dateien, $APP_val_mb MB)
+  </p>
 
-    <div id="map" style="width: 894px; height: 600px; border: 1px solid #ccc;margin:auto;"></div>
-    <ul>
-      $APP_report
-      <li id="APP_download_points" style="display:none;"></li>
-      <li id="APP_download_strips" style="display:none;"></li>
-    </ul>
+  <table style="width:100%">
+    <tr>
+      <td>
+        <input id="APP_download_points" type="button" value="Download Punkte im Rechteck" onclick="" style="display:none;" />
+        <input id="APP_download_strips" type="button" value="Download Streifen die das Rechteck schneiden" onclick="" style="display:none;" />
+      </td>
+      <td style="text-align:right;">
+        <form method="GET" action="$APP_root/app.py/details">
+        <select name="gid">$APP_pulldown_files</select>
+        <input type="submit" value="Metadaten" />
+        </form>
+      </td>
+    </tr>
+  </table>
+
+   <div id="map" style="width: 894px; height: 600px; border: 1px solid #ccc;margin:auto;"></div>
+
+<p>
+  Laserpunkte: $APP_val_points |
+  Punktdichte pro m²: $APP_val_density |
+  Sensor: $APP_val_sensor |
+  Projektion: <a href="http://spatialreference.org/ref/epsg/$APP_val_srid/">EPSG:$APP_val_srid</a> |
+  Flugdatum: $APP_val_cdates $APP_val_year
+  $APP_report
+</p>
 
 </main>
 </body>
