@@ -27,8 +27,9 @@ if __name__ == '__main__':
     # init application
     (base,dbh,tpl) = Laser.base.impl().init(req=None,user='intranet')
 
-    # clean up all content for now, finetune later
+    # clean up all content for now, set start of gid sequence, finetune later
     dbh.execute("DELETE FROM meta")
+    dbh.execute("SELECT SETVAL('meta_gid_seq',1001)")
 
     for dirpath, dirnames, filenames in os.walk(args.startdir):
         if re.search('solartirol',dirpath):
@@ -90,6 +91,9 @@ if __name__ == '__main__':
 
     # add missing SRID to vogis data (http://spatialreference.org/ref/epsg/mgi-austria-gk-west/)
     dbh.execute("UPDATE meta SET srid=31254 WHERE pname='vogis'")
+
+    # control gid of first strip Hintereisferner 2001 for direct access to examples in thesis
+    dbh.execute("UPDATE meta SET gid=1000 WHERE gid IN (SELECT gid FROM meta WHERE cdate='011011' ORDER BY fname LIMIT 1)")
 
     # finish
     dbh.close()
