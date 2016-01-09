@@ -6,6 +6,7 @@
 
 import re
 import os
+import locale
 
 from string import Template
 
@@ -15,6 +16,7 @@ class impl:
         """ initialize new template instance """
         self.base = base
         self.terms = {}
+        self.set_locale()
 
     def add_term(self, term=None, value=None):
         """ add a value to the given template term """
@@ -37,6 +39,17 @@ class impl:
     def get_terms(self, term=None):
         """ return dictionary of all available template terms """
         return self.terms
+
+    def set_locale(self, lang='de_DE.UTF-8'):
+        """ set locale by language """
+        locale.setlocale(locale.LC_ALL,'de_DE.UTF-8')
+
+    def format_with_locale(self, value=None):
+        """ format value according to locale """
+        try:
+            return locale.format("%.15g", value, True)
+        except:
+            return value
 
     def read_template(self, fpath=None):
         """ safely read the given template file into a string """
