@@ -40,6 +40,9 @@ def index(req):
         row['sensor'] = '-' if re.search('LAStools',row['sensor']) else row['sensor']
         tpl.append_to_term('APP_tableRows', "<tr><td>%s</td></tr>" % '</td><td>'.join([str(v) for v in row[1:]]) )
 
+    # fill template terms
+    tpl.add_term('APP_root',APP_ROOT)
+
     # finish
     dbh.close()
     return tpl.resolve_template('/home/institut/www/html/lidar/templates/app_index.tpl')
@@ -57,7 +60,7 @@ def rawdata(req, cid=None):
     # check for flight report
     rpath = "%s/doc/report.pdf" % util.path_to_campaign(cid)
     if os.path.exists(rpath):
-        tpl.add_term('APP_report','<li><a href="%s/app.py/report?cid=%s">Flugbericht (PDF)</a></li>' % (
+        tpl.add_term('APP_report','<li><a href="%s/app.py/report?cid=%s">Download Flugbericht (PDF)</a></li>' % (
             APP_ROOT,util.create_cid(ptype,pname,cdate,cname)
         ))
 
@@ -102,6 +105,9 @@ def details(req, gid=None):
             tpl.add_term('APP_wkt_hull', row['wkt_hull'])
         if row['traj']:
             tpl.add_term('APP_wkt_traj', row['wkt_traj'])
+
+    # fill template terms
+    tpl.add_term('APP_root',APP_ROOT)
 
     # finish
     dbh.close()

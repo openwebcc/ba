@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>$APP_cid / LiDAR data browser Geographie Innsbruck</title>
+    <title>$APP_cid / LiDAR-Repository Geographie Innsbruck</title>
+    <link rel="stylesheet" href="$APP_root/styles.css" />
 
 
     <script src="$APP_root/Leaflet.draw/examples/libs/leaflet-src.js"></script>
@@ -186,13 +187,18 @@
     </script>
 
 </head>
+
 <body>
-    <div id="map" style="width: 800px; height: 600px; border: 1px solid #ccc"></div>
+<main>
+<h1>LiDAR-Repository Geographie Innsbruck</h1>
+
+    <div id="map" style="width: 894px; height: 600px; border: 1px solid #ccc;margin:auto;"></div>
     <ul>
       $APP_report
       <li id="APP_download_points" style="display:none;"></li>
       <li id="APP_download_strips" style="display:none;"></li>
     </ul>
 
+</main>
 </body>
 </html>

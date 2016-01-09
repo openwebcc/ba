@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
-<title>$APP_lasfile details / LiDAR data browser Geographie Innsbruck</title>
+<title>$APP_lasfile details / LiDAR-Repository Geographie Innsbruck</title>
+<link rel="stylesheet" href="$APP_root/styles.css" />
+
+<main>
+<h1>LiDAR-Repository Geographie Innsbruck</h1>
 
 <h3>SELECT * FROM view_meta</h3>
 <pre>
@@ -27,3 +31,5 @@ $APP_wkt_traj
 <p>
 $APP_wkt_hull
 </p>
+
+</main>

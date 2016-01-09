@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
-<title>LiDAR data browser Geographie Innsbruck</title>
+<title>LiDAR-Repository Geographie Innsbruck</title>
+<link rel="stylesheet" href="$APP_root/styles.css" />
 
-<table border>
+<main>
+<h1>LiDAR-Repository Geographie Innsbruck</h1>
+<table class="dataTable">
 <tr>
     <th>pname</th>
     <th>cdate</th>
@@ -18,6 +21,7 @@
 $APP_tableRows
 
 </table>
+</main>
 
 
 

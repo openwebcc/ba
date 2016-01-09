@@ -1,0 +1,32 @@
+/*****
+ * 
+ * a little bit of style
+ * 
+ ****/
+
+body {
+    background-color: #fff;
+    padding-top: 10px;
+}
+main {
+    background-color: #fff;
+    margin: auto;
+    padding: 5px;
+    width: 900px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.6);
+}
+a:link, a:visited {
+    color: blue;
+}
+
+.dataTable td, .dataTable th {
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 5px;
+}
+.dataTable td:last-child, .dataTable th:last-child {
+    border-right: none;
+}
+.dataTable th {
+    border-bottom: 1px solid #333;
+}
