@@ -128,13 +128,11 @@ def details(req, gid=None):
     (base,dbh,tpl) = Laser.base.impl().init(req)
 
     # get details data
-    dbh.execute("""SELECT gid,ptype,pname,cdate,cname,fname,fsize,points,info,srid,datum,sensor,area,density,hull,traj,
-                    ST_AsGeoJSON(ST_Simplify(traj,%s),7) AS wkt_traj,
-                    ST_AsGeoJSON(ST_Simplify(hull,%s),7) AS wkt_hull
-                    FROM view_meta WHERE gid=%s""", (SIMPLIFY_DEG,SIMPLIFY_DEG,gid))
+    dbh.execute("""SELECT gid,ptype,pname,cdate,cname,fname,round(fsize/1000,0) AS kb,info
+                    FROM view_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
-        for col in 'gid,ptype,pname,cdate,cname,fname,fsize,points,info,srid,datum,sensor,area,density,hull,traj'.split(','):
-            tpl.append_to_term('APP_metadata', "%s=%s\n" % (col,row[col]) )
+        for col in 'gid,ptype,pname,cdate,cname,fname,kb,info'.split(','):
+            tpl.add_term('APP_val_%s' % col, row[col])
 
         # show JSON notation
         json = simplejson.loads(row['info'])
@@ -147,12 +145,11 @@ def details(req, gid=None):
                 tpl.add_term('APP_lasinfo', f.read())
         tpl.add_term('APP_lasfile', row['fname'])
 
-        # show WKT geoemtries
-        tpl.add_term('APP_simplify_deg', '%s' % SIMPLIFY_DEG)
-        if row['hull']:
-            tpl.add_term('APP_wkt_hull', row['wkt_hull'])
-        if row['traj']:
-            tpl.add_term('APP_wkt_traj', row['wkt_traj'])
+        # hide trajectory download link if no trajectory is present
+        if os.path.exists("%s.traj.txt" % info_txt):
+            tpl.add_term('APP_trajectory_link_display','inline')
+        else:
+            tpl.add_term('APP_trajectory_link_display','none')
 
     # fill template terms
     tpl.add_term('APP_root',APP_ROOT)

@@ -4,32 +4,29 @@
 <link rel="stylesheet" href="$APP_root/styles.css" />
 
 <main>
-<h1>LiDAR-Repository Geographie Innsbruck</h1>
+  <h1>LiDAR-Repository Geographie Innsbruck</h1>
+  <p>
+    <strong>Datei $APP_val_ptype:$APP_val_pname:$APP_val_cdate:$APP_val_cname $APP_val_fname ($APP_val_kb KB)</strong>
+  </p>
 
-<h3>SELECT * FROM view_meta</h3>
-<pre>
-$APP_metadata
-</pre>
+  <p>
+  <strong>Download</strong>: 
+  <a href="$APP_root/app.py/lasfile?gid=$APP_val_gid">LAS-Datei</a>
+  <span style="display:$APP_trajectory_link_display"> | <a href="$APP_root/app.py/trajectory?gid=$APP_val_gid">Trajektorie</a></span>
+  </p>
 
-<h3>JSON struktur view_meta.info</h3>
-<pre>
-$APP_jsondata
-</pre>
-
-<h3>lasinfo -i $APP_lasfile -compute_density -repair -stdout</h3>
+  <h3>Metadatenblatt</h3>
 <pre>
 $APP_lasinfo
+<strong>Quelle</strong>: lasinfo -i $APP_lasfile -compute_density -repair -stdout
 </pre>
 
+  <h3>JSON-Attribute der Datenbank</h3>
+<pre>
+$APP_jsondata
 
-<h3>WKT Trajektorie  - ST_AsGeoJSON(ST_Simplify(traj,$APP_simplify_deg),7)</h3>
-<p>
-$APP_wkt_traj
-</p>
+<strong>Quelle</strong>: Spalte info in Datenbankview view_meta
+</pre>
 
-<h3>WKT konkave Hülle  - ST_AsGeoJSON(ST_Simplify(hull,$APP_simplify_deg),7)</h3>
-<p>
-$APP_wkt_hull
-</p>
 
 </main>
