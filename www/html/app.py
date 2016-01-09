@@ -39,6 +39,11 @@ def index(req):
         row['cname'] = '<a href="%s/app.py/rawdata?cid=%s">%s</a>' % (APP_ROOT,cid,row['cname'])
         row['srid'] = '<a href="http://spatialreference.org/ref/epsg/%s/">%s</a>' % (row['srid'],row['srid'])
         row['sensor'] = '-' if re.search('LAStools',row['sensor']) else row['sensor']
+
+        # format numbers with locale
+        for col in ['mb','points','density']:
+            row[col] = tpl.format_with_locale(row[col])
+
         tpl.append_to_term('APP_tableRows', "<tr><td>%s</td></tr>" % '</td><td>'.join([str(v) for v in row[1:]]) )
 
     # fill template terms
@@ -70,7 +75,10 @@ def rawdata(req, cid=None):
     for row in dbh.fetchall():
         # set values for template terms
         for col in 'ptype,pname,cdate,cname,srid,sensor,files,mb,points,density'.split(','):
-            tpl.add_term('APP_val_%s' % col, row[col])
+            if type(row[col]) == str:
+                tpl.add_term('APP_val_%s' % col, row[col])
+            else:
+                tpl.add_term('APP_val_%s' % col, tpl.format_with_locale(row[col]))
 
     # query campaign date(s)
     cdates = []
