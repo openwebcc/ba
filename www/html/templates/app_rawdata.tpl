@@ -150,16 +150,15 @@
                 var popup = []
                 popup.push('<h3>' + feature.properties.fname + '</h3>');
                 popup.push('<ul>');
-                popup.push('<li>GID: ' + feature.properties.gid + '</li>');
                 popup.push('<li>Anzahl Punkte: ' + feature.properties.points + '</li>');
-                popup.push('<li>Filegröße (mb): ' + feature.properties.fsize + '</li>');
+                popup.push('<li>Dateigröße (MB): ' + feature.properties.fsize + '</li>');
                 popup.push('</ul>')
                 popup.push('<p>');
-                popup.push('<a href="$APP_root/app.py/details?gid=' + feature.properties.gid + '">Details anzeigen</a><br/>');
-                popup.push('<a href="$APP_root/app.py/lasfile?gid=' + feature.properties.gid + '">Download LAS file</a><br/>');
+                popup.push('<a href="$APP_root/app.py/details?gid=' + feature.properties.gid + '">Metadaten anzeigen</a><br/>');
+                popup.push('<a href="$APP_root/app.py/lasfile?gid=' + feature.properties.gid + '">Download LAS-Datei</a><br/>');
                 // add link to trajectory download if available
                 if (feature.properties.has_traj == true) {
-                    popup.push('<a href="$APP_root/app.py/trajectory?gid=' + feature.properties.gid + '">Download Flugtrajektorie</a><br/>');
+                    popup.push('<a href="$APP_root/app.py/trajectory?gid=' + feature.properties.gid + '">Download originale Flugtrajektorie</a><br/>');
                 }
                 popup.push('</p>')
                 layer.bindPopup(popup.join(''));
