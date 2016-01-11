@@ -75,7 +75,7 @@ def rawdata(req, cid=None):
     for row in dbh.fetchall():
         # set values for template terms
         for col in 'ptype,pname,cdate,cname,srid,sensor,files,mb,points,density'.split(','):
-            if type(row[col]) == str:
+            if type(row[col]) == str or col == 'srid':
                 tpl.add_term('APP_val_%s' % col, row[col])
             else:
                 tpl.add_term('APP_val_%s' % col, tpl.format_with_locale(row[col]))
