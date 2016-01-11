@@ -26,8 +26,8 @@ CREATE TABLE meta (
     pname TEXT,                      -- Projektname (z.B. hef)
     cdate TEXT,                      -- Datum der Kampagne (z.B 011011)
     cname TEXT,                      -- Kampagnenname (z.B. hef01)
-    fname TEXT,                      -- Name des LAS Files
-    fsize BIGINT,                    -- Größe des LAS Files in Bytes
+    fname TEXT,                      -- Name der LAS-Datei
+    fsize BIGINT,                    -- Größe der LAS-Datei in Bytes
     points BIGINT,                   -- Zahl der Punkte im LAS File
     srid INTEGER,                    -- EPSG Code der Projektion
     hull geometry(Polygon,0),        -- Geometrie der konkaven Hülle
