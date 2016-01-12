@@ -24,8 +24,8 @@ CREATE TABLE meta (
     gid SERIAL PRIMARY KEY NOT NULL, -- Primärschlüssel (auto-inkrement)
     ptype TEXT,                      -- Projekttyp (z.B. als)
     pname TEXT,                      -- Projektname (z.B. hef)
-    cdate TEXT,                      -- Datum der Kampagne (z.B 011011)
-    cname TEXT,                      -- Kampagnenname (z.B. hef01)
+    cdate TEXT,                      -- Datum der Befliegung (z.B 011011)
+    cname TEXT,                      -- Befliegungskürzel (z.B. hef01)
     fname TEXT,                      -- Name der LAS-Datei
     fsize BIGINT,                    -- Größe der LAS-Datei in Bytes
     points BIGINT,                   -- Zahl der Punkte im LAS File
