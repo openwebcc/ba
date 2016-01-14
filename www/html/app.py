@@ -301,9 +301,15 @@ def strips(req, cid=None, extent=None):
     # split up campaign ID
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
-    # show ln -s commands for lasfiles involved
-    req.write('<h3>linking the following lasfiles as result:</h3>')
-    req.write('<br/>'.join(util.get_lascopy_cmds(cid,extent)) )
+    # get shell commands and execute
+    cmds = util.get_lascopy_cmds(cid,extent)
+    req.write('<h3>Daten im Downloadbereich bereitgestellt</h3>')
+    req.write('<pre><strong>Shell-Befehle:</strong>\n\n')
+    for args in cmds:
+            req.write('%s\n' % ' '.join(args) )
+            proc = Popen(args, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = proc.communicate()
+    req.write('</pre>')
 
     # finish
     dbh.close()

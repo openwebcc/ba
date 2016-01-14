@@ -81,10 +81,13 @@ class impl:
             )
         )
         for row in self.base.dbh.fetchall():
-            cmds.append("ln -s %s/%s/%s/%s_%s/las/%s %s/%s_%s" % (
-                RAWDATA_DIR,row['ptype'],pname,row['cdate'],cname,row['fname'],
-                DOWNLOAD_DIR,re.sub(':','_',str(cid)),row['fname']
-            ))
+            ipath = '%s/%s/%s/%s_%s/las/%s' % (
+                RAWDATA_DIR,row['ptype'],pname,row['cdate'],cname,row['fname']
+            )
+            opath = '%s/%s_%s' % (
+                DOWNLOAD_DIR,self.get_cid_as_prefix(cid),row['fname']
+            )
+            cmds.append(['ln','-s',ipath,opath])
 
         return cmds
 
