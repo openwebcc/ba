@@ -310,15 +310,21 @@ def strips(req, cid=None, extent=None):
     # split up campaign ID
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
-    # get shell commands and execute
+    # get shell commands
     cmds = util.get_lascopy_cmds(cid,extent)
-    req.write('<h3>Daten im Downloadbereich bereitgestellt</h3>')
-    req.write('<pre><strong>Shell-Befehle:</strong>\n\n')
-    for args in cmds:
-            req.write('%s\n' % ' '.join(args) )
-            proc = Popen(args, stdout=PIPE, stderr=PIPE)
-            stdout, stderr = proc.communicate()
-    req.write('</pre>')
+
+    if type(cmds) == str:
+        # show errors
+        req.write('ERROR: %s' % cmds)
+    else:
+        # execute commands and give feedback
+        req.write('<h3>Daten im Downloadbereich bereitgestellt</h3>')
+        req.write('<pre><strong>Shell-Befehle:</strong>\n\n')
+        for args in cmds:
+                req.write('%s\n' % ' '.join(args) )
+                proc = Popen(args, stdout=PIPE, stderr=PIPE)
+                stdout, stderr = proc.communicate()
+        req.write('</pre>')
 
     # finish
     dbh.close()

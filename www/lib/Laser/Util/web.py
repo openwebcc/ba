@@ -89,7 +89,10 @@ class impl:
             )
             cmds.append(['ln','-s',ipath,opath])
 
-        return cmds
+        if len(cmds) == 0:
+            return "no lasfiles found that intersect the extent"
+        else:
+            return cmds
 
     def get_las2las_cmd(self, cid=None, ext=None):
         """ transform extent in latlng to extent of campaign, create list with lasfiles to process and return las commandline args """
@@ -121,8 +124,6 @@ class impl:
                 ptype,pname,cdate,cname
             )
         )
-        if self.base.dbh.rowcount() == 0:
-            return 'no lasfiles found'
 
         # loop through results and fill las2las args
         for row in self.base.dbh.fetchall():
