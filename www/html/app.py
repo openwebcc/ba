@@ -12,6 +12,9 @@ import simplejson
 
 from mod_python import apache
 
+from subprocess import Popen
+from subprocess import PIPE
+
 sys.path.append('/home/klaus/private/ba/www/lib')
 import Laser.base
 import Laser.Util.web
@@ -218,11 +221,14 @@ def lasfile(req, gid=None):
     dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
-        req.write('<h3>linking the following lasfiles as result:</h3>')
-        req.write("ln -s %s/las/%s %s/%s<br>" % (
-            util.path_to_campaign(cid),row['fname'],
-            util.get_download_dir(),row['fname']
-        ))
+        ipath = '%s/las/%s' % (util.path_to_campaign(cid),row['fname'])
+        opath = '%s/%s_%s' % (util.get_download_dir(),util.get_cid_as_prefix(cid),row['fname'])
+
+        # execute command and give feedback
+        proc = Popen(['ln', '-s', ipath, opath], stdout=PIPE, stderr=PIPE)
+        stdout, stderr = proc.communicate()
+        req.write('<h3>Daten im Downloadbereich bereitgestellt</h3>')
+        req.write("<pre><strong>Shell-Befehl:</strong>\n\nln -s %s %s</pre><br>" % (ipath,opath))
 
     # finish
     dbh.close()
@@ -239,12 +245,17 @@ def trajectory(req, gid=None):
     dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
-        tpath = "%s/meta/%s.traj.txt" % (
-            util.path_to_campaign(cid),row['fname']
-        )
-        if os.path.exists(tpath):
-            req.write('<h3>linking the following trajectoryfile as result:</h3>')
-            req.write("ln -s %s %s/%s.traj.txt<br>" % (tpath,util.get_download_dir(),row['fname']) )
+        ipath = "%s/meta/%s.traj.txt" % (util.path_to_campaign(cid),row['fname'])
+        opath = '%s/%s_%s.traj.txt' % (util.get_download_dir(),util.get_cid_as_prefix(cid),row['fname'])
+
+        if os.path.exists(ipath):
+            # execute command and give feedback
+            proc = Popen(['ln', '-s', ipath, opath], stdout=PIPE, stderr=PIPE)
+            stdout, stderr = proc.communicate()
+            req.write('<h3>Daten im Downloadbereich bereitgestellt</h3>')
+            req.write("<pre><strong>Shell-Befehl:</strong>\n\nln -s %s %s</pre><br>" % (ipath,opath))
+        else:
+            req.write('<h3>no trajectory file found</h3>')
 
     # finish
     dbh.close()
