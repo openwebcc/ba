@@ -92,12 +92,10 @@ class impl:
         return cmds
 
     def get_las2las_cmd(self, cid=None, ext=None):
-        """ transform extent in latlng to extent of campaign and return las commandline args """
-
-        # open new list of lasfiles to take into account
-        o = open('/tmp/files.txt', 'w')
+        """ transform extent in latlng to extent of campaign, create list with lasfiles to process and return las commandline args """
 
         # init vars
+        las_files = []
         cnt_points = 0
         box_extent = None
         las_extension = None
@@ -128,28 +126,36 @@ class impl:
 
         # loop through results and fill las2las args
         for row in self.base.dbh.fetchall():
-            # set extension of lasfiles
-            las_extension = row['fname'][-3:]
+            if len(las_files) == 0:
+                # set extension of lasfiles
+                las_extension = row['fname'][-3:]
 
-            # define projected extent to keep
-            box_extent = self.box2list(row['box_extent'])
+                # define projected extent to keep
+                box_extent = [str(v) for v in self.box2list(row['box_extent'])]
 
             # increment point counter
             cnt_points += row['points']
 
             # append lasfile to list with lasfiles to take into account
-            o.write("%s/%s/%s/%s_%s/las/%s\n" % (RAWDATA_DIR,row['ptype'],pname,row['cdate'],cname,row['fname']) )
-
-        # close list with lasfiles to take into account
-        o.close()
+            las_files.append("%s/%s/%s/%s_%s/las/%s" % (RAWDATA_DIR,row['ptype'],pname,row['cdate'],cname,row['fname']) )
 
         if cnt_points > POINTS_LIMIT:
-            return "ERROR: the point limit of %s points to process for clipping has been execeed, please choose a smaller extent" % POINTS_LIMIT
+            return "the point limit of %s points to process for clipping has been execeed, please choose a smaller extent" % POINTS_LIMIT
+        elif len(las_files) == 0:
+            return "no lasfiles found that intersect the extent"
         else:
-            # build las2las command and return it along with point count
-            return "las2las -lof /tmp/files.txt -keep_xy %s %s %s %s -merged -o %s/%s_%s_%s_%s_%s.%s # %s points to check" % (
-                box_extent[0],box_extent[1],box_extent[2],box_extent[3],
-                DOWNLOAD_DIR,re.sub(':','_',str(cid)),
-                box_extent[0],box_extent[1],box_extent[2],box_extent[3],
-                las_extension,cnt_points
+            # create list with lasfiles to process
+            tpath = '%s/%s_%s_%s_%s_%s.%s.files.txt' % (
+                DOWNLOAD_DIR,self.get_cid_as_prefix(cid),box_extent[0],box_extent[1],box_extent[2],box_extent[3],las_extension
             )
+            opath = re.sub('.files.txt','',tpath)
+            o = open(tpath,'w')
+            o.write('%s\n' % '\n'.join(las_files))
+            o.close()
+
+            # build las2las command and return it
+            return ['las2las',
+                    '-lof',tpath,
+                    '-keep_xy',box_extent[0],box_extent[1],box_extent[2],box_extent[3],
+                    '-merged','-o', opath
+            ]

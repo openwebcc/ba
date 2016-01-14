@@ -273,18 +273,27 @@ def points(req, cid=None, extent=None):
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
     # get las2las command
-    cmd = util.get_las2las_cmd(cid,extent)
+    args = util.get_las2las_cmd(cid,extent)
 
-    if cmd[:5] == 'ERROR':
-        req.write(cmd)
+    if type(args) == str:
+        # show errors
+        req.write('ERROR: %s' % args)
     else:
-        req.write('<h3>command would be:</h3>')
-        req.write(cmd)
+        req.write('<h3>Daten im Downloadbereich bereitgestellt</h3>')
+        req.write('<pre><strong>Shell-Befehl:</strong>\n\n')
+        req.write(' '.join(args))
+
+        # execute las2las command
+        req.write('\n\nrunning command, please wait ...\n')
+
+        proc = Popen(args, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = proc.communicate()
 
         # show lasfiles involved
-        req.write('<h3>with /tmp/files.txt containing:</h3>')
-        for fname in open('/tmp/files.txt').readlines():
-            req.write('%s<br/>' % fname)
+        req.write('\n\nLAS-Dateien in %s:\n\n' % args[2])
+        for fname in open(args[2]).readlines():
+            req.write('%s' % fname)
+        req.write('</pre>')
 
     # finish
     dbh.close()
