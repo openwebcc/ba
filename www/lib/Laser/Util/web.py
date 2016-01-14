@@ -59,6 +59,10 @@ class impl:
         """ return path to campaign extracted from campaign ID """
         return RAWDATA_DIR + "/%s/%s/%s_%s" % tuple(self.parse_cid(cid))
 
+    def get_cid_as_prefix(self, cid, delimiter='_'):
+        """ return cid as prefix suited for filenames with underscore as default delimiter"""
+        return re.sub(':',delimiter,cid)
+
     def get_lascopy_cmds(self, cid=None, ext=None):
         """ return copy commands for lasfiles of given campaign within extent """
 
