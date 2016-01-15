@@ -28,5 +28,5 @@ $APP_jsondata
 <strong>Quelle</strong>: Spalte info in Datenbankview view_meta
 </pre>
 
-
+<p style="text-align:right;font-size:0.9em;font-style:italic;"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a>
 </main>

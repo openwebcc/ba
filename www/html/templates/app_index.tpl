@@ -21,6 +21,7 @@
 $APP_tableRows
 
 </table>
+<p style="text-align:right;font-size:0.9em;font-style:italic;"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a>
 </main>
 
 
