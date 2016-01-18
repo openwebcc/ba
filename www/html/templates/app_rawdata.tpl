@@ -187,6 +187,9 @@
         }, {
             "Flugstreifen": lasFiles
         }).addTo(map);
+
+        // add scale bar
+        L.control.scale({'imperial' : false}).addTo(map);
     };
     </script>
 
