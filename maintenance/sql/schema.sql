@@ -38,7 +38,7 @@ GRANT SELECT ON meta TO GROUP web_group;
 GRANT SELECT, UPDATE ON meta_gid_seq TO GROUP intranet_group;
 GRANT SELECT, INSERT, UPDATE, DELETE ON meta TO GROUP intranet_group;
 
-CREATE VIEW view_meta AS (
+CREATE OR REPLACE VIEW view_meta AS (
     SELECT gid,ptype,pname,cname,cdate,fname,fsize,points,info,srid,
     to_date(cdate, 'YYMMDD') AS datum,
     info->>'system_identifier' AS sensor,
@@ -47,7 +47,7 @@ CREATE VIEW view_meta AS (
     ST_Transform(ST_SetSRID(hull,srid),4326) AS hull,
     ST_Transform(ST_SetSRID(traj,srid),4326) AS traj
     FROM meta
-    WHERE ptype='als'
+    WHERE ptype IN ('als','tls')
 );
 GRANT SELECT ON view_meta TO GROUP web_group;
 
