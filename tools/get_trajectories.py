@@ -51,6 +51,36 @@ def get_files(trajdir=None,infofile=None,rebuild=None):
 
     return files
 
+def get_bet_times(files=None,has_header=True):
+    """ extract minimum and maximum gpstime for each trajectory """
+    times = {}
+    for betfile in files['bet']:
+        print "parsing GPS-times in %s ..." % betfile
+        times[betfile] = {
+            'min_time' : None,
+            'max_time' : None
+        }
+        with open(betfile) as f:
+            for line in f:
+                if not times[betfile]['min_time']:
+                    # init min/max gpstime
+                    times[betfile]['min_time'] = (86400 * 7) + 1
+                    times[betfile]['max_time'] = -1
+
+                    # skip header if present
+                    if has_header:
+                        continue
+
+                # record min/max gpstime
+                row = util.parse_line(line)
+                t = float(row[0])
+                if t < times[betfile]['min_time']:
+                    times[betfile]['min_time'] = t
+                if t > times[betfile]['max_time']:
+                    times[betfile]['max_time'] = t
+
+    return  times
+
 def distance(pt1,pt2):
     """ return distance of two points """
     return sqrt((pt2['x'] - pt1['x'])**2 + (pt2['y'] - pt1['y'])**2 )
@@ -93,6 +123,9 @@ if __name__ == '__main__':
             print "INFO: No info.txt file(s) found for trajectory directory %s" % args.trajdir
         sys.exit(0)
 
+    # extract min/max gpstime for each trajectory
+    times = get_bet_times(files)
+
     # extract new trajectory from min/max gpstime and .bet file
     for obj in sorted(files['info']):
         start_time = datetime.now()
@@ -117,6 +150,12 @@ if __name__ == '__main__':
             cnt_wkt = 0
             for betfile in files['bet']:
                 header = None
+
+                # skip trajectories whos gpstimes do not overlap with lasfile gpstimes
+                if max_time < times[betfile]['min_time'] or min_time > times[betfile]['max_time']:
+                    continue
+
+                # process trajectories whos gpstimes overlap with lasfile gpstimes
                 print "creating %s ... " % obj['traj_path']
                 with open(betfile) as f:
                     #print " looking %s ..." % betfile
