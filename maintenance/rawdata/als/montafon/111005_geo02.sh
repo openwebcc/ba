@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Nachflug Montafon 05.10.2011
 #

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Befliegung Hintereisferner, 08.07.2002
 #

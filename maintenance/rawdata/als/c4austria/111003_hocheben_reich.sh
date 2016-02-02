@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Befliegung Hochebenkar, Reichenkar, 03.10.2011
 #

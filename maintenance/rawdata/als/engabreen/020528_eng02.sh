@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Befliegung Engabreen 28.5.2002
 #

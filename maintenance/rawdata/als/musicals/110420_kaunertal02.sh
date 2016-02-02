@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Befliegung Kaunertal 20.04.2011, 21.04.2011, 22.04.2011 und 23.04.2011
 #

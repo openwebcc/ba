@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Befliegung Südtirol 2005/2006
 # Exaktes Datum nicht bekannt. Nach Galos et al. 2015 "Mitte September". Freitag, 16.9.2005 gewählt

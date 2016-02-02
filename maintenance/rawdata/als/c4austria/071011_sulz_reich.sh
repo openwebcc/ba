@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Befliegung Sulztalferner, Reichenkar, 11.10.2007
 #

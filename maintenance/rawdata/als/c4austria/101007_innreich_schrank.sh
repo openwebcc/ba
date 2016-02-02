@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: Befliegung Inneres Reichenkar, Schrankar, 07.10.2010
 #

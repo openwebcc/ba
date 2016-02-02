@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Datenmigration: TLS Kampagne Schmirntal - Messung 4, 23.05.2013
 #
