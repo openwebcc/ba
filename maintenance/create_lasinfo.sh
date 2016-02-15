@@ -3,7 +3,7 @@
 # extract metadata from lasfiles with lasinfo
 # force rebuilding by passing "rebuild" as commandline argument
 #
-# Usage: sh rebuild_lasinfo.sh {rebuild}
+# Usage: sh create_lasinfo.sh {rebuild}
 #
 
 REBUILD=""
