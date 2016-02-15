@@ -1,0 +1,6 @@
+[submodule "www/html/Leaflet.draw"]
+	path = www/html/Leaflet.draw
+	url = https://github.com/Leaflet/Leaflet.draw.git
+[submodule "www/html/Leaflet.omnivore"]
+	path = www/html/Leaflet.omnivore
+	url = https://github.com/mapbox/leaflet-omnivore.git
