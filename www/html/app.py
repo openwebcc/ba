@@ -47,7 +47,7 @@ def index(req):
         for col in ['mb','points','density']:
             row[col] = tpl.format_with_locale(row[col])
 
-        tpl.append_to_term('APP_tableRows', "<tr><td>%s</td></tr>" % '</td><td>'.join([str(v) for v in row[1:]]) )
+        tpl.append_to_term('APP_tableRows', "<tr><td>%s</td></tr>" % '</td><td>'.join([str(v) for v in row]) )
 
     # fill template terms
     tpl.add_term('APP_root',APP_ROOT)

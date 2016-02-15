@@ -7,6 +7,7 @@
 <h1>LiDAR-Repository Geographie Innsbruck</h1>
 <table class="dataTable">
 <tr>
+    <th>ptype</th>
     <th>pname</th>
     <th>cdate</th>
     <th>cname</th>
