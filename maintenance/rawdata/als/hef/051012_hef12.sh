@@ -25,7 +25,7 @@ do
 done
 
 # Zusammenspielen von .alf und .all zu .ala
-find /home/laser/rawdata/als/hef/051012_hef12/fix -name "*.alf" -exec sh /home/klaus/private/ba/tools/fix_merge_alf_all.sh {} \;
+find /home/laser/rawdata/als/hef/051012_hef12/fix -name "*.alf" -exec sh /home/laser/rawdata/maintenance/rawdata/als/hef/fix_merge_alf_all.sh {} \;
 
 # nach LAS konvertieren
 txt2las -i /home/laser/rawdata/als/hef/051012_hef12/asc/*.ala \

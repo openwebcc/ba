@@ -3,7 +3,7 @@
 # join .alf and .all files for hef11, hef12 and hef13
 #
 # Usage: sh fix_merge_alf_all.sh ALFFILE
-# Batch: find /home/laser/rawdata/als/hef/041005_hef11/fix -name "*.alf" -exec sh /home/klaus/private/ba/tools/fix_merge_alf_all.sh {} \;
+# Batch: find /home/laser/rawdata/als/hef/041005_hef11/fix -name "*.alf" -exec sh /home/laser/rawdata/maintenance/rawdata/als/hef/fix_merge_alf_all.sh {} \;
 #
 
 if [ -z "$1" ]; then 
@@ -33,7 +33,7 @@ awk '$1 = $1 FS "2"' $FNAME.all >> $FNAME.all.tmp
 cat $FNAME.alf.tmp $FNAME.all.tmp | sort > $FNAME.ala.tmp
 
 # parse merged file, add return number and number of returns for given pulse
-python /home/klaus/private/ba/tools/fix_merge_alf_all_cleanup.py -i $FNAME.ala.tmp -o $FNAME.ala
+python /home/laser/rawdata/maintenance/rawdata/als/hef/fix_merge_alf_all_cleanup.py -i $FNAME.ala.tmp -o $FNAME.ala
 
 # move .ala file to final destination and clean up temporary files
 mv $FNAME.ala $ALA.ala
