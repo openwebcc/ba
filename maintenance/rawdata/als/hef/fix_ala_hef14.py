@@ -6,7 +6,7 @@
 import os
 import sys
 
-sys.path.append('/home/klaus/private/ba/www/lib')
+sys.path.append('/home/laser/rawdata/www/lib')
 import Laser
 
 if __name__ == '__main__':

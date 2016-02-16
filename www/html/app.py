@@ -15,7 +15,7 @@ from mod_python import apache
 from subprocess import Popen
 from subprocess import PIPE
 
-sys.path.append('/home/klaus/private/ba/www/lib')
+sys.path.append('/home/laser/rawdata/www/lib')
 import Laser.base
 import Laser.Util.web
 

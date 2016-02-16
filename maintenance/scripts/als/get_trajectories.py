@@ -14,7 +14,7 @@ import sys
 from datetime import datetime
 from math import sqrt
 
-sys.path.append('/home/klaus/private/ba/www/lib')
+sys.path.append('/home/laser/rawdata/www/lib')
 import Laser.Util.las
 
 CSV_PATH = '/home/laser/rawdata/maintenance/scripts/als/logs/get_trajectories.csv'

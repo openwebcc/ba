@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-sys.path.append('/home/klaus/private/ba/www/lib')
+sys.path.append('/home/laser/rawdata/www/lib')
 import Laser
 
 def lines_are_identical(curr=None,prev=None):

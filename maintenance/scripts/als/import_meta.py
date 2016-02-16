@@ -10,7 +10,7 @@ import sys
 import argparse
 
 
-sys.path.append('/home/klaus/private/ba/www/lib')
+sys.path.append('/home/laser/rawdata/www/lib')
 import Laser.base
 import Laser.Util.las
 
