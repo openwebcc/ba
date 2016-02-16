@@ -16,7 +16,7 @@ cp -avu /home/laser/rawdata/als/musicals/101007_kaunertal01/doc/*.pdf ./doc/repo
 #
 
 # Schritt 1: Extent des HEF-Projektpolygons ermitteln
-OGR_EXT=`ogrinfo /home/klaus/private/ba/maintenance/rawdata/als/hef/util/hef_projectpolygon.shp hef_projectpolygon | grep Extent`
+OGR_EXT=`ogrinfo /home/laser/rawdata/maintenance/rawdata/als/hef/util/hef_projectpolygon.shp hef_projectpolygon | grep Extent`
 KEEP_XY=`echo $OGR_EXT | sed -e 's/[a-zA-Z:,\(\)\-]//g'`
 
 # Schritt 2: Flugstreifen der musicals Befliegung am Extent des HEF-Projektpolygons klippen
@@ -30,7 +30,7 @@ find /tmp/hef19 -size -350c -exec rm -f {} \;
 # Schritt 4: Flugstreifen am Projektpolygon klippen
 find /tmp/hef19 -name "*.las" -exec python /home/laser/rawdata/maintenance/scripts/als/clip_lasfile.py \
     --lasfile {} \
-    --wktpoly /home/klaus/private/ba/maintenance/rawdata/als/hef/util/hef_projectpolygon.wkt \
+    --wktpoly /home/laser/rawdata/maintenance/rawdata/als/hef/util/hef_projectpolygon.wkt \
     --outdir /home/laser/rawdata/als/hef/101007_hef19/las/ \;
 
 # Schritt 5: system identifier, generating software setzen und kopierten LAS-header aktualisieren

@@ -2,7 +2,7 @@
 #
 # clip a LAS-file on a WKT-polygon
 #
-# Usage: find /tmp/hef19 -wholename "*/las/*.las" -exec python /home/laser/rawdata/maintenance/scripts/als/clip_lasfile.py --lasfile {} --wktpoly /home/klaus/private/ba/maintenance/rawdata/als/hef/util/hef_projectpolygon.wkt --outdir /home/laser/rawdata/als/hef/101007_hef19/las/ \;
+# Usage: find /tmp/hef19 -wholename "*/las/*.las" -exec python /home/laser/rawdata/maintenance/scripts/als/clip_lasfile.py --lasfile {} --wktpoly /home/laser/rawdata/maintenance/rawdata/als/hef/util/hef_projectpolygon.wkt --outdir /home/laser/rawdata/als/hef/101007_hef19/las/ \;
 #
 
 import os
