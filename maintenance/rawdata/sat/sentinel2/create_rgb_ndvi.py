@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # create RGB and NDVI images from Sentinel-2 bands in JPEG2000 format
-# Usage: python create_images.py -h
+# Usage: python create_rgb_ndvi.py -h
 #
 
 import sys
