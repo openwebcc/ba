@@ -28,7 +28,7 @@ las2las -i *.las -odir /tmp/hef19 -olas -keep_xy $KEEP_XY
 find /tmp/hef19 -size -350c -exec rm -f {} \;
 
 # Schritt 4: Flugstreifen am Projektpolygon klippen
-find /tmp/hef19 -name "*.las" -exec python /home/klaus/private/ba/tools/clip_lasfile.py \
+find /tmp/hef19 -name "*.las" -exec python /home/laser/rawdata/maintenance/scripts/als/clip_lasfile.py \
     --lasfile {} \
     --wktpoly /home/klaus/private/ba/maintenance/rawdata/als/hef/util/hef_projectpolygon.wkt \
     --outdir /home/laser/rawdata/als/hef/101007_hef19/las/ \;

@@ -3,14 +3,14 @@
 # get WKT boundaries of LAS files in subdir las/
 #
 # Usage: sh get_hull.sh FILENAME [thin m] <rebuild>
-# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/klaus/private/ba/tools/get_hull.sh {} 10 \; &
-# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/klaus/private/ba/tools/get_hull.sh {} 10 rebuild \; &
+# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/laser/rawdata/maintenance/scripts/als/get_hull.sh {} 10 \; &
+# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/laser/rawdata/maintenance/scripts/als/get_hull.sh {} 10 rebuild \; &
 #
 
 #
 # handle logging
 #
-CSV=/home/klaus/private/ba/tools/logs/get_hull.csv
+CSV=/home/laser/rawdata/maintenance/scripts/als/logs/get_hull.csv
 if [ ! -f "$CSV" ]; then
     echo "file;task;real;user;sys" > $CSV
 fi

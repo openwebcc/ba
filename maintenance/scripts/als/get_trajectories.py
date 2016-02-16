@@ -4,8 +4,8 @@
 #
 # Usage: python get_trajectories.py --help
 #
-# Batch: find /home/laser/rawdata/als/hef -type d -name bet -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --trajdir {} \;
-# Batch: find /home/laser/rawdata/als/hef -type d -name bet -exec python /home/klaus/private/ba/tools/get_trajectories.py --mindist 100 --trajdir {}  --rebuild \;
+# Batch: find /home/laser/rawdata/als/hef -type d -name bet -exec python /home/laser/rawdata/maintenance/scripts/als/get_trajectories.py --mindist 100 --trajdir {} \;
+# Batch: find /home/laser/rawdata/als/hef -type d -name bet -exec python /home/laser/rawdata/maintenance/scripts/als/get_trajectories.py --mindist 100 --trajdir {}  --rebuild \;
 
 import re
 import os
@@ -17,7 +17,7 @@ from math import sqrt
 sys.path.append('/home/klaus/private/ba/www/lib')
 import Laser.Util.las
 
-CSV_PATH = '/home/klaus/private/ba/tools/logs/get_trajectories.csv'
+CSV_PATH = '/home/laser/rawdata/maintenance/scripts/als/logs/get_trajectories.csv'
 
 def get_files(trajdir=None,infofile=None,rebuild=None):
     """ walk through project directory and find .info.txt and .bet files """
