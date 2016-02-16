@@ -1,2 +1,3 @@
-# ba
-GitHub-Repository für Skripts und HTML-Seiten die im Rahmen der Bachelorarbeit erstellt wurden
+# Geo-IBK
+GitHub-Repository for scripts and HTML pages to handle lidar and satellite rawdata at the department of geography, University of Innsbruck
+
