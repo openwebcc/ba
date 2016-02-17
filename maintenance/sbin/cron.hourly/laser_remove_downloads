@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# remove all files except subdirectories from /home/laser/download that are older than 24 hours
+# remove all files except subdirectories from /home/laser/rawdata/download that are older than 24 hours
 #
 
 find /home/laser/rawdata/download -maxdepth 1 -mmin +1440 -not -type d -ls -exec rm -f {} \;
