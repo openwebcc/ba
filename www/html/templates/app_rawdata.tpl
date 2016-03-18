@@ -86,7 +86,10 @@
             })
         };
         var norway = {  // http://kartverket.no/kart/gratis-kartdata/wms-tjenester/
-            statkart : L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=norges_grunnkart&zoom={z}&x={x}&y={y}', {
+            statkart : L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
+                attribution: '&copy; <a href="http://kartverket.no/">Kartverket</a>'
+            }),
+            statkartgray : L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2graatone&zoom={z}&x={x}&y={y}', {
                 attribution: '&copy; <a href="http://kartverket.no/">Kartverket</a>'
             })
         };
@@ -183,7 +186,9 @@
             "Geoland Basemap Orthofoto" : geoland.bmaporthofoto30cm,
             "Südtirol Grundkarte" : bozen.basemap,
             "Südtirol Orthofoto" : bozen.of2011,
-            "Norwegian Mapping Authority" : norway.statkart
+            "Norwegian Mapping Authority" : norway.statkart,
+            "Norwegian Mapping Authority grau" : norway.statkartgray
+
         }, {
             "Flugstreifen": lasFiles
         }).addTo(map);
