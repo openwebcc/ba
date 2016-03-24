@@ -12,6 +12,7 @@ import requests
 import simplejson
 
 from xml.dom.minidom import parseString
+from time import sleep
 
 sys.path.append('/home/laser/rawdata/www/lib')
 from Sat.sentinel import Util
@@ -158,12 +159,15 @@ if __name__ == '__main__':
                                 # mark image for downloading if needed
                                 jpeg_path = "%s/jpeg/%s.jp2" % (entry['subdir']['path'],img_basename)
                                 json_path = "%s/meta/%s.json" % (entry['subdir']['path'],img_basename[:-4])
+                                xml_path = "%s/meta/%s" % (entry['subdir']['path'],xml_name)
                                 if not os.path.exists(jpeg_path) or not os.path.exists(json_path) or args.rebuild:
                                     download_images["%s.jp2" % img_basename] = {
                                         'url' : image_url,
                                         'jpeg_path' : jpeg_path,
                                         'json_path' : json_path,
                                         'json_dump' : simplejson.dumps(entry, sort_keys=True, indent=4 * ' '),
+                                        'xml_path' : xml_path,
+                                        'xml_dump' : req.text,
                                     }
         else:
             print "WARNING: could not download XML metadata from:\n%s" % req.url
@@ -174,13 +178,17 @@ if __name__ == '__main__':
     for jpeg in sorted(download_images.keys()):
         jpeg_path = download_images[jpeg]['jpeg_path']
         json_path = download_images[jpeg]['json_path']
+        xml_path = download_images[jpeg]['xml_path']
 
         # store JSON metadata
         if not os.path.exists(json_path) or args.rebuild:
             if not args.quiet:
                 print "%s: creating %s ... " % (todo,json_path)
+                print "%s: creating %s ... " % (todo,xml_path)
             with open(json_path, 'w') as o:
                 o.write(download_images[jpeg]['json_dump'])
+            with open(xml_path,'w') as o:
+                o.write(download_images[jpeg]['xml_dump'].encode('utf-8'))
 
         # download image
         if not os.path.exists(jpeg_path) or args.rebuild:
@@ -189,7 +197,7 @@ if __name__ == '__main__':
             with open(jpeg_path, 'wb') as o:
                 o.write(req_image.content)
 
-
+            sleep(2)
             done += 1
 
         todo -= 1
