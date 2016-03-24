@@ -17,6 +17,8 @@ DEFAULT_RGB = True
 DEFAULT_NDVI = True
 DEFAULT_REBUILD = False
 DEFAULT_QUIET = False
+SCHMIRN_TILE = 'T32TPT'
+SCHMIRN_EXTENT = '688505 5213239 701216 5225950'
 
 def filename_matches_tile(fname=None,tiles=None):
     """ return True if filename contains any of the wanted tiles, False otherwise """
@@ -30,20 +32,34 @@ def filename_matches_tile(fname=None,tiles=None):
 def cleanup_tmp_images():
     """ remove temporary images if any """
     for band in ('B02','B03','B04','B08'):
-        if os.path.exists("/tmp/%s.img" % band):
-            os.system("rm -f /tmp/%s.img*" % band)
+        if os.path.exists("/tmp/%s.tif" % band):
+            os.system("rm -f /tmp/%s.tif*" % band)
 
-def convert_jpeg_to_tmp_img(jpeg=None, band=None, epsg=None, quiet=None):
+def convert_jpeg_to_tmp_tif(jpeg=None, band=None, epsg=None, quiet=None):
     """ convert JPEG2000 image to temporary ERDAS imagine file """
     arg_quiet = ''
     if not quiet:
-        print "creating /tmp/%s.img ..." % band
+        print "creating /tmp/%s.tif ..." % band
     else:
         arg_quiet = '-q'
 
-    os.system("gdal_translate %s -of HFA %s /tmp/%s.img -scale 0 32768 0 32768 -a_srs EPSG:%s" % (
+    os.system("gdal_translate %s %s /tmp/%s.tif -scale 0 32768 0 32768 -a_srs EPSG:%s" % (
         arg_quiet,jpeg,band,epsg
     ))
+
+def create_schmirn_quicklook(src_img=None, quiet=None):
+    """ create quicklook image for schmirntal project """
+    if src_img and re.search(SCHMIRN_TILE,src_img):
+        out_img = re.sub('.img$','.tif',src_img)
+        out_img = re.sub('/img/','/img/schmirn_',out_img)
+
+        arg_quiet = ''
+        if not quiet:
+            print "creating %s ..." % out_img
+        else:
+            arg_quiet = '-q'
+        os.system('rm -f %s' % out_img)
+        os.system('gdalwarp %s -te %s %s %s' % (arg_quiet,SCHMIRN_EXTENT,src_img,out_img) )
 
 if __name__ == '__main__':
     """ create RGB and NDVI images from Sentinel-2 bands in JPEG2000 format """
@@ -137,10 +153,12 @@ if __name__ == '__main__':
                         complete = False
                     else:
                         # convert band to ERDAS-imagine
-                        convert_jpeg_to_tmp_img(tile_dict[band],band,tile_dict['epsg'],args.quiet)
+                        convert_jpeg_to_tmp_tif(tile_dict[band],band,tile_dict['epsg'],args.quiet)
                 if complete:
                     print "INFO: creating %s ..." % tile_dict['img_rgb']
-                    os.system("gdal_merge.py -seperate -pct /tmp/B04.img /tmp/B03.img /tmp/B02.img -o %s -q -v %s" % (tile_dict['img_rgb'],pipe_dev_null))
+                    os.system('rm -f %s' % tile_dict['img_rgb'])   # remove in any case to make sure, that a brand new image is created
+                    os.system("gdal_merge.py -seperate -pct /tmp/B04.tif /tmp/B03.tif /tmp/B02.tif -o %s -of HFA -q -v %s" % (tile_dict['img_rgb'],pipe_dev_null))
+                    create_schmirn_quicklook(tile_dict['img_rgb'],args.quiet)
                 else:
                     print "WARNING: not enough bands for RGB creation in %s ..." % img_dir
 
@@ -151,12 +169,14 @@ if __name__ == '__main__':
                         complete = False
                     else:
                         # convert band to ERDAS-imagine unless it exists from previous RGB conversion (i.e. B04)
-                        if band == 'B04' and os.path.exists('/tmp/B04.img'):
+                        if band == 'B04' and os.path.exists('/tmp/B04.tif'):
                             continue
-                        convert_jpeg_to_tmp_img(tile_dict[band],band,tile_dict['epsg'],args.quiet)
+                        convert_jpeg_to_tmp_tif(tile_dict[band],band,tile_dict['epsg'],args.quiet)
                 if complete:
                     print "INFO: creating %s ..." % tile_dict['img_ndvi']
-                    os.system('gdal_calc.py --overwrite -A /tmp/B08.img -B /tmp/B04.img --outfile=%s --calc="(A-B)/(A+B)" %s' % (tile_dict['img_ndvi'],pipe_dev_null))
+                    os.system('rm -f %s' % tile_dict['img_ndvi'])   # remove in any case to make sure, that a brand new image is created
+                    os.system('gdal_calc.py --overwrite --format=HFA -A /tmp/B08.tif -B /tmp/B04.tif --outfile=%s --calc="(A-B)/(A+B)" %s' % (tile_dict['img_ndvi'],pipe_dev_null))
+                    create_schmirn_quicklook(tile_dict['img_ndvi'],args.quiet)
                 else:
                     print "WARNING: not enough bands for NDVI creation in %s ..." % img_dir
 
