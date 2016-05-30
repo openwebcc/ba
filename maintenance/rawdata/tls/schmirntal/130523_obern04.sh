@@ -4,7 +4,7 @@
 #
 
 # Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/tls/schmirntal/130523_obern0/{asc,las,doc,meta}
+mkdir -pv /home/laser/rawdata/tls/schmirntal/130523_obern04/{asc,las,doc,meta}
 
 # Rohdaten und Dokumentation kopieren
 cd /home/laser/rawdata/tls/schmirntal/130523_obern04
