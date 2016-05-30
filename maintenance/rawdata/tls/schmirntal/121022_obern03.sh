@@ -20,3 +20,6 @@ txt2las -i /home/laser/rawdata/tls/schmirntal/121022_obern03/asc/*.txt \
         -epsg 32632 \
         -set_file_creation 296 2012 \
         -set_system_identifier "Optech ILRIS 3D"
+
+# Rohdaten verschieben
+mv /mnt/netappa/Laser/tls/daten/121022_schmirn /home/laser/rawdata/tls/schmirntal/121022_obern03/raw
