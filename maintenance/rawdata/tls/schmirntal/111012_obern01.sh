@@ -24,3 +24,8 @@ txt2las -i /home/laser/rawdata/tls/schmirntal/111012_obern01/asc/*.txt \
 
 # Rohdaten verschieben
 mv /mnt/netappa/Laser/tls/daten/111012_schmirn_obern /home/laser/rawdata/tls/schmirntal/111012_obern01/raw
+
+# Registrierung Jan Wührer übernehmen
+mkdir /home/laser/rawdata/tls/schmirntal/111012_obern01/raw/registriert_wuehrer
+cp -a /mnt/netappa/Laser/tls/daten/2011-2013_schmirntal_registiriert/readme.txt /home/laser/rawdata/tls/schmirntal/111012_obern01/raw/registriert_wuehrer/
+mv /mnt/netappa/Laser/tls/daten/2011-2013_schmirntal_registiriert/*1*.* /home/laser/rawdata/tls/schmirntal/111012_obern01/raw/registriert_wuehrer/
