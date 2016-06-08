@@ -4,13 +4,24 @@
 #
 
 # Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/vogis/111018_vb11/{asc,las,bet,doc,meta}
+mkdir -pv /home/laser/rawdata/als/vogis/111018_vb11/{doc,las,meta,prod}
 
-# Rohdaten im .las und .laz Format kopieren
+# Rohdaten im .laz Format migrieren
 cd /home/laser/rawdata/als/vogis/111018_vb11/las
-cp -avu /mnt/netappa/Rohdaten/vorarlberg_neu_2011/Gelaendemodelle/Lidarpunkte/Kacheln/*.la[szx] .
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/Gelaendemodelle/Lidarpunkte/Kacheln/*.la[zx] .
 
-# Datum auf letztes gefundenes Datum in den Rohdaten der 1. Lieferung setzen (siehe /mnt/netappa/Rohdaten/VoGIS_2011/laz/)
+# Datum auf letztes gefundenes Datum in den Rohdaten der 1. Lieferung setzen
 lasinfo -i *.laz -no_check -quiet -set_file_creation 291 2011
-lasinfo -i *.las -no_check -quiet -set_file_creation 291 2011
 
+# abgeleitete Produkte archivieren
+cd /home/laser/rawdata/als/vogis/111018_vb11/prod
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/Gelaendemodelle/Differenzhoehenmodelle .
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/Gelaendemodelle/Hoehenmodelle .
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/Gelaendemodelle/Hoehenschichten .
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/Gelaendemodelle/nDOM .
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/Gelaendemodelle/Schummerung .
+
+# Blatschnitte archivieren
+cd /home/laser/rawdata/als/vogis/111018_vb11/doc
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/bls_1t .
+mv -v /mnt/netappa/Rohdaten/vorarlberg_neu_2011/bls_5t .
