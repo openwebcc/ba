@@ -4,12 +4,12 @@
 #
 
 # Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/engabreen/020823_eng03/{asc,las,bet,doc,meta}
+mkdir -pv /home/laser/rawdata/als/engabreen/020823_eng03/{asc,las,doc,meta,prod}
 
-# Rohdaten und Dokumentation kopieren
+# Rohdaten und Dokumentation migrieren
 cd /home/laser/rawdata/als/engabreen/020823_eng03
-cp -avu /mnt/netappa/Rohdaten/engabreen/Befliegung_082002/data/*.* ./asc/
-cp -avu /mnt/netappa/Rohdaten/engabreen/Befliegung_082002/readme.txt ./doc/
+mv -v /mnt/netappa/Rohdaten/engabreen/Befliegung_082002/data/*.* ./asc/
+mv -v /mnt/netappa/Rohdaten/engabreen/Befliegung_082002/raw_dhm.tar.gz ./prod/
 
 # nach LAS konvertieren
 txt2las -i /home/laser/rawdata/als/engabreen/020823_eng03/asc/*.all \
