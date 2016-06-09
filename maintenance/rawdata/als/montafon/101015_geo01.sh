@@ -8,8 +8,8 @@ mkdir -pv /home/laser/rawdata/als/montafon/101015_geo01/{asc,las,bet,doc,meta}
 
 # Rohdaten und Dokumentation kopieren
 cd /home/laser/rawdata/als/montafon/101015_geo01
-cp -avu /mnt/netappa/Rohdaten/Montafon/Topscan/Laserpunkte/*-1010*.all.gz ./asc/
-cp -avu /mnt/netappa/Rohdaten/Montafon/Topscan/Metadaten/1010*.bet ./bet/
+mv -v /mnt/netappa/Rohdaten/Montafon/Topscan/Laserpunkte/*-1010*.all.gz ./asc/
+mv -v /mnt/netappa/Rohdaten/Montafon/Topscan/Metadaten/1010*.bet ./bet/
 cp -avu /mnt/netappa/Rohdaten/Montafon/Topscan/Uebersicht/Montafon.* ./bet/
 cp -avu /mnt/netappa/Rohdaten/Montafon/Topscan/Projektbericht/11-UIA-B05-Abschlussbericht.pdf ./doc/report.pdf
 
