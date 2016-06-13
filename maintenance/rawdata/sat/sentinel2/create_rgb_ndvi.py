@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     import argparse
     parser = argparse.ArgumentParser(description='create RGB and NDVI images from Sentinel-2 bands in JPEG2000 format')
-    parser.add_argument('--subdir', dest='subdir', help='rebuild images in given campaign subdirectory (e.g. ')
+    parser.add_argument('--region', dest='region', help='rebuild images in given campaign subdirectory (e.g. ')
     parser.add_argument('--tiles', dest='tiles', default=DEFAULT_TILES, help='set tiles to process')
     parser.add_argument('--rgb', dest='rgb', default=DEFAULT_RGB, action="store_true", help='create RGB-image')
     parser.add_argument('--ndvi', dest='ndvi', default=DEFAULT_NDVI, action="store_true", help='create NDVI-image')
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # set rebuild flag if a subdirectory is passed
-    if args.subdir:
+    if args.region:
         args.rebuild = True
 
     # init utility library
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     tiles = {}
 
     for dirpath, dirnames, filenames in os.walk(util.get_satdir()):
-        if args.subdir and not re.search(args.subdir,dirpath):
+        if args.region and not re.search(args.region,dirpath):
             continue
 
         for fname in sorted(filenames):
