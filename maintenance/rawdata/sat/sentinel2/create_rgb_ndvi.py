@@ -12,9 +12,6 @@ sys.path.append('/home/laser/rawdata/www/lib')
 from Sat.sentinel import Util
 
 # set defaults
-DEFAULT_TILES = '32TNT,32TPT'   # all atwest would be '32TNT,32TPT,32TQT,32TNS,32TPS,32TQS'
-DEFAULT_RGB = True
-DEFAULT_NDVI = True
 DEFAULT_REBUILD = False
 DEFAULT_QUIET = False
 SCHMIRN_TILE = 'T32TPT'
@@ -66,10 +63,10 @@ if __name__ == '__main__':
 
     import argparse
     parser = argparse.ArgumentParser(description='create RGB and NDVI images from Sentinel-2 bands in JPEG2000 format')
-    parser.add_argument('--region', dest='region', help='rebuild images in given campaign subdirectory (e.g. ')
-    parser.add_argument('--tiles', dest='tiles', default=DEFAULT_TILES, help='set tiles to process')
-    parser.add_argument('--rgb', dest='rgb', default=DEFAULT_RGB, action="store_true", help='create RGB-image')
-    parser.add_argument('--ndvi', dest='ndvi', default=DEFAULT_NDVI, action="store_true", help='create NDVI-image')
+    parser.add_argument('--region', dest='region', help='set region abreviation (e.g. atwest)')
+    parser.add_argument('--tiles', dest='tiles', help='comma separated list of tiles to process (e.g. 32TNT,32TPT)')
+    parser.add_argument('--rgb', dest='rgb', action="store_true", help='create RGB-image')
+    parser.add_argument('--ndvi', dest='ndvi', action="store_true", help='create NDVI-image')
     parser.add_argument('--rebuild', dest='rebuild', default=DEFAULT_REBUILD, action="store_true", help='force downloading of images')
     parser.add_argument('--quiet', dest='quiet', default=DEFAULT_QUIET, action="store_true", help='suppress debug messages')
     args = parser.parse_args()

@@ -19,12 +19,10 @@ from Sat.sentinel import Util
 
 
 # set defaults
-DEFAULT_REGION = 'atwest'
-DEFAULT_TILES = '32TNT,32TPT'       # all atwest would be '32TNT,32TPT,32TQT,32TNS,32TPS,32TQS'
-DEFAULT_BANDS = 'B02,B03,B04,B08'   # all bands would be 'B01,B02,B03,B04,B05,B06,B07,B08,B8A,B09,B10,B11,B12'
 DEFAULT_DAYS = 21
 DEFAULT_REBUILD = False
 DEFAULT_QUIET = False
+
 
 def get_attribs(entry=None, keytype=None):
     """ return dictionary with key/value pairs for attributes by field type """
@@ -57,9 +55,9 @@ if __name__ == '__main__':
 
     import argparse
     parser = argparse.ArgumentParser(description='search for new Sentinel-2 images and download them along with metadata')
-    parser.add_argument('--region', dest='region', default=DEFAULT_REGION, help='set region abreviation (default %s)' % DEFAULT_REGION)
-    parser.add_argument('--tiles', dest='tiles', default=DEFAULT_TILES, help='comma separated list of tiles to download (default %s)' % DEFAULT_TILES)
-    parser.add_argument('--bands', dest='bands', default=DEFAULT_BANDS, help='comma separated list of bands to download (default %s)' % DEFAULT_BANDS)
+    parser.add_argument('--region', dest='region', help='set region abreviation (e.g. atwest)')
+    parser.add_argument('--tiles', dest='tiles', help='comma separated list of tiles to download (e.g. 32TNT,32TPT)')
+    parser.add_argument('--bands', dest='bands', help='comma separated list of bands to download (all: B01,B02,B03,B04,B05,B06,B07,B08,B8A,B09,B10,B11,B12)')
     parser.add_argument('--days', dest='days', default=DEFAULT_DAYS, help='how many days to look back for new images (default %s)' % DEFAULT_DAYS)
     parser.add_argument('--rebuild', dest='rebuild', default=False, action="store_true", help='force downloading of images')
     parser.add_argument('--quiet', dest='quiet', default=False, action="store_true", help='suppress debug messages')
@@ -73,7 +71,7 @@ if __name__ == '__main__':
 
     # set geometry for regions
     geom = {
-        'atwest' : 'POLYGON((9.53076 46.6515, 9.53076 47.743, 12.9659 47.743, 12.9659 46.6515, 9.53076 46.6515))'
+        'atwest' : 'POLYGON((9.53076 46.6515, 9.53076 47.743, 12.9659 47.743, 12.9659 46.6515, 9.53076 46.6515))',
     }
 
     # bail out if no geometry is available
