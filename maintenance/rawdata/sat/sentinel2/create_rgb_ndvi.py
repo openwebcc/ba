@@ -74,10 +74,6 @@ if __name__ == '__main__':
     parser.add_argument('--quiet', dest='quiet', default=DEFAULT_QUIET, action="store_true", help='suppress debug messages')
     args = parser.parse_args()
 
-    # set rebuild flag if a subdirectory is passed
-    if args.region:
-        args.rebuild = True
-
     # init utility library
     util = Util()
 
