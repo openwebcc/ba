@@ -19,7 +19,8 @@ sys.path.append('/home/laser/rawdata/www/lib')
 import Laser.base
 import Laser.Util.web
 
-APP_ROOT = '/lidar'
+APP_ROOT = '/data/lidar'
+LEAFLET_root = '/data/lib'
 SIMPLIFY_DEG = '0.0001'
 
 def index(req):
@@ -54,7 +55,7 @@ def index(req):
 
     # finish
     dbh.close()
-    return tpl.resolve_template('/home/institut/www/html/lidar/templates/app_index.tpl')
+    return tpl.resolve_template('/home/institut/www/html/data/lidar/templates/app_index.tpl')
 
 def rawdata(req, cid=None):
     """ rawdata browser, allow to download LAS files for a given campaign by trajectory or hull """
@@ -117,11 +118,12 @@ def rawdata(req, cid=None):
 
     # fill template terms
     tpl.add_term('APP_root',APP_ROOT)
+    tpl.add_term('LEAFLET_root',LEAFLET_root)
     tpl.add_term('APP_cid',cid)
 
     # finish
     dbh.close()
-    return tpl.resolve_template('/home/institut/www/html/lidar/templates/app_rawdata.tpl')
+    return tpl.resolve_template('/home/institut/www/html/data/lidar/templates/app_rawdata.tpl')
 
 
 def details(req, gid=None):
@@ -159,7 +161,7 @@ def details(req, gid=None):
 
     # finish
     dbh.close()
-    return tpl.resolve_template('/home/institut/www/html/lidar/templates/app_details.tpl')
+    return tpl.resolve_template('/home/institut/www/html/data/lidar/templates/app_details.tpl')
 
 
 def geom(req, cid=None):
