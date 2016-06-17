@@ -7,6 +7,7 @@
 import re
 import os
 import locale
+import codecs
 
 from string import Template
 
@@ -55,7 +56,7 @@ class impl:
         """ safely read the given template file into a string """
         template_string = ""
         if os.path.exists(fpath):
-            with open(fpath) as f:
+            with codecs.open(fpath,'r','utf-8') as f:
                 template_string = f.read()
         return template_string
 
