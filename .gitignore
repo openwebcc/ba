@@ -1,2 +1,4 @@
 *.pyc
+www/lib/Laser/acl.py
+www/html/sentinel2/images/*
 
