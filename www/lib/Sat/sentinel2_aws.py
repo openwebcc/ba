@@ -30,6 +30,7 @@ class AWS:
         """ define settings """
         self.quiet = quiet
         self.app_root = '/data/sentinel2'
+        self.dir_tmp = '/home/laser/rawdata/sat/sentinel2/tmp'
         self.dir_rawdata = '/home/laser/rawdata/sat/sentinel2'
         self.dir_webimages = '/home/laser/rawdata/www/html/sentinel2/images'
         self.url_download = 'http://sentinel-s2-l1c.s3.amazonaws.com'
@@ -55,6 +56,10 @@ class AWS:
     def get_basedir(self):
         """ return base directory for metadata """
         return self.dir_rawdata
+
+    def get_tmpdir(self):
+        """ return temporary directory for computations """
+        return self.dir_tmp
 
     def get_browse_url(self):
         """ return AWS baseurl for browsing files """
