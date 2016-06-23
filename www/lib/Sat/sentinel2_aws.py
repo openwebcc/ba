@@ -128,6 +128,10 @@ class AWS:
         """ return attributes for current scene """
         return self.scene_attributes
 
+    def is_valid_scene_name(self,scene):
+        """ test if scene name is valid (e.g. 32TPT_2016_05_22_0) """
+        return re.search(r'^\d{2}[A-Z]{3}_\d{4}_\d{2}_\d{2}_\d{1}$',str(scene))
+
     def tile_exists(self):
         """ return True if a data directory for the tile exists, False otherwise """
         return os.path.exists(self.tile.dir_rawdata)
