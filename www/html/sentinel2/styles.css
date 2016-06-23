@@ -1,0 +1,84 @@
+/*****
+ * 
+ * styles for Sentinel-2 AWS metadata application
+ * 
+ ****/
+
+/* general layout */
+body {
+    background-color: #fff;
+    padding-top: 10px;
+}
+main {
+    background-color: #fff;
+    margin: auto;
+    padding: 5px;
+    width: 1024px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.6);
+}
+td {
+    text-align: left;
+    vertical-align: top;
+}
+a:link, a:visited {
+    color: blue;
+}
+input[type="submit"] {
+    font-weight: bold;
+}
+.align_center {
+    text-align: center;
+}
+.align_right {
+    text-align: right;
+}
+.link_github {
+    text-align: right;
+    font-size: 0.9em;
+    font-style:italic;
+}
+
+/* styles for index page */
+.search_form {
+    width: 70%;
+    margin: auto;
+}
+
+/* styles for preview page */
+.preview {
+    float: left;
+    margin: 1em;
+    padding: 0.2em;
+    width: 450px;
+}
+.preview h3, figure {
+    text-align: center;
+    font-size: 0.9em;
+}
+.preview img {
+    border: 3px solid silver;
+}
+nav.rss {
+    float: right;
+    padding: 0.2em;
+}
+img.rss {
+    vertical-align: middle;
+    padding-right: 0.2em;
+}
+.downloaded {
+    border: 3px solid green !important;
+}
+
+/* styles for toolbox page */
+div.toolbox {
+    float: right;
+}
+.button_add {
+    color: #fff;
+    background-color: rgb(0, 153, 0);
+}
+.button_remove {
+    color: #fff;
+    background-color: rgb(255, 102, 102);
+}
