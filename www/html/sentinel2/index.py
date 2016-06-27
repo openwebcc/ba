@@ -312,3 +312,37 @@ def metadata(req,scene=None,filename=None):
         redirect(req,out_url)
     else:
         return "Error: File %s for scene %s does not exist." % (filename,scene)
+
+
+def csv(req):
+    """ deliver tabular data in CSV format """
+    conn = MongoClient('localhost', 27017)
+    mdb = conn.sentinel2
+
+    # init AWS helper library
+    aws = AWS()
+
+    # get tile descriptions
+    tile_description = {}
+    for rec in mdb.aws_tilesMonitored.find():
+       tile_description[rec['tile']] = rec['description']
+
+    # start table with header
+    tab = []
+    tab.append('"DATE";"TILE";"REGION";"CLOUDY";"DATA";"LINK"')
+
+    # get data
+    for rec in mdb.aws_tileInfo.find().sort("_date",-1):
+        tab.append('"%s";"%s";"%s";%s;%s;"%s"' % (
+            rec['_date'],
+            rec['_name'],
+            re.sub('"','""',tile_description[rec['_name']]),
+            rec['cloudyPixelPercentage'],
+            rec['dataCoveragePercentage'],
+            'http://geographie.uibk.ac.at/%s/index/preview?scene=%s' % (aws.get_app_root(),rec['_scene'])
+        ))
+
+    # finish
+    conn.close()
+    req.content_type = "text/csv"
+    return '\n'.join(tab)

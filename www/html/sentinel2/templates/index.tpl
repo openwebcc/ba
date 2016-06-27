@@ -59,6 +59,8 @@
   $APP_lastN
   </ul>
 
+  <p><a href="/data/sentinel2/index.py/csv">Download Metadaten als CSV</p>
+
   <p class="link_github"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a></p>
 
 </main>
