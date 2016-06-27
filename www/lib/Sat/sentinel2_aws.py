@@ -35,7 +35,7 @@ class AWS:
         self.dir_webimages = '/home/laser/rawdata/www/html/sentinel2/images'
         self.url_download = 'http://sentinel-s2-l1c.s3.amazonaws.com'
         self.url_browse = 'http://sentinel-s2-l1c.s3-website.eu-central-1.amazonaws.com/#'
-        self.files_metadata = ('preview.jpg','productInfo.json','tileInfo.json','metadata.xml','qi/MSK_CLOUDS_B00.gml')
+        self.files_metadata = ('preview.jp2','productInfo.json','tileInfo.json','metadata.xml','qi/MSK_CLOUDS_B00.gml')
         self.derived_image_prefixes = ('rgb','ndvi','ndsi')
         self.scene_attributes = None
 
@@ -219,7 +219,7 @@ class AWS:
         url = "%s/%s/%s" % (self.url_download,tiles_path,rec['fname'])
 
         # download and store preview image or text metadata
-        if rec['fname'] == 'preview.jpg':
+        if rec['fname'] == 'preview.jp2':
             # store image in rawdata area and webspace
             path = "%s/preview/%s_%s" % (self.tile.dir_rawdata,tiles_scene,rec['fname'])
             if os.path.exists(path) and not overwrite:
@@ -232,11 +232,14 @@ class AWS:
                 if r.status_code == 200:
                     with open(path, 'w') as o:
                         shutil.copyfileobj(r.raw, o)
+                else:
+                    print "ERROR %s: could not download %s ..." % (r.status_code,url)
+                    sys.exit()
 
-                # copy preview to web as well
-                print "Downloading http://geographie.uibk.ac.at/data/sentinel2/images/%s.jpg ..." % tiles_scene
+                # convert georeferenced JP2 images to regular JPG images in web space with GDAL
+                print "Downloaded http://geographie.uibk.ac.at/data/sentinel2/images/%s.jpg ..." % tiles_scene
                 path_web = "%s/%s.jpg" % (self.dir_webimages,tiles_scene)
-                shutil.copyfile(path,path_web)
+                os.system("gdal_translate -q -of JPEG %s %s" % (path,path_web) )
 
         elif rec['fname'] in ('productInfo.json','tileInfo.json','metadata.xml'):
             # store ASCII metadata
