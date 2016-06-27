@@ -54,6 +54,11 @@
 
   </div>
 
+  <h3>Die letzten $APP_lastNValue Szenen</h3>
+  <ul>
+  $APP_lastN
+  </ul>
+
   <p class="link_github"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a></p>
 
 </main>

@@ -23,7 +23,7 @@ import Laser.base
 import Laser.Util.web
 from Sat.sentinel2_aws import AWS
 
-def index(req):
+def index(req,lastn='15'):
     """ provide startpage with search mask """
     (base,dbh,tpl) = Laser.base.impl().init(req)
     util = Laser.Util.web.impl(base)
@@ -64,6 +64,19 @@ def index(req):
         tpl.append_to_term('APP_tilesOptions', '<option value="%s" %s>%s - %s (%s)</option>' % (
             rec['_id']['tile'],selected,rec['_id']['tile'],desc,rec['count']
         ))
+
+    # get last 10 scenes and link them
+    for rec in mdb.aws_tileInfo.find().limit(int(lastn)).sort([ ('_date', -1)]):
+        col = "gray"
+        if rec['cloudyPixelPercentage'] <= 20 and rec['dataCoveragePercentage'] >= 90:
+            col = "green"
+        tpl.append_to_term('APP_lastN', """<li>%s | <a href="/data/sentinel2/index.py/preview?scene=%s">%s %s</a> | <span style="color:%s">cloudy=%s%%, data=%s%%</span></li>""" % (
+            rec['_date'],
+            rec['_scene'],
+            rec['_name'],tile_description[rec['_name']],
+            col,rec['cloudyPixelPercentage'],rec['dataCoveragePercentage']
+        ))
+    tpl.add_term('APP_lastNValue', lastn)
 
     # finish
     conn.close()
