@@ -217,7 +217,7 @@ def preview(req,tile=None, datefrom=None, dateto=None, cloudcoverage=None, datac
                           <a href="%s/index.py/metadata?scene=%s&amp;filename=tileInfo.json">tileInfo.json</a>
                           | <a href="%s/index.py/metadata?scene=%s&amp;filename=productInfo.json">productInfo.json</a><br/>
                           <a href="%s/index.py/metadata?scene=%s&amp;filename=metadata.xml">metadata.xml</a>
-                          | <a href="%s/index.py/metadata?scene=%s&amp;filename=MSK_CLOUDS_B00.gml">MSK_CLOUDS.gml</a>
+                          | <a href="%s/index.py/metadata?scene=%s&amp;filename=qi/MSK_CLOUDS_B00.gml">MSK_CLOUDS.gml</a>
                         </td>
                       </tr>
                       <tr>
@@ -297,6 +297,9 @@ def metadata(req,scene=None,filename=None):
     # make sure that filename is valid
     if not filename in aws.get_metadata_filenames():
         return "Error: invalid filename requested"
+
+    # strip qi/ subdirectory from cloudmask
+    filename = re.sub('qi/','',filename)
 
     # link original file to temporary directory and redirect
     in_path = "%s/%s/metadata/%s_%s" % (aws.get_basedir(),attr['tile'],scene,filename)
