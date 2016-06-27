@@ -70,8 +70,9 @@ def index(req,lastn='15'):
         col = "gray"
         if rec['cloudyPixelPercentage'] <= 20 and rec['dataCoveragePercentage'] >= 90:
             col = "green"
-        tpl.append_to_term('APP_lastN', """<li>%s | <a href="/data/sentinel2/index.py/preview?scene=%s">%s %s</a> | <span style="color:%s">cloudy=%s%%, data=%s%%</span></li>""" % (
+        tpl.append_to_term('APP_lastN', """<li>%s | <a href="%s/index.py/preview?scene=%s">%s %s</a> | <span style="color:%s">cloudy=%s%%, data=%s%%</span></li>""" % (
             rec['_date'],
+            aws.get_app_root(),
             rec['_scene'],
             rec['_name'],tile_description[rec['_name']],
             col,rec['cloudyPixelPercentage'],rec['dataCoveragePercentage']
