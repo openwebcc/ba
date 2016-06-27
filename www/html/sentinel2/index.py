@@ -200,7 +200,7 @@ def preview(req,tile=None, datefrom=None, dateto=None, cloudcoverage=None, datac
                       </tr>
                       <tr>
                         <td>Metadaten: </td>
-                        <td colspan="2">
+                        <td colspan="2" style="font-size:0.9em;">
                           <a href="%s/index.py/metadata?scene=%s&amp;filename=tileInfo.json">tileInfo.json</a>
                           | <a href="%s/index.py/metadata?scene=%s&amp;filename=productInfo.json">productInfo.json</a><br/>
                           <a href="%s/index.py/metadata?scene=%s&amp;filename=metadata.xml">metadata.xml</a>
