@@ -65,7 +65,7 @@ def index(req,lastn='15'):
             rec['_id']['tile'],selected,rec['_id']['tile'],desc,rec['count']
         ))
 
-    # get last 10 scenes and link them
+    # get last-n  scenes and link them
     for rec in mdb.aws_tileInfo.find().limit(int(lastn)).sort([ ('_date', -1)]):
         col = "gray"
         if rec['cloudyPixelPercentage'] <= 20 and rec['dataCoveragePercentage'] >= 90:
