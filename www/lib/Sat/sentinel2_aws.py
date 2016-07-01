@@ -33,6 +33,7 @@ class AWS:
         self.dir_tmp = '/home/laser/rawdata/sat/sentinel2/tmp'
         self.dir_rawdata = '/home/laser/rawdata/sat/sentinel2'
         self.dir_webimages = '/home/laser/rawdata/www/html/sentinel2/images'
+        self.dir_gdalbin = '/usr/local/bin'
         self.url_download = 'http://sentinel-s2-l1c.s3.amazonaws.com'
         self.url_browse = 'http://sentinel-s2-l1c.s3-website.eu-central-1.amazonaws.com/#'
         self.files_metadata = ('preview.jp2','productInfo.json','tileInfo.json','metadata.xml','qi/MSK_CLOUDS_B00.gml')
@@ -60,6 +61,10 @@ class AWS:
     def get_tmpdir(self):
         """ return temporary directory for computations """
         return self.dir_tmp
+
+    def get_gdalbindir(self):
+        """ return GDAL bin directory """
+        return self.dir_gdalbin
 
     def get_browse_url(self):
         """ return AWS baseurl for browsing files """

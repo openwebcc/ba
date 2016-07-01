@@ -73,7 +73,7 @@ def _convert_jpeg_to_tif(req,aws,attr,band):
     jp2 = "%s/%s/%s/%s.jp2" % (aws.get_basedir(),attr['tile'],attr['scene'],band )
     tif = "%s/%s_%s.tif" % (aws.get_tmpdir(),attr['scene'],band)
     if not os.path.exists(tif):
-        cmd = "gdal_translate %s %s -scale 0 32768 0 32768" % (jp2,tif)
+        cmd = "%s/gdal_translate %s %s -scale 0 32768 0 32768" % (aws.get_gdalbindir(),jp2,tif)
         req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
         os.system(cmd)
 
@@ -92,7 +92,8 @@ def _create_rgb_image(req,aws,attr):
         _convert_jpeg_to_tif(req,aws,attr,band)
 
     # run command
-    cmd = "gdal_merge.py -q -seperate -pct %s/%s_B04.tif %s/%s_B03.tif %s/%s_B02.tif -of HFA -o %s" % (
+    cmd = "%s/gdal_merge.py -q -seperate -pct %s/%s_B04.tif %s/%s_B03.tif %s/%s_B02.tif -of HFA -o %s" % (
+        aws.get_gdalbindir(),
         aws.get_tmpdir(),attr['scene'],
         aws.get_tmpdir(),attr['scene'],
         aws.get_tmpdir(),attr['scene'],
@@ -120,7 +121,8 @@ def _create_ndvi_image(req,aws,attr):
         _convert_jpeg_to_tif(req,aws,attr,band)
 
     # run command
-    cmd = 'gdal_calc.py --format=HFA -A %s/%s_B08.tif -B %s/%s_B04.tif --calc="(A-B)/(A+B)" --outfile=%s' % (
+    cmd = '%s/gdal_calc.py --format=HFA --type=Float32 -A %s/%s_B08.tif -B %s/%s_B04.tif --calc="(A.astype(float)-B.astype(float))/(A.astype(float)+B.astype(float))" --outfile=%s' % (
+        aws.get_gdalbindir(),
         aws.get_tmpdir(),attr['scene'],
         aws.get_tmpdir(),attr['scene'],
         attr['img_ndvi']
@@ -151,15 +153,17 @@ def _create_ndsi_image(req,aws,attr):
 
     # resample B11 to 10 meters resolution
     if not os.path.exists('%s/%s_B11_10m.tif' % (aws.get_tmpdir(),attr['scene'])):
-        cmd = 'gdalwarp -q -overwrite %s/%s_B11.tif %s/%s_B11_10m.tif -r near -tr 10 10' % (
+        cmd = '%s/gdalwarp -q -overwrite %s/%s_B11.tif %s/%s_B11_10m.tif -r near -tr 10 10' % (
+            aws.get_gdalbindir(),
             aws.get_tmpdir(),attr['scene'],
             aws.get_tmpdir(),attr['scene']
         )
         req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
         os.system(cmd)
 
-    # composite
-    cmd = 'gdal_calc.py --format=HFA -A %s/%s_B03.tif -B %s/%s_B11_10m.tif --calc="(A-B)/(A+B)" --outfile=%s' % (
+    # run command
+    cmd = '%s/gdal_calc.py --format=HFA --type=Float32 -A %s/%s_B03.tif -B %s/%s_B11_10m.tif --calc="(A.astype(float)-B.astype(float))/(A.astype(float)+B.astype(float))" --outfile=%s' % (
+        aws.get_gdalbindir(),
         aws.get_tmpdir(),attr['scene'],
         aws.get_tmpdir(),attr['scene'],
         attr['img_ndsi']
