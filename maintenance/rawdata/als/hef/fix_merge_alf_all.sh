@@ -16,26 +16,31 @@ else
     fi
 fi
 
-FNAME=`echo $1 | sed s/\.[^\.]*$//`
-if [ ! -f "$FNAME.all" ]; then
-    echo "no corresponding .all file found for $1"
+# define file paths
+ALF=`echo $1`
+ALL=`echo $1 | sed s/.alf/.all/`
+ALA=`echo $1 | sed s/.alf/.ala/`
+
+# check for existance of corresponding .all file
+if [ ! -f "$ALL" ]; then
+    echo "ERROR: no corresponding .all file found for $ALF"
     exit
 fi
 
-ALA=`echo $FNAME | sed s/fix/asc/`
-echo "creating $ALA.ala ..."
+# start merging
+echo "creating $ALA ..."
 
 # add echo numbers as new column after GPS-time
-awk '$1 = $1 FS "1"' $FNAME.alf > $FNAME.alf.tmp
-awk '$1 = $1 FS "2"' $FNAME.all >> $FNAME.all.tmp
+awk '$1 = $1 FS "1"' $ALF > $ALF.tmp
+awk '$1 = $1 FS "2"' $ALL > $ALL.tmp
 
 # merge files and sort them by GPS-time, echo number
-cat $FNAME.alf.tmp $FNAME.all.tmp | sort > $FNAME.ala.tmp
+cat $ALF.tmp $ALL.tmp | sort > $ALA.tmp
 
 # parse merged file, add return number and number of returns for given pulse
-python /home/laser/rawdata/maintenance/rawdata/als/hef/fix_merge_alf_all_cleanup.py -i $FNAME.ala.tmp -o $FNAME.ala
+python /home/laser/rawdata/maintenance/rawdata/als/hef/fix_merge_alf_all_cleanup.py -i $ALA.tmp -o $ALA
 
-# move .ala file to final destination and clean up temporary files
-mv $FNAME.ala $ALA.ala
-rm -f *.tmp
-
+# clean up temporary files
+rm -f $ALF.tmp
+rm -f $ALL.tmp
+rm -f $ALA.tmp
