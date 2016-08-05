@@ -8,7 +8,7 @@ import re
 import sys
 
 sys.path.append('/home/laser/rawdata/www/lib')
-import Laser
+from Laser.Util import las
 
 def lines_are_identical(curr=None,prev=None):
     """ compare two lines omitting helper column 2 with return 1|2 and last two composed return columns and return True if they are identical, False otherwise """
@@ -34,7 +34,7 @@ def clean_alf_all(ipath,opath):
     curr_line = None
     lnum = 0
 
-    util = Laser.Util()
+    util = las.rawdata()
 
     #print "cleaning %s ..." % ipath
     stats = {

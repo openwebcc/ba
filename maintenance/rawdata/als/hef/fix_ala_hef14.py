@@ -7,11 +7,11 @@ import os
 import sys
 
 sys.path.append('/home/laser/rawdata/www/lib')
-import Laser
+from Laser.Util import las
 
 if __name__ == '__main__':
     """ fix incorrect return number and number of returns for given pulse syntax """
-    util = Laser.Util()
+    util = las.rawdata()
     basedir = '/home/laser/rawdata/als/hef/071011_hef14'
 
 
