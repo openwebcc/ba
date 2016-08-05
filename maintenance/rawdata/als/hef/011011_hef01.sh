@@ -30,7 +30,7 @@ do
     # create lasindex
     lasindex -i $LAS 2>>/dev/null
 
-    rm -f $BASE/raw/$TMP
+    rm -f $TMP
 done
 
 # copy cleaned trajectories
