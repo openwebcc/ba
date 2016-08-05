@@ -1,32 +1,34 @@
 #!/bin/bash
 #
-# Datenmigration: Befliegung Hintereisferner, 04.05.2003
+# Hintereisferner, 04.05.2003
 #
 
-# Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/hef/030504_hef08/{asc,las,bet,doc,meta}
+BASE=/home/laser/rawdata/als/hef/030504_hef08
 
-# Rohdaten und Dokumentation kopieren
-cd /home/laser/rawdata/als/hef/030504_hef08
-cp -avu /mnt/netappa/Rohdaten/hef/hef08_030504/kach/all/*.all ./asc/
-cp -avu /mnt/netappa/Rohdaten/hef/TopScanBefliegungsbericht_HEF2001bis2003.pdf ./doc/report.pdf
-
-# ASCII Rohdaten bereinigen und nach LAS konvertieren
-cd /home/laser/rawdata/als/hef/030504_hef08/asc/
-for ALL in `ls *.all`
+# unpack ASCII rawdata and convert it to LAS
+cd $BASE/raw/kach/all
+for GZ in `ls *.all.gz`
 do
-    echo "strip32 and clean $ALL ..."
-    awk '{gsub(/^32/,"",$1); print}' $ALL > $ALL.tmp
-    mv $ALL.tmp $ALL
+    TMP=`echo $BASE/raw/$GZ | sed s/.all.gz/.all/`
+    LAS=`echo $BASE/las/$GZ | sed s/.all.gz/.las/`
 
-    LAS=`echo $ALL | sed s/\.[^\.]*$/.las/`
-    echo "creating ../las/$LAS ..."
-    txt2las -i $ALL \
-            -o ../las/$LAS \
+    echo "creating $LAS ..."
+
+    # unpack and remove leading 32 from x-coordinates
+    gunzip -c $GZ | awk '{gsub(/^32/,"",$1); print}' > $TMP
+
+    # convert to LAS
+    txt2las -i $TMP \
+            -o $LAS \
             -parse xyzi \
             -reoffset 0 0 0 \
             -rescale 0.01 0.01 0.01 \
             -epsg 25832 \
             -set_file_creation 124 2003 \
             -set_system_identifier "ALTM 2050"
+
+    # create lasindex
+    lasindex -i $LAS 2>>/dev/null
+
+    rm -f $TMP
 done
