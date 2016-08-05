@@ -1,43 +1,42 @@
 #!/bin/bash
 #
-# Datenmigration: Befliegung Hintereisferner, 11.10.2011
+# Hintereisferner, 11.10.2011
 #
 
-# Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/hef/011011_hef01/{asc,las,bet,doc,meta}
+BASE=/home/laser/rawdata/als/hef/011011_hef01
 
-# Rohdaten und Dokumentation kopieren
-cd /home/laser/rawdata/als/hef/011011_hef01
-cp -avu /mnt/netappa/Rohdaten/hef/hef01_011011/str/ala/*.ala ./asc/
-cp -avu /mnt/netappa/Rohdaten/hef/hef01_011011/str/H_011011.bet ./bet/
-cp -avu /mnt/netappa/Rohdaten/hef/hef01_011011/str/H_011011.dgn ./bet/
-cp -avu /mnt/netappa/Rohdaten/hef/*Befliegungsbericht*.pdf ./doc/report.pdf
-
-# ASCII Rohdaten bereinigen und nach LAS konvertieren
-cd /home/laser/rawdata/als/hef/011011_hef01/asc/
-for ALA in `ls *.ala`
+# unpack ASCII rawdata and convert it to LAS
+cd $BASE/raw/str/all
+for GZ in `ls *.all.gz`
 do
-    echo "entferne 32 bei x-Koordinaten in $ALA ..."
-    awk '{gsub(/^32/,"",$2); print}' $ALA > $ALA.tmp
-    mv $ALA.tmp $ALA
+    TMP=`echo $BASE/raw/$GZ | sed s/.all.gz/.all/`
+    LAS=`echo $BASE/las/$GZ | sed s/.all.gz/.las/`
 
-    LAS=`echo $ALA | sed s/\.[^\.]*$/.las/`
-    echo "konvertiere nach ../las/$LAS ..."
-    txt2las -i $ALA \
-            -o ../las/$LAS \
+    echo "creating $LAS ..."
+
+    # unpack and remove leading 32 from x-coordinates
+    gunzip -c $GZ | awk '{gsub(/^32/,"",$2); print}' > $TMP
+
+    # convert to LAS
+    txt2las -i $TMP \
+            -o $LAS \
             -parse txyzirn \
             -reoffset 0 0 0 \
             -rescale 0.01 0.01 0.01 \
             -epsg 25832 \
             -set_file_creation 284 2001 \
             -set_system_identifier "ALTM 1225"
+
+    # create lasindex
+    lasindex -i $LAS 2>>/dev/null
+
+    rm -f $BASE/raw/$TMP
 done
 
-# Koordinaten der Trajektorie(n) bereinigen
-for BET in `find /home/laser/rawdata/als/hef/011011_hef01/bet/ -name *.bet`
+# copy cleaned trajectories
+cd $BASE/raw/str/bet
+for BET in `ls *.bet`
 do
-    echo "entferne 32 bei x-Koordinaten in $BET ..."
-    awk '{gsub(/^32/,"",$2);print}' $BET > $BET.tmp
-    mv $BET.tmp $BET
+    echo "creating $BASE/bet/$BET ..."
+    cat $BET | awk '{gsub(/^32/,"",$2); print}' > $BASE/bet/$BET
 done
-
