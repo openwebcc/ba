@@ -44,7 +44,6 @@ do
     echo "creating $ALA.gz ..."
     gzip -f $ALA
 
-    break
 done
 
 # copy cleaned trajectories
