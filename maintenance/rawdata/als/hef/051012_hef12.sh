@@ -31,7 +31,8 @@ do
     rm $ALL
 
     echo "creating $LAS ..."
-    # nach LAS konvertieren
+
+    # convert to LAS
     txt2las -i $ALA \
             -o $LAS \
             -iparse txyzirn \
