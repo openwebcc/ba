@@ -5,29 +5,28 @@
 
 BASE=/home/laser/rawdata/als/hef/041005_hef11
 
-# create cleaned .alf and .all files
-for EXT in `echo "alf all"`
+cd $BASE/raw/str/alf
+for GZ in `ls *.alf.gz`
 do
-    cd $BASE/raw/str/$EXT
-    for GZ in `ls *.$EXT.gz`
-    do
-        TMP=`echo $BASE/raw/$GZ | sed s/.$EXT.gz/.$EXT/`
-        gunzip -c $GZ | awk '{gsub(/^32/,"",$2); print}' > $TMP
-        echo "creating $TMP ..."
-    done
-done
+    FNAME=`echo $GZ | sed s/.alf.gz//`
 
-# merge .alf and .all files with a python script
-cd $BASE/raw/
-for ALF in `ls *.alf`
-do
-    ALL=`echo $BASE/raw/$ALF | sed s/.alf/.all/`
-    ALA=`echo $BASE/raw/$ALF | sed s/.alf/.ala/`
-    LAS=`echo $BASE/las/$ALF | sed s/.alf/.las/`
+    # set paths to files
+    ALF=`echo $BASE/raw/str/alf/$FNAME.alf`
+    ALL=`echo $BASE/raw/str/all/$FNAME.all`
+    ALA=`echo $BASE/raw/str/ala/$FNAME.ala`
+    LAS=`echo $BASE/las/$FNAME.las`
+    
+    # temporarily uncompress .alf.gz and .all.gz files and remove leading 32 from x-coordinates
+    echo "creating $ALF (temporary) ..."
+    gunzip -c $BASE/raw/str/alf/$FNAME.alf.gz | awk '{gsub(/^32/,"",$2); print}' > $ALF
+    echo "creating $ALL (temporary) ..."
+    gunzip -c $BASE/raw/str/all/$FNAME.all.gz | awk '{gsub(/^32/,"",$2); print}' > $ALL
 
-    sh /home/laser/rawdata/maintenance/rawdata/als/hef/fix_merge_alf_all.sh $BASE/raw/$ALF
+    # merge .alf and .all files with a python script
+    echo "creating $ALA (temporary) ..."
+    python /home/laser/rawdata/maintenance/scripts/als/merge_first_last.py --dist=0.1 --first=$ALF --last=$ALL --out=$ALA
 
-    # clean up temporary files
+    # remove temporarily uncompressed .alf.gz and .all.gz files
     rm $ALF
     rm $ALL
 
@@ -46,6 +45,10 @@ do
     # create lasindex
     lasindex -i $LAS 2>>/dev/null
 
+    # compress .ala file
+    echo "creating $ALA.gz ..."
+    gzip -f $ALA
+
 done
 
 # copy cleaned trajectories
@@ -55,3 +58,4 @@ do
     echo "creating $BASE/bet/$BET ..."
     cat $BET | awk '{gsub(/^32/,"",$2); print}' > $BASE/bet/$BET
 done
+
