@@ -26,6 +26,11 @@ do
             -epsg 25832 \
             -set_file_creation 127 2009 \
             -set_system_identifier "ALTM 3100"
+
+    # create lasindex
+    lasindex -i $LAS 2>>/dev/null
+
+    rm -f $TMP
 done
 
 # copy cleaned trajectories
