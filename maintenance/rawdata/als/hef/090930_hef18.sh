@@ -7,10 +7,10 @@ BASE=/home/laser/rawdata/als/hef/090930_hef18
 
 # unpack ASCII rawdata and convert it to LAS
 cd $BASE/raw/str/ala
-for GZ in `ls *.ala.gz`
+for GZ in `ls *.all.gz`
 do
-    TMP=`echo $BASE/raw/$GZ | sed s/.ala.gz/.ala/`
-    LAS=`echo $BASE/las/$GZ | sed s/.ala.gz/.las/`
+    TMP=`echo $BASE/raw/$GZ | sed s/.all.gz/.ala/`
+    LAS=`echo $BASE/las/$GZ | sed s/.all.gz/.las/`
 
     echo "creating $LAS ..."
 
