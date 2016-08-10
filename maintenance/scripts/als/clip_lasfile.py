@@ -59,7 +59,7 @@ if __name__ == '__main__':
     o = lasfile.File(opath, header=f.header, mode='w')
 
     # extract points
-    print "processing %s ..." % args.lasfile
+    #print "processing %s ..." % args.lasfile
     for point in f:
         points_read += 1
         p = Point(point.x, point.y)
@@ -71,10 +71,10 @@ if __name__ == '__main__':
     o.close()
     f.close()
     if points_kept == 0:
-        print "no points found within WKT-poly"
+        print "    no points found within WKT-poly"
         os.remove(opath)
     else:
-        print "created %s (kept %s of %s points)" % (opath,points_kept,points_read)
+        print "    created %s (kept %s of %s points)" % (opath,points_kept,points_read)
 
     # log times
     time_end = time.time()
