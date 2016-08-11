@@ -1,45 +1,69 @@
 #!/bin/bash
 #
-# Datenmigration: Befliegung Kaunertal 20.04.2011, 21.04.2011, 22.04.2011 und 23.04.2011
+# Kaunertal 20.04.2011, 21.04.2011, 22.04.2011 und 23.04.2011
 #
 
-# Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/musicals/110420_kaunertal02/{asc,las,bet,doc,meta,fix}
+BASE=/home/laser/rawdata/als/musicals/110420_kaunertal02
+BASE_MUSICALS=/mnt/netappa/Rohdaten/P7160_MUSICALS/2011/Laserpunkte/Utm
 
-# Rohdaten und Dokumentation kopieren
-cd /home/laser/rawdata/als/musicals/110420_kaunertal02
-cp -avu /mnt/netappa/Rohdaten/P7160_MUSICALS/2011/160-051/Flugpfade/*_221.bet ./bet/
-cp -avu /mnt/netappa/Rohdaten/P7160_MUSICALS/2011/TopScanBefliegungsbericht_MUSICALS_2011.pdf ./doc/report.pdf
+# copy trajectories and documentation
+cp -avu $BASE_MUSICALS/../../Flugpfade/1104*.bet $BASE/raw/str/bet/
+cp -avu $BASE_MUSICALS/../../TopScanBefliegungsbericht_MUSICALS_2011.pdf $BASE/doc/report.pdf
 
-# LAS Files migrieren
-cd /mnt/netappa/Rohdaten/P7160_MUSICALS/2011/Laserpunkte_nach_Feingeoreferenzierung/Utm/Las
+# fix missing LAS files that could not be restored from external disk
+for FNAME in `echo L0117-1-110421_1_221_Kaunertal2011_UTM L0118-1-110421_1_221_Kaunertal2011_UTM`
+do
+    echo "creating missing $BASE_MUSICALS/Las/$FNAME.las ..."
+
+    # reorder columns first as GPS-time is located in column four and expected in column one in .alf and .all files; remove leading 32 as well
+    cat $BASE_MUSICALS/First/$FNAME.alf | awk '{gsub(/^32/,"",$1);print $4 " " $1 " " $2 " " $3 " " $5}' > /tmp/$FNAME.alf
+    cat $BASE_MUSICALS/Last/$FNAME.all | awk '{gsub(/^32/,"",$1);print $4 " " $1 " " $2 " " $3 " " $5}' > /tmp/$FNAME.all
+
+    # merge .alf and .all file
+    python /home/laser/rawdata/maintenance/scripts/als/merge_first_last.py \
+        --dist=0.0 \
+        --first=/tmp/$FNAME.alf \
+        --last=/tmp/$FNAME.all \
+        --out=$BASE_MUSICALS/Las/$FNAME.las
+
+    # remove temporary files
+    rm /tmp/$FNAME.*
+
+done
+
+# migrate LAS files
+cd $BASE_MUSICALS/Las
 for LAS in `ls *.las`
 do
-    echo "erzeuge /home/laser/rawdata/als/musicals/110420_kaunertal02/las/$LAS ..."
+    echo "creating $BASE/las/$LAS ..."
 
-    # Offset entfernen und x,y,z skalieren
+    # remove offset and scale x,y,z
     las2las -i $LAS \
-            -o /home/laser/rawdata/als/musicals/110420_kaunertal02/las/$LAS \
+            -o $BASE/las/$LAS \
             -reoffset 0 0 0 \
             -rescale 0.01 0.01 0.01
 
-    # System identifier und generating software wie beim Original setzen
-    lasinfo -i /home/laser/rawdata/als/musicals/110420_kaunertal02/las/$LAS \
+    # set system identifier and generating software to original values
+    lasinfo -i $BASE/las/$LAS \
             -set_system_identifier "ALTM Gemini" \
             -set_generating_software "OptechLMS" > /dev/null 2>&1
+
+    # create lasindex
+    lasindex -i $LAS 2>>/dev/null
+
 done
 
-# Jahr und Tag im Jahr setzen
-cd /home/laser/rawdata/als/musicals/110420_kaunertal02/las
+# set day of year and year
+cd $BASE/las
 find . -name "*110420*.las" -exec lasinfo -i {} -no_check -quiet -set_file_creation 110 2011 \;
 find . -name "*110421*.las" -exec lasinfo -i {} -no_check -quiet -set_file_creation 111 2011 \;
 find . -name "*110422*.las" -exec lasinfo -i {} -no_check -quiet -set_file_creation 112 2011 \;
 find . -name "*110423*.las" -exec lasinfo -i {} -no_check -quiet -set_file_creation 113 2011 \;
 
-# Koordinaten der Trajektorie(n) bereinigen
-for BET in `find /home/laser/rawdata/als/musicals/110420_kaunertal02/bet -name *.bet`
+# copy cleaned trajectories
+cd $BASE/raw/str/bet
+for BET in `ls *.bet`
 do
-    echo "entferne 32 bei x-Koordinaten in $BET ..."
-    awk '{gsub(/^32/,"",$2);print}' $BET > $BET.xxx
-    mv $BET.xxx $BET
+    echo "creating $BASE/bet/$BET ..."
+    cat $BET | awk '{gsub(/^32/,"",$2); print}' > $BASE/bet/$BET
 done
