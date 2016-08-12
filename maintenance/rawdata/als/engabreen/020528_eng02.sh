@@ -1,22 +1,33 @@
 #!/bin/bash
 #
-# Datenmigration: Befliegung Engabreen 28.5.2002
+# Engabreen 28.5.2002
 #
 
-# Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/engabreen/020528_eng02/{asc,las,doc,meta,prod}
+BASE=/home/laser/rawdata/als/engabreen/020528_eng02
 
-# Rohdaten und Dokumentation migrieren
-cd /home/laser/rawdata/als/engabreen/020528_eng02
-mv -v /mnt/netappa/Rohdaten/engabreen/Befliegung_052002/data/*.* ./asc/
-mv -v /mnt/netappa/Rohdaten/engabreen/Befliegung_052002/raw_dhm.tar.gz ./prod/
+# convert to LAS
+cd $BASE/raw/kach/all
+for GZ in `ls *.all.gz`
+do
+    FNAME=`echo $GZ | sed s/.all.gz//`
+    TMP=`echo $BASE/raw/kach/all/$FNAME.all`
+    LAS=`echo $BASE/las/$FNAME.las`
 
-# nach LAS konvertieren
-txt2las -i /home/laser/rawdata/als/engabreen/020528_eng02/asc/*.all \
-        -odir /home/laser/rawdata/als/engabreen/020528_eng02/las \
-        -parse xyzi \
-        -reoffset 0 0 0 \
-        -rescale 0.01 0.01 0.01 \
-        -epsg 32633 \
-        -set_file_creation 148 2002 \
-        -set_system_identifier "ALTM 1225"
+    echo "creating $LAS ..."
+
+    zcat $GZ > $TMP
+    txt2las -i $TMP \
+            -o $LAS \
+            -parse xyzi \
+            -reoffset 0 0 0 \
+            -rescale 0.01 0.01 0.01 \
+            -epsg 32633 \
+            -set_file_creation 148 2002 \
+            -set_system_identifier "ALTM 1225"
+
+    # create lasindex
+    lasindex -i $LAS 2>>/dev/null
+
+    rm -f $TMP
+done
+
