@@ -49,7 +49,7 @@ do
             -set_generating_software "OptechLMS" > /dev/null 2>&1
 
     # create lasindex
-    lasindex -i $LAS 2>>/dev/null
+    lasindex -i $BASE/las/$LAS 2>>/dev/null
 
 done
 
