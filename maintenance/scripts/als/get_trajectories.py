@@ -45,7 +45,8 @@ def get_files(trajdir=None,infofile=None,rebuild=None):
                         'wkt_path' : wkt_path,
                     })
             elif fname[-4:] == '.bet':
-                files['bet'].append(fpath)
+                if not re.search('/raw/',fpath):
+                    files['bet'].append(fpath)
             else:
                 pass
 
