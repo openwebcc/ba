@@ -16,6 +16,7 @@ fi
 find /home/laser/rawdata/als/c4austria -maxdepth 2 -type d -name bet -exec python $SCRIPTDIR/get_trajectories.py --mindist 100 --trajdir {} $REBUILD \;
 find /home/laser/rawdata/als/engabreen -maxdepth 2 -type d -name bet -exec python $SCRIPTDIR/get_trajectories.py --mindist 100 --trajdir {} $REBUILD \;
 find /home/laser/rawdata/als/hef -maxdepth 2 -type d -name bet -exec python $SCRIPTDIR/get_trajectories.py --mindist 100 --trajdir {} $REBUILD \;
+find /home/laser/rawdata/als/island -maxdepth 2 -type d -name bet -exec python $SCRIPTDIR/get_trajectories.py --mindist 100 --trajdir {} $REBUILD \;
 find /home/laser/rawdata/als/montafon -maxdepth 2 -type d -name bet -exec python $SCRIPTDIR/get_trajectories.py --mindist 100 --trajdir {} $REBUILD \;
 find /home/laser/rawdata/als/musicals -maxdepth 2 -type d -name bet -exec python $SCRIPTDIR/get_trajectories.py --mindist 100 --trajdir {} $REBUILD \;
 find /home/laser/rawdata/als/schmirntal -maxdepth 2 -type d -name bet -exec python $SCRIPTDIR/get_trajectories.py --mindist 100 --trajdir {} $REBUILD \;
