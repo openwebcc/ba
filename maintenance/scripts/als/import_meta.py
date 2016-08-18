@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     import argparse
     parser = argparse.ArgumentParser(description='parse metadata and import to PostgreSQL')
-    parser.add_argument('--startdir',dest='startdir', default='/home/laser/rawdata', help='path to starting directory')
+    parser.add_argument('--startdir',dest='startdir', default='/home/laser/rawdata/als', help='path to starting directory')
     args = parser.parse_args()
 
     args.startdir = args.startdir.rstrip('/')
