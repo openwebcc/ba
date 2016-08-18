@@ -8,12 +8,12 @@ if [ -z "$1" ]; then
     exit
 fi
 
-echo "setting user:group to root:rawdata ..."
-chown -R root:rawdata $1
+echo "setting user:group to klaus:rawdata ..."
+chown -R klaus:rawdata $1
 
 echo "setting directory permissions to 755 ..."
 find $1 -type d -exec chmod 755 {} \;
 
-echo "setting file permissions to 640 ..."
-find $1 -type f -exec chmod 640 {} \;
+echo "setting file permissions to 644 ..."
+find $1 -type f -exec chmod 644 {} \;
 
