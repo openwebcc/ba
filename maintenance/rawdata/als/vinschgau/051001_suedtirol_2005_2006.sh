@@ -1,47 +1,48 @@
 #!/bin/bash
 #
-# Datenmigration: Befliegung Südtirol 2005/2006
-# Exaktes Datum nicht bekannt. Nach Galos et al. 2015 "Mitte September". Freitag, 16.9.2005 gewählt
+# Südtirol 2005/2006
+#
+# exact date of campaign is not know, according to Galos et al. 2015 it is "mid of september" - choose sat, october 1st 2005 for all files
 #
 
-# Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/vinschgau/051001_suedtirol_2005_2006/{asc,las,bet,doc,meta}
+BASE=/home/laser/rawdata/als/vinschgau/051001_vinschgau0506
 
-# Rohdaten und Dokumentation kopieren
-cd /home/laser/rawdata/als/vinschgau/051001_suedtirol_2005_2006
-cp -avu /mnt/netappa/Rohdaten/Suedtirol_2005_2006/data/[12456789]*.txt ./asc/
-cp -avu /mnt/netappa/Rohdaten/Suedtirol_2005_2006/data/import/3.txt ./asc/
-cp -avu /mnt/netappa/Rohdaten/Suedtirol_2005_2006/data/AOI_Zusatz/12.txt ./asc/
-cp -avu /mnt/netappa/Rohdaten/Suedtirol_2005_2006/nutzungsbedingungen.odt ./doc/
-
-# nach LAS konvertieren
-cd /home/laser/rawdata/als/vinschgau/051001_suedtirol_2005_2006/asc/
-for N in `echo 1 2 4 5 6 7 8 9 10 11`
+for SUBDIR in `echo "all xyz"`
 do
-    echo "erzeuge ../las/$N.las ..."
-    txt2las -i $N.txt \
-            -o ../las/$N.las \
-            -parse xyzsssss \
-            -reoffset 0 0 0 \
-            -rescale 0.01 0.01 0.01 \
-            -set_file_creation 259 2005 \
-            -epsg 25832
+    cd $BASE/raw/str/$SUBDIR
+
+    for GZ in `ls *.gz`
+    do
+        TMP=`echo $BASE/raw/$GZ | sed s/.txt.gz/.txt/`
+        LAS=`echo $BASE/las/$GZ | sed s/.txt.gz/.las/`
+
+        echo "creating $LAS ..."
+
+        # unpack and remove header
+        zcat $GZ | grep -v x > $TMP
+
+        # set -parse argument accordingly
+        if test "$GZ" = "3_schnals_teil2.txt.gz"; then
+            PARSE=xyz
+        elif test "$GZ" = "12_aoi_zusatz.txt.gz"; then
+            PARSE=xyzt
+        else
+            PARSE=xyztrnis
+        fi
+
+        # convert to LAS
+        txt2las -i $TMP \
+                -o $LAS \
+                -parse $PARSE \
+                -reoffset 0 0 0 \
+                -rescale 0.01 0.01 0.01 \
+                -set_file_creation 274 2005 \
+                -epsg 25832
+
+        # create lasindex
+        lasindex -i $LAS 2>>/dev/null
+
+        rm -f $TMP
+
+    done
 done
-
-echo "erzeuge ../las/3.las ..."
-txt2las -i 3.txt \
-        -o ../las/3.las \
-        -parse xyz \
-        -reoffset 0 0 0 \
-        -rescale 0.01 0.01 0.01 \
-        -set_file_creation 259 2005 \
-        -epsg 25832
-
-echo "erzeuge ../las/12.las ..."
-txt2las -i 12.txt \
-        -o ../las/12.las \
-        -parse xyzss \
-        -reoffset 0 0 0 \
-        -rescale 0.01 0.01 0.01 \
-        -set_file_creation 259 2005 \
-        -epsg 25832
