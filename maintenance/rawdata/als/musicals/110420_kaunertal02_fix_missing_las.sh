@@ -14,14 +14,25 @@ do
     zcat $BASE/raw/str/all/$FNAME.all.gz | awk '{gsub(/^32/,"",$1);print $4 " " $1 " " $2 " " $3 " " $5}' > $BASE/raw/$FNAME.all
 
     # merge .alf and .all file
-    echo "creating $BASE/raw/str/las/$FNAME.las ..."
+    echo "creating $BASE/raw/$FNAME.ala (temporary) ..."
     python /home/laser/rawdata/maintenance/scripts/als/merge_first_last.py \
         --dist=0.0 \
         --first=$BASE/raw/$FNAME.alf \
         --last=$BASE/raw/$FNAME.all \
-        --out=$BASE/raw/str/las/$FNAME.las
+        --out=$BASE/raw/$FNAME.ala
+
+    # convert to LAS
+    echo "creating $BASE/raw/str/las/$FNAME.las ..."
+    txt2las -i $BASE/raw/$FNAME.ala \
+            -o $BASE/raw/str/las/$FNAME.las \
+            -iparse txyzirn \
+            -reoffset 0 0 0 \
+            -rescale 0.01 0.01 0.01 \
+            -epsg 32632 \
+            -set_file_creation 111 2011 \
+            -set_system_identifier "ALTM Gemini"
 
     # remove temporary files
-    rm $BASE/raw/$FNAME.al[lf]
+    rm $BASE/raw/$FNAME.al*
 
 done
