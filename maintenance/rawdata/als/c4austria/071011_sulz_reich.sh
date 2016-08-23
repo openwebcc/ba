@@ -1,36 +1,34 @@
 #!/bin/bash
 #
-# Datenmigration: Befliegung Sulztalferner, Reichenkar, 11.10.2007
+# Sulztalferner, Reichenkar, 11.10.2007
 #
 
-# Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/als/c4austria/071011_sulz_reich/{asc,las,bet,doc,meta}
+BASE=/home/laser/rawdata/als/c4austria/071011_sulz_reich
 
-# Rohdaten und Dokumentation kopieren
-cd /home/laser/rawdata/als/c4austria/071011_sulz_reich/
-cp -avu /mnt/netappa/Rohdaten/P7160_012_043_C4AUSTRIA/reichenkar2007/*.all ./asc/
-cp -avu /mnt/netappa/Rohdaten/P7160_012_043_C4AUSTRIA/reichenkar2007/TopScanBefliegungsbericht_SulztalfReichenkar2007.pdf ./doc/report.pdf
-
-# ASCII Rohdaten bereinigen
-cd /home/laser/rawdata/als/c4austria/071011_sulz_reich/asc
-for ALL in `ls *.all`
+# convert ASCII rawdata to LAS
+cd $BASE/raw/str/all
+for GZ in `ls *.all.gz`
 do
-    echo "strip32 and clean $ALL ..."
-    awk '{gsub(/^32/,"",$2); print}' $ALL > $ALL.tmp
-    mv $ALL.tmp $ALL
+    TMP=`echo $BASE/raw/$GZ | sed s/.all.gz/.all/`
+    LAS=`echo $BASE/las/$GZ | sed s/.all.gz/.las/`
 
+    echo "creating $LAS ..."
+
+    # unpack and remove leading 32 from x-coordinates
+    gunzip -c $GZ | awk '{gsub(/^32/,"",$1); print}' > $TMP
+
+    # convert to LAS
+    txt2las -i $TMP \
+            -o $LAS \
+            -parse xyzi \
+            -reoffset 0 0 0 \
+            -rescale 0.01 0.01 0.01 \
+            -epsg 25832 \
+            -set_file_creation 284 2007 \
+            -set_system_identifier "ALTM 3100"
+
+    # create lasindex
+    lasindex -i $LAS 2>>/dev/null
+
+    rm -f $TMP
 done
-
-# nach LAS konvertieren
-txt2las -i /home/laser/rawdata/als/c4austria/071011_sulz_reich/asc/*.all \
-        -odir /home/laser/rawdata/als/c4austria/071011_sulz_reich/las \
-        -parse xyzi \
-        -reoffset 0 0 0 \
-        -rescale 0.01 0.01 0.01 \
-        -epsg 25832 \
-        -set_file_creation 284 2007 \
-        -set_system_identifier "ALTM 3100"
-
-
-# Flugtrajektorie fehlt leider
-echo "WARNING: keine Flugtrajektorie vorhanden"
