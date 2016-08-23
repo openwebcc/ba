@@ -30,7 +30,7 @@ def lines_are_supposed_to_be_identical(curr=None,prev=None,dist=None):
             x1,y1,z1 = float(prev[1]),float(prev[2]),float(prev[3])
             x2,y2,z2 = float(curr[1]),float(curr[2]),float(curr[3])
             d = sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
-            if d <= dist:
+            if d < dist:
                 # points are within minimum distance - classify duplicated
                 return True
             else:
