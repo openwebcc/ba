@@ -4,35 +4,9 @@
 #
 
 BASE=/home/laser/rawdata/als/musicals/110420_kaunertal02
-BASE_MUSICALS=/mnt/netappa/Rohdaten/P7160_MUSICALS/2011/Laserpunkte/Utm
-
-# copy trajectories and documentation
-cp -avu $BASE_MUSICALS/../../Flugpfade/1104*.bet $BASE/raw/str/bet/
-cp -avu $BASE_MUSICALS/../../TopScanBefliegungsbericht_MUSICALS_2011.pdf $BASE/doc/report.pdf
-
-# fix missing LAS files that could not be restored from external disk
-for FNAME in `echo L0117-1-110421_1_221_Kaunertal2011_UTM L0118-1-110421_1_221_Kaunertal2011_UTM`
-do
-    echo "creating missing $BASE_MUSICALS/Las/$FNAME.las ..."
-
-    # reorder columns first as GPS-time is located in column four and expected in column one in .alf and .all files; remove leading 32 as well
-    cat $BASE_MUSICALS/First/$FNAME.alf | awk '{gsub(/^32/,"",$1);print $4 " " $1 " " $2 " " $3 " " $5}' > /tmp/$FNAME.alf
-    cat $BASE_MUSICALS/Last/$FNAME.all | awk '{gsub(/^32/,"",$1);print $4 " " $1 " " $2 " " $3 " " $5}' > /tmp/$FNAME.all
-
-    # merge .alf and .all file
-    python /home/laser/rawdata/maintenance/scripts/als/merge_first_last.py \
-        --dist=0.0 \
-        --first=/tmp/$FNAME.alf \
-        --last=/tmp/$FNAME.all \
-        --out=$BASE_MUSICALS/Las/$FNAME.las
-
-    # remove temporary files
-    rm /tmp/$FNAME.*
-
-done
 
 # migrate LAS files
-cd $BASE_MUSICALS/Las
+cd $BASE/raw/str/las
 for LAS in `ls *.las`
 do
     echo "creating $BASE/las/$LAS ..."
