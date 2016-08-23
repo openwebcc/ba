@@ -4,14 +4,9 @@
 #
 
 BASE=/home/laser/rawdata/als/musicals/101007_kaunertal01
-BASE_MUSICALS=/mnt/netappa/Rohdaten/P7160_MUSICALS/2010/
-
-# copy trajectories and documentation
-cp -avu $BASE_MUSICALS/Flugpfade/1010*.bet $BASE/raw/str/bet/
-cp -avu $BASE_MUSICALS/TopScanBefliegungsbericht_MUSICALS_2010.pdf $BASE/doc/report.pdf
 
 # migrate LAS files
-cd $BASE_MUSICALS/Laserpunkte/Utm/Las
+cd $BASE/raw/str/las
 for LAS in `ls *.las`
 do
     echo "creating $BASE/las/$LAS ..."
