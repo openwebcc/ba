@@ -27,18 +27,26 @@ if __name__ == '__main__':
     # init application
     (base,dbh,tpl) = Laser.base.impl().init(req=None,user='intranet')
 
-    # clean up all content for now, set start of gid sequence, finetune later
-    dbh.execute("DELETE FROM meta")
-    dbh.execute("SELECT SETVAL('meta_gid_seq',1001)")
-
+    # find metadata directories to process
     for dirpath, dirnames, filenames in os.walk(args.startdir):
-        if re.search('solartirol',dirpath):
-            # skip solartirol for now
+        if os.path.basename(dirpath) == 'meta':
+            print "importing %s ..." % dirpath
+        else:
             continue
 
-        if len(dirpath.split('/')) == 6:
-            print "importing %s ..." % dirpath
+        # define project type, campaign name and date from directory path (e.g. /home/laser/rawdata/als/hef/011011_hef01/meta)
+        parts = dirpath.split("/")
+        cdate = parts[-2].split("_")[0]             # 011011
+        cname = '_'.join(parts[-2].split("_")[1:])  # hef01 or even suedtirol_2005_2006
+        pname = parts[-3]                           # hef
+        ptype = parts[-4]                           # als
 
+        # clean up existing content in db
+        dbh.execute("DELETE FROM meta WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s", (
+            ptype,pname,cdate,cname
+        ))
+
+        # get metadata
         for fname in filenames:
             if not fname[-9:] == '.info.txt':
                 continue
@@ -60,13 +68,6 @@ if __name__ == '__main__':
 
             meta = parser.get_db_metadata()
 
-            # define project type, campaign name and date from directory path (e.g. /home/laser/rawdata/als/hef/011011_hef01/meta)
-            parts = dirpath.split("/")
-            cdate = parts[-2].split("_")[0]             # 011011
-            cname = '_'.join(parts[-2].split("_")[1:])  # hef01 or even suedtirol_2005_2006
-            pname = parts[-3]                           # hef
-            ptype = parts[-4]                           # als
-
             # INSERT metadata
             dbh.execute("INSERT INTO meta (ptype,pname,cname,cdate,fname,fsize,points,srid,info) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING gid", (
                 ptype,pname,
@@ -83,17 +84,21 @@ if __name__ == '__main__':
             # add geometry for hull and trajectory if any
             if parser.has_wkt_geometry('hull'):
                 if parser.get_wkt_geometry('hull') == "":
-                    print "WARNING: lasfile with gid=%s has empty hull geometry" % last_gid
+                    print "WARNING: /home/laser/rawdata/%s/%s/%s_%s/las/%s with gid=%s has empty hull geometry" % (
+                        ptype,pname,cdate,cname,fname[:-9],last_gid
+                    )
                 else:
                     dbh.execute("UPDATE meta SET hull=ST_GeomFromText('%s') WHERE gid=%s" % (parser.get_wkt_geometry('hull'),last_gid) )
             if parser.has_wkt_geometry('traj'):
                 dbh.execute("UPDATE meta SET traj=ST_GeomFromText('%s') WHERE gid=%s" % (parser.get_wkt_geometry('traj'),last_gid) )
 
-    # add missing SRID to vogis data (http://spatialreference.org/ref/epsg/mgi-austria-gk-west/)
-    dbh.execute("UPDATE meta SET srid=31254 WHERE pname='vogis'")
+        # add missing SRID to vogis data (http://spatialreference.org/ref/epsg/mgi-austria-gk-west/)
+        if pname == 'vogis':
+            dbh.execute("UPDATE meta SET srid=31254 WHERE pname='vogis'")
 
-    # control gid of first strip Hintereisferner 2001 for direct access to examples in thesis
-    dbh.execute("UPDATE meta SET gid=1000 WHERE gid IN (SELECT gid FROM meta WHERE cdate='011011' ORDER BY fname LIMIT 1)")
+        # control gid of first strip Hintereisferner 2001 for direct access to examples in thesis
+        if pname == 'hef' and cdate == '011011':
+            dbh.execute("UPDATE meta SET gid=1000 WHERE gid IN (SELECT gid FROM meta WHERE cdate='011011' ORDER BY fname LIMIT 1)")
 
     # finish
     dbh.close()
