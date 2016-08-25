@@ -37,7 +37,12 @@ if test "$PTYPE" = "als"; then
 
 elif test "$PTYPE" = "tls"; then
     # create TLS-data skeleton
-    echo "TLS-data skeleton not yet impelemented"
+    echo "going tls"
+    for DIR in `echo "raw las reg doc meta"`
+    do
+        mkdir -pv /home/laser/rawdata/$PTYPE/$PDIR/$PNAME/$DIR
+    done
+    sh set_perms.sh /home/laser/rawdata/$PTYPE/$PDIR/$PNAME
 
 else
     echo "'$PTYPE' is not a valid project type"
