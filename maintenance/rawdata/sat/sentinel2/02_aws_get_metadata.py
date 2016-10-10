@@ -49,10 +49,6 @@ if __name__ == '__main__':
     # sort tiles, why not ;-)
     tiles.sort()
 
-    # force overwrite switch when rebuilding all files
-    if args.rebuild:
-        args.overwrite = True
-
     for tile in tiles:
         # init AWS module for this tile
         aws = AWS(args.quiet)
