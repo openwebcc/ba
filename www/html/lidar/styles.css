@@ -12,13 +12,16 @@ main {
     background-color: #fff;
     margin: auto;
     padding: 5px;
-    width: 900px;
+    width: 85%;
     box-shadow: 0 0 10px rgba(0,0,0,0.6);
 }
 a:link, a:visited {
     color: blue;
 }
 
+.dataTable {
+    margin: auto;
+}
 .dataTable td, .dataTable th {
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
