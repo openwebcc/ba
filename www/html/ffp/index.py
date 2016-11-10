@@ -48,15 +48,25 @@ def tiles(req,dataset='090930_gesamt',pname='m31',ctype='dom',**kwargs):
         "features": []
     }
 
-    # set common attributes
-    tpl.add_term('APP_dataset', config.get_dataset_title(dataset))
-    tpl.add_term('APP_ctype', ctype.upper() )
-    tpl.add_term('APP_ftype', ftype.upper() )
-    tpl.add_term('APP_pname', pname.capitalize())
+    # set title
+    tpl.add_term('APP_title', "%s (%s/%s/%s)" % (
+        config.get_dataset_title(dataset),
+        ctype.upper(),
+        ftype.upper(),
+        pname.capitalize(),
+    ))
+
+    # set file path
     tpl.add_term('APP_fpath', "%s/%s/%s" % (pname,dataset,ctype) )
 
+    # set hidden input form values
+    tpl.add_term('VAL_pname',pname)
+    tpl.add_term('VAL_cdate',dataset.split('_')[0])
+    tpl.add_term('VAL_cname',dataset.split('_')[1])
+    tpl.add_term('VAL_ftype',ftype)
+
     # get geometry of tiles
-    dbh.execute("""SELECT id,fname,fsize,fdate,tile,geom FROM view_ffp_tiles
+    dbh.execute("""SELECT id,fname,fsize,fdate,tile,ST_AsGeoJSON(geom) AS geom FROM view_ffp_tiles
                     WHERE pname=%s AND cdate=%s AND cname=%s AND ctype=%s AND ftype=%s
                 """, (
         pname,cdate,cname,ctype,ftype

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>FFP-Repository, Karte</title>
+    <title>FFP-Repository Tiles, $APP_title</title>
     <link rel="stylesheet" href="$APP_root/styles.css" />
 
     <link rel="stylesheet" href="/data/lib/Leaflet-0.7/leaflet.css" />
@@ -12,25 +12,26 @@
     <link rel="stylesheet" href="/data/lib/Leaflet.draw/leaflet.draw.css" />
 
     <script>
-        fill_agreement = function (id,path) {
-            if (id && path) {
-                document.forms.userdata.id.value = id;
-                document.forms.userdata.datasets.value = path;
-                document.getElementById("agreement").style.display = 'block';
+        fill_agreement = function (opts) {
+            if (opts.id && opts.path) {
+                document.forms.userdata.geom.value = '';
+                document.forms.userdata.id.value = opts.id;
+                document.forms.userdata.tiles.value = opts.path;
+            } else if (opts.geom) {
+                document.forms.userdata.id.value = '';
+                document.forms.userdata.geom.value = opts.geom;
+
+                // compose textarea content
+                document.forms.userdata.tiles.value = document.getElementById('dataset_title').innerHTML;
+                document.forms.userdata.tiles.value += '\n';
+                document.forms.userdata.tiles.value += 'AOI=';
+                document.forms.userdata.tiles.value += opts.geom;
             } else {
-                alert('not yet implemented');
+                // nothing else for now;
             }
-        };
 
-        fill_dataset = function (geom) {
-            // fill in geometry
-            document.forms.userdata.geom.value = geom;
-
-            // compose textarea content
-            document.forms.userdata.datasets.value = document.getElementById('dataset_title').innerHTML;
-            document.forms.userdata.datasets.value += '\n';
-            document.forms.userdata.datasets.value += 'AOI=';
-            document.forms.userdata.datasets.value += geom;
+            // show license agreement
+            document.getElementById("agreement").style.display = 'block';
         };
 
         window.onload = function () {
@@ -118,15 +119,12 @@
                 drawnItems.addLayer(evt.layer);
 
                 // store GeoJSON representation of the digitized polygon
-                fill_dataset(JSON.stringify(drawnItems.toGeoJSON().features[0].geometry));
-
-                // show license agreement
-                document.getElementById("agreement").style.display = 'block';
+                fill_agreement({geom:JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)});
             });
 
              // store GeoJSON representation of the edited polygon
              map.on('draw:editstop', function (evt) {
-                fill_dataset(JSON.stringify(drawnItems.toGeoJSON().features[0].geometry));
+                fill_agreement({geom:JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)});
              });
 
              // store edited polygon
@@ -150,7 +148,7 @@
                     }
                     popup.push('</ul>')
                     popup.push('<p>');
-                    popup.push('<a href="#" onclick="fill_agreement(' + feature.properties.id + ',\'' + location + '\');return false;">Download Daten</a><br/>');
+                    popup.push('<a href="#" onclick="fill_agreement({id:' + feature.properties.id + ',path:\'' + location + '\'});return false;">Download Daten</a><br/>');
                     popup.push('</p>')
                     layer.bindPopup(popup.join(''));
                 }
@@ -179,7 +177,7 @@
   </head>
 
   <main>
-  <h2>FFP-Repository <span id="dataset_title">$APP_dataset ($APP_ctype/$APP_ftype/$APP_pname)</span></h2>
+  <h2>FFP-Repository <span id="dataset_title">$APP_title</span></h2>
 
   <div id="mapdiv" style="width:990px;height:600px;"></div>
 
@@ -204,13 +202,8 @@
         <legend><strong>Angaben zur Datennutzung</strong></legend>
 
         <p>
-        <label for="user">c-Kennung</label>
-        <input type="text" name="user" placeholder="z.B. c716xxx, csaxxxx">
-        </p>
-
-        <p>
-        <label for="user">Name und Adresse des/r Datennutzer/s</label>
-        <textarea name="user" rows="4" cols="60"></textarea>
+        <label for="person">Name und Adresse des/r Datennutzer/s</label>
+        <textarea name="person" rows="4" cols="60"></textarea>
         </p>
 
         <p>
@@ -219,16 +212,20 @@
         </p>
 
         <p>
-        <label for=datasets">Erhaltene Datensätze</label>
-        <textarea name="datasets" rows="4" cols="60"></textarea>
+        <label for="tiles">Erhaltene Datensätze</label>
+        <textarea name="tiles" rows="4" cols="60"></textarea>
         </p>
 
         <p>
         <input type="checkbox" name="confirmed"> Ich bestätige hiermit, dass ich die <a href="$APP_root/pdf/nutzungsbestimmungen.pdf">Nutzungsbestimmungen für Geodaten</a> des Landes Tirol gelesen habe und einhalten werde.
         </p>
 
-        <input type="hidden" name="id">
-        <input type="hidden" name="geom">
+        <input type="hidden" name="id" value="">
+        <input type="hidden" name="geom" value="">
+        <input type="hidden" name="pname" value="$VAL_pname">
+        <input type="hidden" name="cdate" value="$VAL_cdate">
+        <input type="hidden" name="cname" value="$VAL_cname">
+        <input type="hidden" name="ftype" value="$VAL_ftype">
 
         <p style="text-align:right;">
             <input type="button" value="Abbrechen" onclick="document.getElementById('agreement').style.display='none'">
