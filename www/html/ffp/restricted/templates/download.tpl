@@ -19,8 +19,8 @@
     <li>Windows:
 <pre>
 Netzlaufwerk verbinden
-\\geo1.uibk.ac.at\download\ffp\$APP_subdir
-User: $APP_user
+\\geo1\download\ffp\$APP_subdir
+User: geo1\$APP_user
 Pass: *******
 </pre>
     </li>
