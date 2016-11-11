@@ -89,6 +89,6 @@ def tiles(req,dataset='090930_gesamt',pname='m31',ctype='dom',**kwargs):
 
     tpl.add_term('APP_geom', simplejson.dumps(geojson))
     tpl.add_term('APP_root', config.get_app_root())
-    tpl.add_term('LEAFLET_root', config.get_leaflet_root())
+    tpl.add_term('APP_leaflet_root', config.get_leaflet_root())
     return tpl.resolve_template('/home/institut/www/html/data/ffp/templates/index_tiles.tpl')
 
