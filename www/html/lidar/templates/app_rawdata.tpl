@@ -4,44 +4,11 @@
     <title>$APP_cid / LiDAR-Repository Geographie Innsbruck</title>
     <link rel="stylesheet" href="$APP_root/styles.css" />
 
+    <link rel="stylesheet" href="$LEAFLET_root/Leaflet/leaflet.css" />
+    <script src="$LEAFLET_root/Leaflet/leaflet.js"></script>
 
-    <script src="$LEAFLET_root/Leaflet.draw/examples/libs/leaflet-src.js"></script>
-    <link rel="stylesheet" href="$LEAFLET_root/Leaflet.draw/examples/libs/leaflet.css" />
-
-    <script src="$LEAFLET_root/Leaflet.draw/src/Leaflet.draw.js"></script>
-    <link rel="stylesheet" href="$LEAFLET_root/Leaflet.draw/dist/leaflet.draw.css" />
-
-    <script src="$LEAFLET_root/Leaflet.draw/src/Toolbar.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/Tooltip.js"></script>
-
-    <script src="$LEAFLET_root/Leaflet.draw/src/ext/GeometryUtil.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/ext/LatLngUtil.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/ext/LineUtil.Intersect.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/ext/Polygon.Intersect.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/ext/Polyline.Intersect.js"></script>
-
-
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/DrawToolbar.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/handler/Draw.Feature.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/handler/Draw.SimpleShape.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/handler/Draw.Polyline.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/handler/Draw.Circle.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/handler/Draw.Marker.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/handler/Draw.Polygon.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/draw/handler/Draw.Rectangle.js"></script>
-
-
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/EditToolbar.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/handler/EditToolbar.Edit.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/handler/EditToolbar.Delete.js"></script>
-
-    <script src="$LEAFLET_root/Leaflet.draw/src/Control.Draw.js"></script>
-
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/handler/Edit.Poly.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/handler/Edit.SimpleShape.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/handler/Edit.Circle.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/handler/Edit.Rectangle.js"></script>
-    <script src="$LEAFLET_root/Leaflet.draw/src/edit/handler/Edit.Marker.js"></script>
+    <link rel="stylesheet" href="$LEAFLET_root/Leaflet.draw/leaflet.draw.css" />
+    <script src="$LEAFLET_root/Leaflet.draw/leaflet.draw.js"></script>
 
     <!-- load geometries -->
     <script src='$LEAFLET_root/Leaflet.omnivore/leaflet-omnivore.js'></script>
@@ -167,13 +134,10 @@
                 layer.bindPopup(popup.join(''));
             }
         });
-        var fitBounds = function () {
-            map.fitBounds(geojson_layer)
-        };
         var geojson_layer = omnivore.geojson('$APP_root/app.py/geom?cid=$APP_cid',null, lasFiles).on(
             'ready', function() {
                 // look at campaign
-                fitBounds();
+                map.fitBounds(geojson_layer.getBounds());
             }).addTo(map)
 
         // provide layer navigation
