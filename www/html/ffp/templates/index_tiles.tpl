@@ -5,11 +5,11 @@
     <title>FFP-Repository Tiles, $APP_title</title>
     <link rel="stylesheet" href="$APP_root/styles.css" />
 
-    <link rel="stylesheet" href="$APP_leaflet_root/Leaflet-0.7/leaflet.css" />
-    <script src="$APP_leaflet_root/Leaflet-0.7/leaflet.js"></script>
+    <link rel="stylesheet" href="$APP_leaflet_root/Leaflet/leaflet.css" />
+    <script src="$APP_leaflet_root/Leaflet/leaflet.js"></script>
 
-    <script src="$APP_leaflet_root/Leaflet.draw/dist/leaflet.draw.js"></script>
-    <link rel="stylesheet" href="$APP_leaflet_root/Leaflet.draw/dist/leaflet.draw.css" />
+    <script src="$APP_leaflet_root/Leaflet.draw/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="$APP_leaflet_root/Leaflet.draw/leaflet.draw.css" />
 
     <script>
         fill_agreement = function (opts) {
