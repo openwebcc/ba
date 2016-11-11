@@ -2,12 +2,6 @@
 <html>
 <title>FFP-Repository Geographie Innsbruck</title>
 <link rel="stylesheet" href="$APP_root/styles.css" />
-<style>
-.ftype_pulldown {
-    position: absolute;
-    left: 100px;
-}
-</style>
 
 <main>
 <h1>FFP-Repository Geographie Innsbruck</h1>
@@ -24,7 +18,7 @@
     </select>
 
     <p>
-        <input type="radio" name="ctype" value="dom" checked> DOM
+        <div class="ftype_dataset"><input type="radio" name="ctype" value="dom" checked> DOM</div>
         <select name="dom_ftype" class="ftype_pulldown">
             <option value="xyz" selected>*.xyz.gz</option>
             <option value="asc">*.asc.gz</option>
@@ -32,7 +26,7 @@
         </select>
     </p>
     <p>
-        <input type="radio" name="ctype" value="dgm"> DGM
+        <div class="ftype_dataset"><input type="radio" name="ctype" value="dgm"> DGM</div>
         <select name="dgm_ftype" class="ftype_pulldown">
             <option value="xyz" selected>*.xyz.gz</option>
             <option value="asc">*.asc.gz</option>
@@ -40,13 +34,13 @@
         </select>
     </p>
     <p>
-        <input type="radio" name="ctype" value="iso"> ISO
+        <div class="ftype_dataset"><input type="radio" name="ctype" value="iso"> ISO</div>
         <select name="iso_ftype" selected class="ftype_pulldown">
             <option value="dxf" selected>*.dxf.gz</option>
         </select>
     </p>
     <p>
-        <input type="radio" name="ctype" value="oph"> OPH
+        <div class="ftype_dataset"><input type="radio" name="ctype" value="oph"> OPH</div>
         <select name="oph_ftype" selected class="ftype_pulldown">
             <option value="jpg" selected>*.jpg</option>
         </select>

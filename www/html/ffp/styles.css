@@ -1,5 +1,12 @@
 /* styles for ffp application */
 
+main {
+    width: 1024px;
+    padding: 1em;
+    margin: auto;
+    box-shadow: 0 15px 10px #777;
+    border: 1px solid #eee;
+}
 #mapdiv {
     z-index: 10;
 }
@@ -27,4 +34,9 @@
     display: inline-block;
     width: 300px;
     vertical-align: top;
+}
+
+.ftype_dataset {
+    display: inline-block;
+    width: 100px;
 }
