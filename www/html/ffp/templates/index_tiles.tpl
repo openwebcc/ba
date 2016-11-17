@@ -254,6 +254,7 @@
         <input type="hidden" name="pname" value="$VAL_pname">
         <input type="hidden" name="cdate" value="$VAL_cdate">
         <input type="hidden" name="cname" value="$VAL_cname">
+        <input type="hidden" name="ctype" value="$VAL_ctype">
         <input type="hidden" name="ftype" value="$VAL_ftype">
 
         <p style="text-align:right;">

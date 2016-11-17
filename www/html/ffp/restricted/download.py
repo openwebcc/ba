@@ -11,8 +11,8 @@ sys.path.append('/home/laser/rawdata/www/lib')
 import Laser.base
 import FFP.util
 
-def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ftype=None,fname=None,**kwargs):
-    """ store license agreement and link data to donwload directory """
+def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftype=None,fname=None,**kwargs):
+    """ store license agreement and link data to download directory """
     (base,dbh,tpl) = Laser.base.impl().init(req)
     config = FFP.util.Config()
 
@@ -39,9 +39,9 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ftype=None,fnam
         ids.append(int(id))
     elif geom:
         # query ids of tiles intersecting geometry
-        dbh.execute("""SELECT id FROM view_ffp_tiles WHERE pname=%s AND cdate=%s AND cname=%s AND ftype=%s
+        dbh.execute("""SELECT id FROM view_ffp_tiles WHERE pname=%s AND cdate=%s AND cname=%s AND ctype=%s AND ftype=%s
                         AND ST_Intersects(ST_GeomFromGeoJSON(%s),geom)""", (
-            pname,cdate,cname,ftype,geom
+            pname,cdate,cname,ctype,ftype,geom
         ))
         for row in dbh.fetchall():
             ids.append(row['id'])

@@ -63,6 +63,7 @@ def tiles(req,dataset='090930_gesamt',pname='m31',ctype='dom',**kwargs):
     tpl.add_term('VAL_pname',pname)
     tpl.add_term('VAL_cdate',dataset.split('_')[0])
     tpl.add_term('VAL_cname',dataset.split('_')[1])
+    tpl.add_term('VAL_ctype',ctype)
     tpl.add_term('VAL_ftype',ftype)
 
     # get geometry of tiles
