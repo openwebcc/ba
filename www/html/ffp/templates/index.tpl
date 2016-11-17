@@ -9,7 +9,7 @@
 <form method="GET" action="/data/ffp/index/tiles/">
 
     <select name="dataset">
-        <option value="090930_gesamt">Gesamtbefliegung 2006 - 2009</option>
+        <option value="090930_gesamt">Gesamtbefliegung 2006 - 2009 (1m)</option>
     </select>
 
     <select name="pname">
