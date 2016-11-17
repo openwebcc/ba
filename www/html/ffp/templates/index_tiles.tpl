@@ -89,14 +89,26 @@
                 layers : layerGroupsTirol.summer
             });
 
-            // add layer for digitized geometry, preset with geometry if any
+            // add layer for digitized geometry to map, fill license agreement onclick
             var drawnItems = new L.FeatureGroup();
+            drawnItems.addTo(map);
+            drawnItems.on('click', function () {
+                fill_agreement({geom:JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)});
+            });
 
             // add draw control for polygons and rectangles with edit option
             drawControl = new L.Control.Draw({
                 draw : {
-                    polygon : true,
-                    rectangle : true,
+                    polygon : {
+                        shapeOptions: {
+                            color: 'lime'
+                        }
+                    },
+                    rectangle : {
+                        shapeOptions: {
+                            color: 'lime'
+                        }
+                    },
                     polyline : false,
                     circle : false,
                     marker : false
@@ -113,21 +125,12 @@
                 drawnItems.clearLayers();
             });
 
-            // add geometry and store GeoJSON representation of the digitized polygon
+            // add digitized geometry
             map.on('draw:created', function (evt) {
-                // add geometry
                 drawnItems.addLayer(evt.layer);
-
-                // store GeoJSON representation of the digitized polygon
-                fill_agreement({geom:JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)});
             });
 
-             // store GeoJSON representation of the edited polygon
-             map.on('draw:editstop', function (evt) {
-                fill_agreement({geom:JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)});
-             });
-
-             // store edited polygon
+             // remove geometry after deletion
              map.on('draw:deletestop', function (evt) {
                 // reset geometry
                 document.forms.userdata.geom = '';
@@ -152,9 +155,9 @@
                     popup.push('</p>')
                     layer.bindPopup(popup.join(''));
                 }
-            }).addTo(map);;
+            }).addTo(map);
 
-            map.fitBounds(geomTiles.getBounds())
+            map.fitBounds(geomTiles.getBounds());
 
             // provide layer navigation
             L.control.layers({
@@ -172,6 +175,32 @@
             L.control.scale({'imperial' : false}).addTo(map);
 
 
+            // upload area of interest in GeoJSON format
+            document.getElementById("uploadAOI").onchange = function () {
+                var reader, js_obj;
+                reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        // convert GeoJSON-string to Javascript object
+                        js_obj = JSON.parse(evt.target.result);
+
+                        // add it to the layer of draw items
+                        drawnItems.addLayer(L.geoJSON(js_obj, {
+                            'style' : function () {
+                                return {color: 'lime'};
+                            }
+                        }).getLayers()[0]);
+
+                        // look at AOI
+                        map.fitBounds(drawnItems.getBounds());
+
+                    } catch (err) {
+                        alert('ERROR: ' + err);
+                    }
+                };
+                // read GeoJSON file
+                reader.readAsText(this.files[0]);
+            };
         };
     </script>
   </head>
@@ -237,6 +266,10 @@
 
     </div>
   </section>
+
+  <p>
+    Area of interest auswählen: <input type="file" id="uploadAOI"> <span style="font-size:0.85em;">(Format: GeoJSON, EPSG:4326)</span>
+  </p>
 
   </main>
 
