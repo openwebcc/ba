@@ -175,6 +175,14 @@ def _create_ndsi_image(req,aws,attr):
     req.write("CREATION OK: created NDSI-image <strong>%s</strong>\n\n" % (attr['img_ndsi']) )
 
 
+def _log_task(req,dbh,task,scene):
+    """ log toolbox action """
+    dbh.execute("INSERT INTO sentinel2_log (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
+        req.user if req.user else 'anonymous',
+        task,scene
+    ))
+
+
 def index(req, scene=None):
     """ provide start page for toolbox """
     (base,dbh,tpl) = Laser.base.impl().init(req)
@@ -224,6 +232,7 @@ def index(req, scene=None):
 
 def download(req, scene=None, image=None, quiet=True):
     """ downlaod rawdata for the given tile and create optional RGB, NDVI images """
+    (base,dbh,tpl) = Laser.base.impl().init(req)
 
     if not type(req) == file:
         req.content_type = "text/html"
@@ -244,6 +253,9 @@ def download(req, scene=None, image=None, quiet=True):
     aws.set_scene(scene)
     attr = aws.get_scene_attributes()
 
+    # connect to database for logging
+    dbh.connect(user='intranet')
+
     # download rawdata
     req.write("<h3>Processing %s</h3>" % scene)
     req.write('<pre>')
@@ -251,19 +263,24 @@ def download(req, scene=None, image=None, quiet=True):
     if not os.path.exists(attr['dir_root']):
         # download rawdata
        _download_rawdata(req,aws,attr)
+       _log_task(req,dbh,'download',attr['scene'])
 
     # create additional RGB-image if requested
     if 'rgb' in images:
         _create_rgb_image(req,aws,attr)
+        _log_task(req,dbh,'create RGB',attr['scene'])
 
     # create additional NDVI-image if requested
     if 'ndvi' in images:
         _create_ndvi_image(req,aws,attr)
+        _log_task(req,dbh,'create NDVI',attr['scene'])
 
     # create additional NDSI-image if requested
     if 'ndsi' in images:
         _create_ndsi_image(req,aws,attr)
+        _log_task(req,dbh,'create NDSI',attr['scene'])
 
+    dbh.close()
     return '\n</pre><p><a href="/data/sentinel2/toolbox/index?scene=%s">continue to toolbox &gt;&gt;</p>' % scene
 
 def process(req, scene=None, image=None, quiet=True):
@@ -280,6 +297,11 @@ def remove(req, scene=None, image=None, quiet=True):
     if not scene:
         return "Error: no scene to remove image(s) specified"
 
+    (base,dbh,tpl) = Laser.base.impl().init(req)
+
+    # connect to database for logging
+    dbh.connect(user='intranet')
+
     # init AWS module
     aws = AWS(quiet)
     aws.set_scene(scene)
@@ -295,17 +317,23 @@ def remove(req, scene=None, image=None, quiet=True):
 
             # remove rawdata directory with all derived images
             shutil.rmtree(attr['dir_root'])
+            _log_task(req,dbh,'remove',attr['scene'])
+
     else:
         # remove image if it exists
         if os.path.exists(attr["img_%s" % image]):
             os.remove(attr["img_%s" % image])
+            _log_task(req,dbh,'remove %s' % image.upper(),attr['scene'])
         else:
+            dbh.close()
             return "Error: %s-image for this scene does not exist" % image.upper()
 
     if not type(req) == file:
         # redirect to toolbox
+        dbh.close()
         redirect(req, "/data/sentinel2/toolbox/index?scene=%s" % scene)
     else:
+        dbh.close()
         if image == 'all':
             return "removed all data in %s" % attr['dir_root']
         else:
