@@ -50,11 +50,11 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
         pass
 
     # log agreement and get ID for subdirectory to link tiles to
-    dbh.execute("INSERT INTO ffp_agreements (user_id,person,project,pname,cdate,cname,ftype,fname,geom_json,tiles) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id", (
+    dbh.execute("INSERT INTO ffp_agreements (user_id,person,project,pname,cdate,cname,ctype,ftype,fname,geom_json,tiles,tstamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NOW()) RETURNING id", (
         req.user if req.user else 'anonymous',
         kwargs.get('person'),
         kwargs.get('project'),
-        pname,cdate,cname,ftype,
+        pname,cdate,cname,ftype,ctype,
         kwargs.get('tiles').split('/')[-1] if id else None,
         geom if geom else None,
         len(ids),
