@@ -18,6 +18,7 @@ class Config:
         self.leaflet_root = '/data/lib'
         self.dataset_title = {
             '090930_gesamt' : 'Gesamtbefliegung 2006 - 2009',
+            '151025_dsr' : 'Befliegung Dauersiedlungsraum 2013 - 2015',
         }
 
     def get_base_dir(self):
