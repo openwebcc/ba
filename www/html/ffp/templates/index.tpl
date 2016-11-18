@@ -44,6 +44,7 @@ window.onload = function () {
 
 </script>
 <main>
+<img src="$APP_root/icons/logo_land.png" alt="Logo Land Tirol" style="float:right;"/>
 <h1>FFP-Repository Geographie Innsbruck</h1>
 
 <form method="GET" action="/data/ffp/index/tiles/">
