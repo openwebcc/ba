@@ -25,7 +25,7 @@ do
             -rescale 0.01 0.01 0.01 \
             -epsg 25832 \
             -set_file_creation 238 2016 \
-            -set_system_identifier "UNKNOWN"
+            -set_system_identifier "LMS Q780"
 
     # create lasindex
     lasindex -i $LAS 2>>/dev/null
