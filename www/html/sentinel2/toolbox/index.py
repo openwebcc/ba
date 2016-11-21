@@ -182,6 +182,24 @@ def _log_task(req,dbh,task,scene):
         task,scene
     ))
 
+    # keep track of "owner" of scene
+    if task[:6] == 'remove':
+        if task == 'remove':
+            # remove all entries for the given user and scene
+            dbh.execute("DELETE FROM sentinel2 WHERE user_id=%s AND scene=%s", (
+                req.user if req.user else 'anonymous',scene
+            ))
+        else:
+            # remove specific entry for the given user and scene
+            dbh.execute("DELETE FROM sentinel2 WHERE user_id=%s AND task=%s AND scene=%s", (
+                req.user if req.user else 'anonymous',
+                re.sub('remove','create',task),scene
+            ))
+    else:
+        dbh.execute("INSERT INTO sentinel2 (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
+            req.user if req.user else 'anonymous',
+            task,scene
+        ))
 
 def index(req, scene=None):
     """ provide start page for toolbox """
@@ -308,7 +326,11 @@ def remove(req, scene=None, image=None, quiet=True):
     attr = aws.get_scene_attributes()
 
     if image == 'all':
-        if os.path.exists(attr['dir_root']):
+        # remove all images if they exist
+        if not os.path.exists(attr['dir_root']):
+            # no rawdata directory found
+            req.write("<pre>ERROR: scene %s does not exist\n</pre>" % attr['scene'] )
+        else:
             # unset download switch in MongoDB
             conn = MongoClient('localhost', 27017)
             mdb = conn.sentinel2
@@ -318,26 +340,20 @@ def remove(req, scene=None, image=None, quiet=True):
             # remove rawdata directory with all derived images
             shutil.rmtree(attr['dir_root'])
             _log_task(req,dbh,'remove',attr['scene'])
-
+            req.write("<pre>INFO: removed all data for scene %s ...\n</pre>" % attr['scene'] )
     else:
         # remove image if it exists
-        if os.path.exists(attr["img_%s" % image]):
+        if not os.path.exists(attr["img_%s" % image]):
+            req.write("<pre>ERROR: %s-image for scene %s does not exist\n</pre>" % (image.upper(),attr['scene']) )
+        else:
             os.remove(attr["img_%s" % image])
             _log_task(req,dbh,'remove %s' % image.upper(),attr['scene'])
-        else:
-            dbh.close()
-            return "Error: %s-image for this scene does not exist" % image.upper()
+            req.write("<pre>INFO: removed %s-image for scene %s ...\n</pre>" % (image.upper(),attr['scene']) )
 
-    if not type(req) == file:
-        # redirect to toolbox
-        dbh.close()
-        redirect(req, "/data/sentinel2/toolbox/index?scene=%s" % scene)
-    else:
-        dbh.close()
-        if image == 'all':
-            return "removed all data in %s" % attr['dir_root']
-        else:
-            return "removed %s" % attr["img_%s" % image]
+    # finish
+    dbh.close()
+    return '<p><a href="/data/sentinel2/toolbox/index?scene=%s">continue to toolbox &gt;&gt;</p>' % attr['scene']
+
 
 if __name__ == '__main__':
     """ download rawdata for Sentinel-2 tiles from Amazon S3 (commandline access)"""
