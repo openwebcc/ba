@@ -12,6 +12,7 @@
   <img src="$APP_root/images/$APP_scene.jpg" alt="Preview" />
 
   <div class="toolbox">
+    <p>Daten für Benutzer $APP_owners</p>
     <fieldset>
       $APP_buttons
       <form method="GET" action="/data/sentinel2/toolbox/index.py/remove">
@@ -24,6 +25,13 @@
     </fieldset>
 
     <p><a href="$APP_root/index.py/preview?scene=$APP_scene">Details zur Szene anzeigen</a></p>
+
+  <pre>
+Datenzugang über Netzlaufwerk verbinden
+PFAD: \\geo1\sentinel2
+USER: geo1\$APP_user
+PASS: *******
+</pre>
 
   </div>
 

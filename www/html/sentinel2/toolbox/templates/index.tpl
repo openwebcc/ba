@@ -24,6 +24,13 @@
 
   <p><a href="$APP_root/index.py/preview?scene=$APP_scene">Details zur Szene anzeigen</a></p>
 
+  <pre>
+Datenzugang über Netzlaufwerk verbinden
+PFAD: \\geo1\sentinel2
+USER: geo1\$APP_user
+PASS: *******
+</pre>
+
   </div>
 
   <p class="link_github"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a></p>
