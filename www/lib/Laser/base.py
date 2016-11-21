@@ -32,3 +32,10 @@ class impl:
         self.tpl = Laser.template.impl(self)
 
         return (self, self.dbh, self.tpl)
+
+    def get_user(self):
+        """ return logged in apache2 user if any, anonymous otherwise """
+        if self.req and self.req.user:
+            return self.req.user
+        else:
+            return 'anonymous'
