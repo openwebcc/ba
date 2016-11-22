@@ -25,7 +25,7 @@ import Laser.base
 import Laser.Util.web
 from Sat.sentinel2_aws import AWS
 
-def _download_rawdata(req,aws,attr):
+def _download_rawdata(req,base,aws,attr):
     """ get rawdata for scene """
     download = {
         'dir_root' : [],
@@ -67,6 +67,28 @@ def _download_rawdata(req,aws,attr):
     mdb.aws_tileInfo.update({ "_scene" : attr['scene'] },{ "$set" : { "_downloaded" : True } })
     conn.close()
 
+    #
+    # provide data in users download area
+    #
+
+    # ensure tile-directory
+    tile_dir = base.ensure_directory("%s/sentinel2/%s" % (base.get_download_dir(),attr['tile']) )
+
+    # link all metadata and previews for this tile
+    for subdir in ('metadata','preview'):
+        if not os.path.exists("%s/%s" % (tile_dir,subdir) ):
+            os.system('ln -s %s/%s/%s %s/%s' % (
+                aws.get_basedir(),attr['tile'],subdir,
+                tile_dir,subdir
+            ))
+
+    # link scene data subdirectory
+    scene_dir = "%s/%s" % (tile_dir,attr['scene'])
+    if not os.path.exists(scene_dir):
+        os.system("ln -s %s/%s/%s %s" % (
+            aws.get_basedir(),attr['tile'],attr['scene'],
+            scene_dir
+        ))
 
 def _convert_jpeg_to_tif(req,aws,attr,band):
     """ convert JPEG2000 image to temporary TIF file """
@@ -187,11 +209,10 @@ def _get_owners(req,dbh,task,scene):
 
     return owners if len(owners) > 0 else ['laser']
 
-def _log_task(req,dbh,task,scene):
+def _log_task(req,base,dbh,task,scene):
     """ log toolbox action """
     dbh.execute("INSERT INTO sentinel2_log (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
-        req.user if req.user else 'anonymous',
-        task,scene
+        base.get_user(),task,scene
     ))
 
     # keep track of "owner" of scene
@@ -199,18 +220,16 @@ def _log_task(req,dbh,task,scene):
         if task == 'remove':
             # remove all entries for the given user and scene
             dbh.execute("DELETE FROM sentinel2 WHERE user_id=%s AND scene=%s", (
-                req.user if req.user else 'anonymous',scene
+                base.get_user(),scene
             ))
         else:
             # remove specific entry for the given user and scene
             dbh.execute("DELETE FROM sentinel2 WHERE user_id=%s AND task=%s AND scene=%s", (
-                req.user if req.user else 'anonymous',
-                re.sub('remove','create',task),scene
+                base.get_user(),re.sub('remove','create',task),scene
             ))
     else:
         dbh.execute("INSERT INTO sentinel2 (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
-            req.user if req.user else 'anonymous',
-            task,scene
+            base.get_user(),task,scene
         ))
 
 def index(req, scene=None):
@@ -232,7 +251,7 @@ def index(req, scene=None):
     # set template terms
     tpl.add_term('APP_root', aws.get_app_root())
     tpl.add_term('APP_scene', scene)
-    tpl.add_term('APP_user', req.user if req.user else 'anonymous')
+    tpl.add_term('APP_user', base.get_user() )
     tpl.add_term('APP_owners', ', '.join(owners) )
 
     # build edit buttons for derivates if any
@@ -298,23 +317,23 @@ def download(req, scene=None, image=None, quiet=True):
 
     if not os.path.exists(attr['dir_root']):
         # download rawdata
-       _download_rawdata(req,aws,attr)
-       _log_task(req,dbh,'download',attr['scene'])
+        _download_rawdata(req,base,aws,attr)
+        _log_task(req,base,dbh,'download',attr['scene'])
 
     # create additional RGB-image if requested
     if 'rgb' in images:
         _create_rgb_image(req,aws,attr)
-        _log_task(req,dbh,'create RGB',attr['scene'])
+        _log_task(req,base,dbh,'create RGB',attr['scene'])
 
     # create additional NDVI-image if requested
     if 'ndvi' in images:
         _create_ndvi_image(req,aws,attr)
-        _log_task(req,dbh,'create NDVI',attr['scene'])
+        _log_task(req,base,dbh,'create NDVI',attr['scene'])
 
     # create additional NDSI-image if requested
     if 'ndsi' in images:
         _create_ndsi_image(req,aws,attr)
-        _log_task(req,dbh,'create NDSI',attr['scene'])
+        _log_task(req,base,dbh,'create NDSI',attr['scene'])
 
     dbh.close()
     return '\n</pre><p><a href="/data/sentinel2/toolbox/index?scene=%s">continue to toolbox &gt;&gt;</p>' % scene
@@ -347,7 +366,7 @@ def remove(req, scene=None, image=None, quiet=True):
     owners = _get_owners(req,dbh,image.upper(),attr['scene'])
     owners_notme = []
     for owner in owners:
-        if owner != (req.user if req.user else 'anonymous'):
+        if owner != base.get_user():
             owners_notme.append(owner)
 
     if image == 'all':
@@ -357,7 +376,7 @@ def remove(req, scene=None, image=None, quiet=True):
             req.write("<pre>ERROR: scene %s does not exist\n</pre>" % attr['scene'] )
         else:
             if len(owners_notme) > 0:
-                _log_task(req,dbh,'remove',attr['scene'])
+                _log_task(req,base,dbh,'remove',attr['scene'])
                 req.write("<pre>INFO: die Daten werden von %s noch benötigt und können deshalb nicht vom Server gelöscht werden.\n</pre>" % ', '.join(owners_notme) )
             else:
                 # unset download switch in MongoDB
@@ -368,7 +387,7 @@ def remove(req, scene=None, image=None, quiet=True):
 
                 # remove rawdata directory with all derived images
                 shutil.rmtree(attr['dir_root'])
-                _log_task(req,dbh,'remove',attr['scene'])
+                _log_task(req,base,dbh,'remove',attr['scene'])
                 req.write("<pre>INFO: removed all data for scene %s ...\n</pre>" % attr['scene'] )
     else:
         # remove image if it exists
@@ -376,11 +395,11 @@ def remove(req, scene=None, image=None, quiet=True):
             req.write("<pre>ERROR: %s-image for scene %s does not exist\n</pre>" % (image.upper(),attr['scene']) )
         else:
             if len(owners_notme) > 0:
-                _log_task(req,dbh,'remove %s' % image.upper(),attr['scene'])
+                _log_task(req,base,dbh,'remove %s' % image.upper(),attr['scene'])
                 req.write("<pre>INFO: die Daten werden von %s noch benötigt und können deshalb nicht vom Server gelöscht werden.\n</pre>" % ', '.join(owners_notme) )
             else:
                 os.remove(attr["img_%s" % image])
-                _log_task(req,dbh,'remove %s' % image.upper(),attr['scene'])
+                _log_task(req,base,dbh,'remove %s' % image.upper(),attr['scene'])
                 req.write("<pre>INFO: removed %s-image for scene %s ...\n</pre>" % (image.upper(),attr['scene']) )
 
     # finish
