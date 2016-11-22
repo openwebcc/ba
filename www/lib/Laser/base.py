@@ -13,6 +13,7 @@ class impl:
         self.req = None
         self.dbh = None
         self.tpl = None
+        self.download_dir = '/home/laser/rawdata/download'
 
     def init(self, req=None, mimetype='text/html', dbname='geo', user='web'):
         """ initialize laser application """
@@ -39,3 +40,7 @@ class impl:
             return self.req.user
         else:
             return 'anonymous'
+
+    def get_download_dir(self):
+        """ return absolute path to download directory """
+        return self.download_dir
