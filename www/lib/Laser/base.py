@@ -4,6 +4,7 @@
 # basic module
 #
 
+import os
 import Laser.db
 import Laser.template
 
@@ -44,3 +45,13 @@ class impl:
     def get_download_dir(self):
         """ return absolute path to download directory of logged in user """
         return "%s/%s" % (self.download_base,self.get_user())
+
+    def ensure_directory(self,dirpath):
+        """ make sure that a requested directory exists, create it if it is absent """
+        if not os.path.exists(dirpath):
+            try:
+                os.makedirs(dirpath)
+            except:
+                return None
+
+        return dirpath
