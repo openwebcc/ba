@@ -26,7 +26,7 @@
 
   <pre>
 Datenzugang über Netzlaufwerk verbinden
-PFAD: \\geo1\sentinel2
+PFAD: \\geo1\download\$APP_user\sentinel2
 USER: geo1\$APP_user
 PASS: *******
 </pre>
