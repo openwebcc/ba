@@ -104,119 +104,122 @@ def _convert_jpeg_to_tif(req,aws,attr,band):
 
 def _create_rgb_image(req,base,dbh,aws,attr):
     """ create RGB-image for this scene """
-    req.write("PLEASE WAIT: creating RGB-image ...\n")
+    if not os.path.exists(attr['img_rgb']):
+        req.write("PLEASE WAIT: creating RGB-image ...\n")
 
-    # handle outputdir and existing content
-    if not os.path.exists(attr['dir_derived']):
-        os.mkdir(attr['dir_derived'])
+        # handle outputdir and existing content
+        if not os.path.exists(attr['dir_derived']):
+            os.mkdir(attr['dir_derived'])
+        else:
+            os.system("rm -f %s/rgb_*" % attr['dir_derived'] )
+
+        # convert JP2 bands to temporary TIFs
+        for band in ('B02','B03','B04'):
+            _convert_jpeg_to_tif(req,aws,attr,band)
+
+        # run command
+        cmd = "%s/gdal_merge.py -q -seperate -pct %s/%s_B04.tif %s/%s_B03.tif %s/%s_B02.tif -of HFA -o %s" % (
+            aws.get_gdalbindir(),
+            aws.get_tmpdir(),attr['scene'],
+            aws.get_tmpdir(),attr['scene'],
+            aws.get_tmpdir(),attr['scene'],
+            attr['img_rgb']
+        )
+        req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
+        os.system(cmd)
+
+        # give feedback
+        req.write("CREATION OK: created RGB-image <strong>%s</strong>\n\n" % (attr['img_rgb']) )
     else:
-        os.system("rm -f %s/rgb_*" % attr['dir_derived'] )
+        req.write('INFO: subscribed to RGB-image of scene %s' % attr['scene'])
 
-    # convert JP2 bands to temporary TIFs
-    for band in ('B02','B03','B04'):
-        _convert_jpeg_to_tif(req,aws,attr,band)
-
-    # run command
-    cmd = "%s/gdal_merge.py -q -seperate -pct %s/%s_B04.tif %s/%s_B03.tif %s/%s_B02.tif -of HFA -o %s" % (
-        aws.get_gdalbindir(),
-        aws.get_tmpdir(),attr['scene'],
-        aws.get_tmpdir(),attr['scene'],
-        aws.get_tmpdir(),attr['scene'],
-        attr['img_rgb']
-    )
-    req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
-    os.system(cmd)
+    # log image for user
     target = "%s/sentinel2/%s/%s/derived/rgb_%s.img" % (base.get_download_dir(),attr['tile'],attr['scene'],attr['scene'])
     _log_files(req,dbh,base.get_user(),attr['img_rgb'],target)
-
-    # give feedback
-    req.write("CREATION OK: created RGB-image <strong>%s</strong>\n\n" % (attr['img_rgb']) )
 
 
 def _create_ndvi_image(req,base,dbh,aws,attr):
     """ create NDVI-image for this scene """
-    req.write("PLEASE WAIT: creating NDVI-image ...\n")
+    if not os.path.exists(attr['img_ndvi']):
+        req.write("PLEASE WAIT: creating NDVI-image ...\n")
 
-    # handle outputdir and existing content
-    if not os.path.exists(attr['dir_derived']):
-        os.mkdir(attr['dir_derived'])
+        # handle outputdir and existing content
+        if not os.path.exists(attr['dir_derived']):
+            os.mkdir(attr['dir_derived'])
+        else:
+            os.system("rm -f %s/ndvi_*" % attr['dir_derived'] )
+
+        # convert JP2 bands to temporary TIFs
+        for band in ('B04','B08'):
+            _convert_jpeg_to_tif(req,aws,attr,band)
+
+        # run command
+        cmd = '%s/gdal_calc.py --format=HFA --type=Float32 -A %s/%s_B08.tif -B %s/%s_B04.tif --calc="(A.astype(float)-B.astype(float))/(A.astype(float)+B.astype(float))" --outfile=%s' % (
+            aws.get_gdalbindir(),
+            aws.get_tmpdir(),attr['scene'],
+            aws.get_tmpdir(),attr['scene'],
+            attr['img_ndvi']
+        )
+        req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
+        os.system(cmd)
+
+        # give feedback
+        req.write("CREATION OK: created NDVI-image <strong>%s</strong>\n\n" % (attr['img_ndvi']) )
     else:
-        os.system("rm -f %s/ndvi_*" % attr['dir_derived'] )
+        req.write('INFO: subscribed to NDVI-image of scene %s' % attr['scene'])
 
-    # convert JP2 bands to temporary TIFs
-    for band in ('B04','B08'):
-        _convert_jpeg_to_tif(req,aws,attr,band)
-
-    # run command
-    cmd = '%s/gdal_calc.py --format=HFA --type=Float32 -A %s/%s_B08.tif -B %s/%s_B04.tif --calc="(A.astype(float)-B.astype(float))/(A.astype(float)+B.astype(float))" --outfile=%s' % (
-        aws.get_gdalbindir(),
-        aws.get_tmpdir(),attr['scene'],
-        aws.get_tmpdir(),attr['scene'],
-        attr['img_ndvi']
-    )
-    req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
-    os.system(cmd)
+    # log image for user
     target = "%s/sentinel2/%s/%s/derived/ndvi_%s.img" % (base.get_download_dir(),attr['tile'],attr['scene'],attr['scene'])
     _log_files(req,dbh,base.get_user(),attr['img_ndvi'],target)
-
-    # give feedback
-    req.write("CREATION OK: created NDVI-image <strong>%s</strong>\n\n" % (attr['img_ndvi']) )
 
 
 def _create_ndsi_image(req,base,dbh,aws,attr):
     """ create NDSI-image for this scene 
         see https://sentinel.esa.int/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm
     """
-    req.write("PLEASE WAIT: creating NDSI-image ...\n")
+    if not os.path.exists(attr['img_ndsi']):
+        req.write("PLEASE WAIT: creating NDSI-image ...\n")
 
-    # handle outputdir and existing content
-    if not os.path.exists(attr['dir_derived']):
-        os.mkdir(attr['dir_derived'])
-    else:
-        os.system("rm -f %s/ndsi_*" % attr['dir_derived'] )
+        # handle outputdir and existing content
+        if not os.path.exists(attr['dir_derived']):
+            os.mkdir(attr['dir_derived'])
+        else:
+            os.system("rm -f %s/ndsi_*" % attr['dir_derived'] )
 
-    # convert JP2 bands to temporary TIFs
-    # NOTE: B13 has resolution 20m and will be automatically resampled to 10m resolution
-    for band in ('B03','B11'):
-        _convert_jpeg_to_tif(req,aws,attr,band)
+        # convert JP2 bands to temporary TIFs
+        # NOTE: B13 has resolution 20m and will be automatically resampled to 10m resolution
+        for band in ('B03','B11'):
+            _convert_jpeg_to_tif(req,aws,attr,band)
 
-    # resample B11 to 10 meters resolution
-    if not os.path.exists('%s/%s_B11_10m.tif' % (aws.get_tmpdir(),attr['scene'])):
-        cmd = '%s/gdalwarp -q -overwrite %s/%s_B11.tif %s/%s_B11_10m.tif -r near -tr 10 10' % (
+        # resample B11 to 10 meters resolution
+        if not os.path.exists('%s/%s_B11_10m.tif' % (aws.get_tmpdir(),attr['scene'])):
+            cmd = '%s/gdalwarp -q -overwrite %s/%s_B11.tif %s/%s_B11_10m.tif -r near -tr 10 10' % (
+                aws.get_gdalbindir(),
+                aws.get_tmpdir(),attr['scene'],
+                aws.get_tmpdir(),attr['scene']
+            )
+            req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
+            os.system(cmd)
+
+        # run command
+        cmd = '%s/gdal_calc.py --format=HFA --type=Float32 -A %s/%s_B03.tif -B %s/%s_B11_10m.tif --calc="(A.astype(float)-B.astype(float))/(A.astype(float)+B.astype(float))" --outfile=%s' % (
             aws.get_gdalbindir(),
             aws.get_tmpdir(),attr['scene'],
-            aws.get_tmpdir(),attr['scene']
+            aws.get_tmpdir(),attr['scene'],
+            attr['img_ndsi']
         )
         req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
         os.system(cmd)
 
-    # run command
-    cmd = '%s/gdal_calc.py --format=HFA --type=Float32 -A %s/%s_B03.tif -B %s/%s_B11_10m.tif --calc="(A.astype(float)-B.astype(float))/(A.astype(float)+B.astype(float))" --outfile=%s' % (
-        aws.get_gdalbindir(),
-        aws.get_tmpdir(),attr['scene'],
-        aws.get_tmpdir(),attr['scene'],
-        attr['img_ndsi']
-    )
-    req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
-    os.system(cmd)
+        # give feedback
+        req.write("CREATION OK: created NDSI-image <strong>%s</strong>\n\n" % (attr['img_ndsi']) )
+    else:
+        req.write('INFO: subscribed to NDSI-image of scene %s' % attr['scene'])
+
+    # log image for user
     target = "%s/sentinel2/%s/%s/derived/ndsi_%s.img" % (base.get_download_dir(),attr['tile'],attr['scene'],attr['scene'])
     _log_files(req,dbh,base.get_user(),attr['img_ndsi'],target)
 
-    # give feedback
-    req.write("CREATION OK: created NDSI-image <strong>%s</strong>\n\n" % (attr['img_ndsi']) )
-
-def _get_owners(req,dbh,task,scene):
-    """ get owners for a given scene and image type """
-    owners = []
-    if task == 'ALL':
-        dbh.execute("SELECT DISTINCT user_id FROM sentinel2 WHERE scene=%s", (scene,) )
-    else:
-        dbh.execute("SELECT DISTINCT user_id FROM sentinel2 WHERE task=%s AND scene=%s", ('create %s' % task,scene) )
-
-    for row in dbh.fetchall():
-        owners.append(row['user_id'])
-
-    return owners
 
 def _log_files(req,dbh,user_id,source,target):
     """ log files for user """
@@ -240,23 +243,6 @@ def _log_task(req,base,dbh,task,scene):
         base.get_user(),task,scene
     ))
 
-    # keep track of "owner" of scene
-    if task[:6] == 'remove':
-        if task == 'remove':
-            # remove all entries for the given user and scene
-            dbh.execute("DELETE FROM sentinel2 WHERE user_id=%s AND scene=%s", (
-                base.get_user(),scene
-            ))
-        else:
-            # remove specific entry for the given user and scene
-            dbh.execute("DELETE FROM sentinel2 WHERE user_id=%s AND task=%s AND scene=%s", (
-                base.get_user(),re.sub('remove','create',task),scene
-            ))
-    else:
-        dbh.execute("INSERT INTO sentinel2 (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
-            base.get_user(),task,scene
-        ))
-
 def index(req, scene=None):
     """ provide start page for toolbox """
     (base,dbh,tpl) = Laser.base.impl().init(req)
@@ -271,44 +257,100 @@ def index(req, scene=None):
     attr = aws.get_scene_attributes()
 
     # get owners of scene
-    owners = _get_owners(req,dbh,'ALL',attr['scene'])
+    acl = {}
+    user_id = base.get_user()
+    scene_files = []
+    dbh.execute("SELECT user_id,target FROM sentinel2_files WHERE target ~ %s", (attr['scene'],) )
+    for row in dbh.fetchall():
+        if not row['user_id'] in acl:
+            acl[row['user_id']] = {
+                'rgb' : False,
+                'ndvi' : False,
+                'ndsi' : False,
+                'scene' : False
+            }
+
+        # check images
+        for img in ('rgb','ndvi','ndsi'):
+            if re.search('derived/%s' % img, row['target']):
+                acl[row['user_id']][img] = True
+                if not img in scene_files:
+                    scene_files.append(img)
+
+        # check scene
+        if re.search(r'%s$' % attr['scene'], row['target']):
+            acl[row['user_id']]['scene'] = True
+            if not 'scene' in scene_files:
+                scene_files.append('scene')
 
     # set template terms
     tpl.add_term('APP_root', aws.get_app_root())
     tpl.add_term('APP_scene', scene)
     tpl.add_term('APP_user', base.get_user() )
-    tpl.add_term('APP_owners', ', '.join(owners) )
 
-    # build edit buttons for derivates if any
-    for prefix in aws.get_derived_image_prefixes():
-        if attr['has_%s' % prefix]:
-            tpl.append_to_term("APP_buttons",u"""
-                <div>
-                  <form method="GET" action="/data/sentinel2/toolbox/index.py/remove">
-                    <input type="hidden" name="scene" value="%s">
-                    <input type="hidden" name="image" value="%s">
-                    <input type="submit" value="%s-Bild löschen &gt;&gt;" class="button_remove">
-                  </form><br>
-                </div>""" % (
-                    scene,prefix,prefix.upper()
-            ))
-        else:
-            tpl.append_to_term("APP_buttons",u"""
-                <div>
-                  <form method="GET" action="/data/sentinel2/toolbox/index.py/process">
-                    <input type="hidden" name="scene" value="%s">
-                    <input type="hidden" name="image" value="%s">
-                    <input type="submit" value="%s-Bild erzeugen &gt;&gt;" class="button_add">
-                  </form><br>
-                </div>""" % (
-                    scene,prefix,prefix.upper()
-            ))
-
-    # set template according to task
-    if os.path.exists(attr['dir_root']):
-        return tpl.resolve_template('/home/institut/www/html/data/sentinel2/toolbox/templates/index_edit.tpl')
-    else:
+    # decide what to do
+    if not 'scene' in scene_files:
+        # show download form
         return tpl.resolve_template('/home/institut/www/html/data/sentinel2/toolbox/templates/index.tpl')
+
+    else:
+        # build buttons for derivates if any
+        for img in aws.get_derived_image_prefixes():
+            # hide image creation buttons until scene is subscribed
+            display = 'block'
+            if not user_id in acl or (user_id in acl and not acl[user_id]['scene']):
+                display = 'none'
+
+            # set button properties
+            if not img in scene_files:
+                action = "/data/sentinel2/toolbox/index.py/process"
+                submit = "%s-Bild erzeugen &gt;&gt;" % img.upper()
+                cls = "button_add"
+            else:
+                if user_id in acl and acl[user_id][img]:
+                    action = "/data/sentinel2/toolbox/index.py/remove"
+                    if len(acl.keys()) == 1:
+                        submit = u"%s-Bild löschen &gt;&gt;" % img.upper()
+                        cls = "button_remove"
+                    else:
+                        submit = "%s-Bild vorhanden --&gt; unsubscribe" % img.upper()
+                        cls = "button_unsubscribe"
+                else:
+                    action = "/data/sentinel2/toolbox/index.py/process"
+                    submit = "%s-Bild vorhanden --&gt;subscribe" % img.upper()
+                    cls = "button_add"
+
+            tpl.append_to_term("APP_buttons",u"""
+                <div style="display:%s">
+                    <form method="GET" action="%s">
+                    <input type="hidden" name="scene" value="%s">
+                    <input type="hidden" name="image" value="%s">
+                    <input type="submit" value="%s" class="%s">
+                    </form><br>
+                </div>""" % (
+                    display,action,scene,img,submit,cls
+            ))
+
+        if 'scene' in scene_files:
+            # set label for scene remove button
+            if not user_id in acl:
+                tpl.add_term('APP_sceneButtonAction', '/data/sentinel2/toolbox/index.py/download')
+                tpl.add_term('APP_sceneButtonImages', '')
+                tpl.add_term('APP_sceneButtonLabel', 'Szene vorhanden --&gt; subscribe')
+                tpl.add_term('APP_sceneButtonClass', 'button_add')
+            else:
+                if acl[user_id]['scene'] and len(acl.keys()) == 1:
+                    tpl.add_term('APP_sceneButtonAction', '/data/sentinel2/toolbox/index.py/remove')
+                    tpl.add_term('APP_sceneButtonImages', 'all')
+                    tpl.add_term('APP_sceneButtonLabel', u'Gesamte Szene mit allen Daten löschen &gt;&gt;')
+                    tpl.add_term('APP_sceneButtonClass', 'button_remove')
+                else:
+                    tpl.add_term('APP_sceneButtonAction', '/data/sentinel2/toolbox/index.py/remove')
+                    tpl.add_term('APP_sceneButtonImages', 'all')
+                    tpl.add_term('APP_sceneButtonLabel', u'Szene vorhanden --&gt; unsubscribe')
+                    tpl.add_term('APP_sceneButtonClass', 'button_unsubscribe')
+
+        return tpl.resolve_template('/home/institut/www/html/data/sentinel2/toolbox/templates/index_edit.tpl')
 
 def download(req, scene=None, image=None, quiet=True):
     """ downlaod rawdata for the given tile and create optional RGB, NDVI images """
@@ -337,13 +379,20 @@ def download(req, scene=None, image=None, quiet=True):
     dbh.connect(user='intranet')
 
     # download rawdata
-    req.write("<h3>Processing %s</h3>" % scene)
     req.write('<pre>')
 
+    # download or subscribe to data
     if not os.path.exists(attr['dir_root']):
         # download rawdata
         _download_rawdata(req,base,dbh,aws,attr)
         _log_task(req,base,dbh,'download',attr['scene'])
+    else:
+        if not images:
+            # add to scenes of user
+            source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],attr['scene'])
+            target = "%s/sentinel2/%s/%s" % (base.get_download_dir(),attr['tile'],attr['scene'])
+            _log_files(req,dbh,base.get_user(),source,target)
+            req.write("INFO: subscribed to scene %s" % attr['scene'])
 
     # create additional RGB-image if requested
     if 'rgb' in images:
@@ -361,6 +410,8 @@ def download(req, scene=None, image=None, quiet=True):
         _log_task(req,base,dbh,'create NDSI',attr['scene'])
 
     dbh.close()
+
+    # redirect to toolbox page
     return '\n</pre><p><a href="/data/sentinel2/toolbox/index?scene=%s">continue to toolbox &gt;&gt;</p>' % scene
 
 def process(req, scene=None, image=None, quiet=True):
@@ -401,8 +452,8 @@ def remove(req, scene=None, image=None, quiet=True):
         else:
             # get other owners of scene
             owners_notme = []
-            dbh.execute("SELECT DISTINCT user_id FROM sentinel2_files WHERE target=%s AND user_id != %s", (
-                scene_dir,base.get_user()
+            dbh.execute("SELECT DISTINCT user_id FROM sentinel2_files WHERE source ~ %s AND user_id != %s", (
+                attr['dir_root'],base.get_user()
             ))
             for row in dbh.fetchall():
                 owners_notme.append(row['user_id'])

@@ -12,14 +12,13 @@
   <img src="$APP_root/images/$APP_scene.jpg" alt="Preview" />
 
   <div class="toolbox">
-    <p>Daten für Benutzer $APP_owners</p>
     <fieldset>
       $APP_buttons
-      <form method="GET" action="/data/sentinel2/toolbox/index.py/remove">
+      <form method="GET" action="$APP_sceneButtonAction">
       <p>
         <input type="hidden" name="scene" value="$APP_scene">
-        <input type="hidden" name="image" value="all">
-        <input type="submit" value="Gesamte Szene mit allen Daten löschen &gt;&gt;" class="button_remove">
+        <input type="hidden" name="image" value="$APP_sceneButtonImages">
+        <input type="submit" value="$APP_sceneButtonLabel" class="$APP_sceneButtonClass">
       </p>
       </form>
     </fieldset>
