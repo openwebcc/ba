@@ -370,6 +370,9 @@ def remove(req, scene=None, image=None, quiet=True):
             owners_notme.append(owner)
 
     if image == 'all':
+        # set path to scene directory softlink
+        scene_dir = "%s/sentinel2/%s/%s" % (base.get_download_dir(),attr['tile'],attr['scene'])
+
         # remove all images if they exist
         if not os.path.exists(attr['dir_root']):
             # no rawdata directory found
@@ -378,6 +381,7 @@ def remove(req, scene=None, image=None, quiet=True):
             if len(owners_notme) > 0:
                 _log_task(req,base,dbh,'remove',attr['scene'])
                 req.write("<pre>INFO: die Daten werden von %s noch benötigt und können deshalb nicht vom Server gelöscht werden.\n</pre>" % ', '.join(owners_notme) )
+                os.system('rm -f %s' % scene_dir)
             else:
                 # unset download switch in MongoDB
                 conn = MongoClient('localhost', 27017)
@@ -388,6 +392,7 @@ def remove(req, scene=None, image=None, quiet=True):
                 # remove rawdata directory with all derived images
                 shutil.rmtree(attr['dir_root'])
                 _log_task(req,base,dbh,'remove',attr['scene'])
+                os.system('rm -f %s' % scene_dir)
                 req.write("<pre>INFO: removed all data for scene %s ...\n</pre>" % attr['scene'] )
     else:
         # remove image if it exists
