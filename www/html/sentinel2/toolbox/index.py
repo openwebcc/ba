@@ -278,7 +278,7 @@ def index(req, scene=None):
                   <form method="GET" action="/data/sentinel2/toolbox/index.py/remove">
                     <input type="hidden" name="scene" value="%s">
                     <input type="hidden" name="image" value="%s">
-                    <input type="submit" value="%s-Bild lÃ¶schen &gt;&gt;" class="button_remove">
+                    <input type="submit" value="%s-Bild löschen &gt;&gt;" class="button_remove">
                   </form><br>
                 </div>""" % (
                     scene,prefix,prefix.upper()
@@ -397,7 +397,7 @@ def remove(req, scene=None, image=None, quiet=True):
             #req.write("%s ..." % owners_notme)
             if len(owners_notme) > 0:
                 _log_task(req,base,dbh,'remove',attr['scene'])
-                req.write("<pre>INFO: die Daten werden von %s noch benÃ¶tigt und kÃ¶nnen deshalb nicht vom Server gelÃ¶scht werden.\n</pre>" % ', '.join(owners_notme) )
+                req.write("<pre>INFO: die Daten werden von %s noch benötigt und können deshalb nicht vom Server gelöscht werden.\n</pre>" % ', '.join(owners_notme) )
                 os.system('rm -f %s' % scene_dir)
             else:
                 # unset download switch in MongoDB
@@ -418,7 +418,7 @@ def remove(req, scene=None, image=None, quiet=True):
         else:
             if len(owners_notme) > 0:
                 _log_task(req,base,dbh,'remove %s' % image.upper(),attr['scene'])
-                req.write("<pre>INFO: die Daten werden von %s noch benÃ¶tigt und kÃ¶nnen deshalb nicht vom Server gelÃ¶scht werden.\n</pre>" % ', '.join(owners_notme) )
+                req.write("<pre>INFO: die Daten werden von %s noch benötigt und können deshalb nicht vom Server gelöscht werden.\n</pre>" % ', '.join(owners_notme) )
             else:
                 os.remove(attr["img_%s" % image])
                 _log_task(req,base,dbh,'remove %s' % image.upper(),attr['scene'])
