@@ -25,7 +25,7 @@ import Laser.base
 import Laser.Util.web
 from Sat.sentinel2_aws import AWS
 
-def _download_rawdata(req,base,aws,attr):
+def _download_rawdata(req,base,dbh,aws,attr):
     """ get rawdata for scene """
     download = {
         'dir_root' : [],
@@ -72,23 +72,26 @@ def _download_rawdata(req,base,aws,attr):
     #
 
     # ensure tile-directory
-    tile_dir = base.ensure_directory("%s/sentinel2/%s" % (base.get_download_dir(),attr['tile']) )
+    source = "%s/%s" % (aws.get_basedir(),attr['tile'])
+    target = "%s/sentinel2/%s" % (base.get_download_dir(),attr['tile'])
+    tile_dir = base.ensure_directory(target)
+    _log_files(req,dbh,base.get_user(),source,target)
 
     # link all metadata and previews for this tile
     for subdir in ('metadata','preview'):
-        if not os.path.exists("%s/%s" % (tile_dir,subdir) ):
-            os.system('ln -s %s/%s/%s %s/%s' % (
-                aws.get_basedir(),attr['tile'],subdir,
-                tile_dir,subdir
-            ))
+        source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],subdir)
+        target = "%s/%s" % (tile_dir,subdir)
+        _log_files(req,dbh,base.get_user(),source,target)
+        if not os.path.exists(target):
+            os.system('ln -s %s %s' % (source,target) )
 
     # link scene data subdirectory
-    scene_dir = "%s/%s" % (tile_dir,attr['scene'])
-    if not os.path.exists(scene_dir):
-        os.system("ln -s %s/%s/%s %s" % (
-            aws.get_basedir(),attr['tile'],attr['scene'],
-            scene_dir
-        ))
+    source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],attr['scene'])
+    target = "%s/%s" % (tile_dir,attr['scene'])
+    if not os.path.exists(target):
+        os.system('ln -s %s %s' % (source,target) )
+        _log_files(req,dbh,base.get_user(),source,target)
+
 
 def _convert_jpeg_to_tif(req,aws,attr,band):
     """ convert JPEG2000 image to temporary TIF file """
@@ -99,7 +102,7 @@ def _convert_jpeg_to_tif(req,aws,attr,band):
         req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
         os.system(cmd)
 
-def _create_rgb_image(req,aws,attr):
+def _create_rgb_image(req,base,dbh,aws,attr):
     """ create RGB-image for this scene """
     req.write("PLEASE WAIT: creating RGB-image ...\n")
 
@@ -123,12 +126,14 @@ def _create_rgb_image(req,aws,attr):
     )
     req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
     os.system(cmd)
+    target = "%s/sentinel2/%s/%s/derived/rgb_%s.img" % (base.get_download_dir(),attr['tile'],attr['scene'],attr['scene'])
+    _log_files(req,dbh,base.get_user(),attr['img_rgb'],target)
 
     # give feedback
     req.write("CREATION OK: created RGB-image <strong>%s</strong>\n\n" % (attr['img_rgb']) )
 
 
-def _create_ndvi_image(req,aws,attr):
+def _create_ndvi_image(req,base,dbh,aws,attr):
     """ create NDVI-image for this scene """
     req.write("PLEASE WAIT: creating NDVI-image ...\n")
 
@@ -151,12 +156,14 @@ def _create_ndvi_image(req,aws,attr):
     )
     req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
     os.system(cmd)
+    target = "%s/sentinel2/%s/%s/derived/ndvi_%s.img" % (base.get_download_dir(),attr['tile'],attr['scene'],attr['scene'])
+    _log_files(req,dbh,base.get_user(),attr['img_ndvi'],target)
 
     # give feedback
     req.write("CREATION OK: created NDVI-image <strong>%s</strong>\n\n" % (attr['img_ndvi']) )
 
 
-def _create_ndsi_image(req,aws,attr):
+def _create_ndsi_image(req,base,dbh,aws,attr):
     """ create NDSI-image for this scene 
         see https://sentinel.esa.int/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm
     """
@@ -192,6 +199,8 @@ def _create_ndsi_image(req,aws,attr):
     )
     req.write("PLEASE WAIT: executing '%s' ...\n" % cmd)
     os.system(cmd)
+    target = "%s/sentinel2/%s/%s/derived/ndsi_%s.img" % (base.get_download_dir(),attr['tile'],attr['scene'],attr['scene'])
+    _log_files(req,dbh,base.get_user(),attr['img_ndsi'],target)
 
     # give feedback
     req.write("CREATION OK: created NDSI-image <strong>%s</strong>\n\n" % (attr['img_ndsi']) )
@@ -207,7 +216,14 @@ def _get_owners(req,dbh,task,scene):
     for row in dbh.fetchall():
         owners.append(row['user_id'])
 
-    return owners if len(owners) > 0 else ['laser']
+    return owners
+
+def _log_files(req,dbh,user_id,source,target):
+    """ log files for user """
+    dbh.execute("DELETE FROM sentinel2_files WHERE user_id=%s AND source=%s AND target=%s", (user_id,source,target) )
+    dbh.execute("""INSERT INTO sentinel2_files (user_id,source,target,tstamp) VALUES (%s,%s,%s,NOW())""", (
+        user_id,source,target
+    ))
 
 def _log_task(req,base,dbh,task,scene):
     """ log toolbox action """
@@ -317,22 +333,22 @@ def download(req, scene=None, image=None, quiet=True):
 
     if not os.path.exists(attr['dir_root']):
         # download rawdata
-        _download_rawdata(req,base,aws,attr)
+        _download_rawdata(req,base,dbh,aws,attr)
         _log_task(req,base,dbh,'download',attr['scene'])
 
     # create additional RGB-image if requested
     if 'rgb' in images:
-        _create_rgb_image(req,aws,attr)
+        _create_rgb_image(req,base,dbh,aws,attr)
         _log_task(req,base,dbh,'create RGB',attr['scene'])
 
     # create additional NDVI-image if requested
     if 'ndvi' in images:
-        _create_ndvi_image(req,aws,attr)
+        _create_ndvi_image(req,base,dbh,aws,attr)
         _log_task(req,base,dbh,'create NDVI',attr['scene'])
 
     # create additional NDSI-image if requested
     if 'ndsi' in images:
-        _create_ndsi_image(req,aws,attr)
+        _create_ndsi_image(req,base,dbh,aws,attr)
         _log_task(req,base,dbh,'create NDSI',attr['scene'])
 
     dbh.close()
@@ -378,6 +394,7 @@ def remove(req, scene=None, image=None, quiet=True):
             # no rawdata directory found
             req.write("<pre>ERROR: scene %s does not exist\n</pre>" % attr['scene'] )
         else:
+            #req.write("%s ..." % owners_notme)
             if len(owners_notme) > 0:
                 _log_task(req,base,dbh,'remove',attr['scene'])
                 req.write("<pre>INFO: die Daten werden von %s noch benÃ¶tigt und kÃ¶nnen deshalb nicht vom Server gelÃ¶scht werden.\n</pre>" % ', '.join(owners_notme) )
