@@ -387,14 +387,10 @@ def remove(req, scene=None, image=None, quiet=True):
     aws.set_scene(scene)
     attr = aws.get_scene_attributes()
 
-    # get data owners
-    owners = _get_owners(req,dbh,image.upper(),attr['scene'])
-    owners_notme = []
-    for owner in owners:
-        if owner != base.get_user():
-            owners_notme.append(owner)
-
+    # decide what to do
     if image == 'all':
+        # remove scene if it exists
+
         # set path to scene directory softlink
         scene_dir = "%s/sentinel2/%s/%s" % (base.get_download_dir(),attr['tile'],attr['scene'])
 
