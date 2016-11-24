@@ -19,7 +19,7 @@
     <li>Windows:
 <pre>
 Netzlaufwerk verbinden
-\\geo1\download\ffp\$APP_subdir
+\\geo1\download\$APP_user\ffp\$APP_subdir
 User: geo1\$APP_user
 Pass: *******
 </pre>
@@ -28,7 +28,7 @@ Pass: *******
 <pre>
 # mount
 mkdir /tmp/$APP_subdir
-sudo mount -t cifs -o username=$APP_user,passwd=******* //geo1.uibk.ac.at/download/ffp/$APP_subdir /tmp/$APP_subdir
+sudo mount -t cifs -o username=$APP_user,passwd=******* //geo1.uibk.ac.at/download/$APP_user/ffp/$APP_subdir /tmp/$APP_subdir
 
 # umount
 sudo umount /tmp/$APP_subdir

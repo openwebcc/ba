@@ -62,7 +62,7 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
     subdir = dbh.fetchone()['id']
 
     # create download subdirectory
-    os.mkdir('%s/%s' % (config.get_download_dir(),subdir) )
+    download_dir = base.ensure_directory('%s/ffp/%s' % (base.get_download_dir(),subdir))
 
     # create softlinks to tiles
     download_size = 0
@@ -77,11 +77,10 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
 
         # link
         for fname in link_files:
-            os.system("ln -s %s/%s/%s_%s/%s/%s %s/%s/%s_%s_%s_%s" % (
+            os.system("ln -s %s/%s/%s_%s/%s/%s %s/%s_%s_%s_%s" % (
                 config.get_base_dir(),
                 row['pname'],row['cdate'],row['cname'],row['ctype'],fname,
-                config.get_download_dir(),subdir,
-                row['pname'],row['cdate'],row['cname'],fname
+                download_dir,row['pname'],row['cdate'],row['cname'],fname
             ))
 
         # add to download_size
@@ -97,7 +96,7 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
     tpl.add_term('APP_tiles', len(ids))
     tpl.add_term('APP_tiles_label', "Kachel" if len(ids) == 1 else "Kacheln")
     tpl.add_term('APP_subdir', subdir )
-    tpl.add_term('APP_download_dir', config.get_download_dir() )
+    tpl.add_term('APP_download_dir', download_dir )
     tpl.add_term('APP_download_size', download_size )
     tpl.add_term('APP_user',req.user if req.user else 'anonymous')
     tpl.add_term('APP_hours_available',config.get_download_hours_available())
