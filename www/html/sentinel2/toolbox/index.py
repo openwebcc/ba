@@ -225,6 +225,15 @@ def _log_files(req,dbh,user_id,source,target):
         user_id,source,target
     ))
 
+def _unlog_files(req,dbh,user_id,source=None,target=None):
+    """ remove files for user """
+    if source:
+        dbh.execute("DELETE FROM sentinel2_files WHERE user_id=%s AND source ~ %s", (user_id,source) )
+    elif target:
+        dbh.execute("DELETE FROM sentinel2_files WHERE user_id=%s AND target ~ %s", (user_id,target) )
+    else:
+        pass
+
 def _log_task(req,base,dbh,task,scene):
     """ log toolbox action """
     dbh.execute("INSERT INTO sentinel2_log (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
@@ -389,15 +398,22 @@ def remove(req, scene=None, image=None, quiet=True):
         # set path to scene directory softlink
         scene_dir = "%s/sentinel2/%s/%s" % (base.get_download_dir(),attr['tile'],attr['scene'])
 
-        # remove all images if they exist
+        # remove scene if it exists
         if not os.path.exists(attr['dir_root']):
             # no rawdata directory found
             req.write("<pre>ERROR: scene %s does not exist\n</pre>" % attr['scene'] )
         else:
-            #req.write("%s ..." % owners_notme)
+            # get other owners of scene
+            owners_notme = []
+            dbh.execute("SELECT DISTINCT user_id FROM sentinel2_files WHERE target=%s AND user_id != %s", (
+                scene_dir,base.get_user()
+            ))
+            for row in dbh.fetchall():
+                owners_notme.append(row['user_id'])
+
             if len(owners_notme) > 0:
                 _log_task(req,base,dbh,'remove',attr['scene'])
-                req.write("<pre>INFO: die Daten werden von %s noch benötigt und können deshalb nicht vom Server gelöscht werden.\n</pre>" % ', '.join(owners_notme) )
+                req.write("<pre>INFO: unsubscribed from scene %s</pre>" % (attr['scene']) )
                 os.system('rm -f %s' % scene_dir)
             else:
                 # unset download switch in MongoDB
@@ -411,18 +427,33 @@ def remove(req, scene=None, image=None, quiet=True):
                 _log_task(req,base,dbh,'remove',attr['scene'])
                 os.system('rm -f %s' % scene_dir)
                 req.write("<pre>INFO: removed all data for scene %s ...\n</pre>" % attr['scene'] )
+
+            # remove all scene entries for this user
+            _unlog_files(req,dbh,base.get_user(),target=scene_dir)
+
     else:
         # remove image if it exists
         if not os.path.exists(attr["img_%s" % image]):
             req.write("<pre>ERROR: %s-image for scene %s does not exist\n</pre>" % (image.upper(),attr['scene']) )
         else:
+            # get other owners of image
+            owners_notme = []
+            dbh.execute("SELECT DISTINCT user_id FROM sentinel2_files WHERE source=%s AND user_id != %s", (
+                attr["img_%s" % image],base.get_user()
+            ))
+            for row in dbh.fetchall():
+                owners_notme.append(row['user_id'])
+
             if len(owners_notme) > 0:
                 _log_task(req,base,dbh,'remove %s' % image.upper(),attr['scene'])
-                req.write("<pre>INFO: die Daten werden von %s noch benötigt und können deshalb nicht vom Server gelöscht werden.\n</pre>" % ', '.join(owners_notme) )
+                req.write("<pre>INFO: unsubscribed from %s-image for scene %s</pre>" % (image.upper(),attr['scene']) )
             else:
                 os.remove(attr["img_%s" % image])
                 _log_task(req,base,dbh,'remove %s' % image.upper(),attr['scene'])
                 req.write("<pre>INFO: removed %s-image for scene %s ...\n</pre>" % (image.upper(),attr['scene']) )
+
+            # remove image entry for this user
+            _unlog_files(req,dbh,base.get_user(),source=attr["img_%s" % image])
 
     # finish
     dbh.close()
