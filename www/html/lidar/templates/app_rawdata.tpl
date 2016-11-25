@@ -75,6 +75,11 @@
             edit: { featureGroup: drawnItems }
         }));
 
+        // clear existing layer geometry prior to digitizing
+        map.on('draw:drawstart', function (evt) {
+            drawnItems.clearLayers();
+        });
+
         map.on('draw:created', function(event) {
             var layer = event.layer;
             sw = layer.getBounds().getSouthWest();
