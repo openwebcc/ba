@@ -186,21 +186,3 @@ def strips(req, cid=None, extent=None):
     tpl.add_term('APP_user',base.get_user())
     return tpl.resolve_template('/home/institut/www/html/data/lidar/restricted/templates/download.tpl')
 
-def report(req, cid=None):
-    """ get flight report for given campaign if any """
-
-    # init application
-    (base,dbh,tpl) = Laser.base.impl().init(req)
-    util = Laser.Util.web.impl(base)
-
-    # se if pdf exists
-    cpath = util.path_to_campaign(cid)
-    if os.path.exists('%s/doc/report.pdf' % cpath):
-        req.content_type = 'application/pdf'
-        req.write(open('%s/doc/report.pdf' % cpath).read())
-    else:
-        req.write('No flight report available')
-
-    # finish
-    dbh.close()
-    raise apache.SERVER_RETURN, apache.OK
