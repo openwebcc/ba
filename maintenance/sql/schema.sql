@@ -44,9 +44,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON lidar_meta TO GROUP intranet_group;
 CREATE TABLE lidar_log (
     id SERIAL PRIMARY KEY NOT NULL,
     user_id TEXT,
-    mb INTEGER,
-    fnames TEXT[],
-    geom_json TEXT,
+    files TEXT[],
     tstamp TIMESTAMP DEFAULT NOW()
 );
 GRANT SELECT ON lidar_log TO GROUP web_group;
