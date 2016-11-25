@@ -16,11 +16,11 @@ BEGIN;
 --
 
 
-DROP VIEW IF EXISTS view_meta;
-DROP TABLE IF EXISTS meta;
-DROP SEQUENCE IF EXISTS meta_gid_seq;
+DROP VIEW IF EXISTS view_lidar_meta;
+DROP TABLE IF EXISTS lidar_meta;
+DROP SEQUENCE IF EXISTS lidar_meta_gid_seq;
 
-CREATE TABLE meta (
+CREATE TABLE lidar_meta (
     gid SERIAL PRIMARY KEY NOT NULL, -- Primärschlüssel (auto-inkrement)
     ptype TEXT,                      -- Projekttyp (z.B. als)
     pname TEXT,                      -- Projektname (z.B. hef)
@@ -34,11 +34,11 @@ CREATE TABLE meta (
     traj geometry(Linestring,0),     -- Geometrie der Trajektorie
     info JSON                        -- JSON-Objekt mit allen Attributen
 );
-GRANT SELECT ON meta TO GROUP web_group;
-GRANT SELECT, UPDATE ON meta_gid_seq TO GROUP intranet_group;
-GRANT SELECT, INSERT, UPDATE, DELETE ON meta TO GROUP intranet_group;
+GRANT SELECT ON lidar_meta TO GROUP web_group;
+GRANT SELECT, UPDATE ON lidar_meta_gid_seq TO GROUP intranet_group;
+GRANT SELECT, INSERT, UPDATE, DELETE ON lidar_meta TO GROUP intranet_group;
 
-CREATE OR REPLACE VIEW view_meta AS (
+CREATE OR REPLACE VIEW view_lidar_meta AS (
     SELECT gid,ptype,pname,cname,cdate,fname,fsize,points,info,srid,
     to_date(cdate, 'YYMMDD') AS datum,
     info->>'system_identifier' AS sensor,
@@ -46,10 +46,10 @@ CREATE OR REPLACE VIEW view_meta AS (
     (info->>'point_density')::numeric AS density,
     ST_Transform(ST_SetSRID(hull,srid),4326) AS hull,
     ST_Transform(ST_SetSRID(traj,srid),4326) AS traj
-    FROM meta
+    FROM lidar_meta
     WHERE ptype IN ('als','tls')
 );
-GRANT SELECT ON view_meta TO GROUP web_group;
+GRANT SELECT ON view_lidar_meta TO GROUP web_group;
 
 
 COMMIT;

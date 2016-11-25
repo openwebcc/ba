@@ -32,7 +32,7 @@ def lasfile(req, gid=None):
     (base,dbh,tpl) = Laser.base.impl().init(req)
     util = Laser.Util.web.impl(base)
 
-    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_meta WHERE gid=%s""", (gid,))
+    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_lidar_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         ipath = '%s/las/%s' % (util.path_to_campaign(cid),row['fname'])
@@ -56,7 +56,7 @@ def trajectory(req, gid=None):
     (base,dbh,tpl) = Laser.base.impl().init(req)
     util = Laser.Util.web.impl(base)
 
-    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_meta WHERE gid=%s""", (gid,))
+    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_lidar_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         ipath = "%s/meta/%s.traj.txt" % (util.path_to_campaign(cid),row['fname'])
