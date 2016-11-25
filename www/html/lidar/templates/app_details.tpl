@@ -11,8 +11,8 @@
 
   <p>
   <strong>Download</strong>: 
-  <a href="$APP_root/app.py/lasfile?gid=$APP_val_gid">LAS-Datei</a>
-  <span style="display:$APP_trajectory_link_display"> | <a href="$APP_root/app.py/trajectory?gid=$APP_val_gid">Trajektorie</a></span>
+  <a href="$APP_root/restricted/download/lasfile?gid=$APP_val_gid">LAS-Datei</a>
+  <span style="display:$APP_trajectory_link_display"> | <a href="$APP_root/restricted/download/trajectory?gid=$APP_val_gid">Trajektorie</a></span>
   </p>
 
   <h3>Metadatenblatt</h3>

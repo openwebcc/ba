@@ -84,10 +84,10 @@
 
             // activate download buttons
             document.getElementById('APP_download_points').onclick = function (e) {
-                window.location = '$APP_root/app.py/points?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
+                window.location = '$APP_root/restricted/download/points?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
             };
             document.getElementById('APP_download_strips').onclick = function (e) {
-                window.location = '$APP_root/app.py/strips?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
+                window.location = '$APP_root/restricted/download/strips?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
             };
             document.getElementById('APP_download_points').style.display = "inline";
             document.getElementById('APP_download_strips').style.display = "inline";
@@ -125,10 +125,10 @@
                 popup.push('</ul>')
                 popup.push('<p>');
                 popup.push('<a href="$APP_root/app.py/details?gid=' + feature.properties.gid + '">Metadaten anzeigen</a><br/>');
-                popup.push('<a href="$APP_root/app.py/lasfile?gid=' + feature.properties.gid + '">Download LAS-Datei</a><br/>');
+                popup.push('<a href="$APP_root/restricted/download/lasfile?gid=' + feature.properties.gid + '">Download LAS-Datei</a><br/>');
                 // add link to trajectory download if available
                 if (feature.properties.has_traj == true) {
-                    popup.push('<a href="$APP_root/app.py/trajectory?gid=' + feature.properties.gid + '">Download originale Flugtrajektorie</a><br/>');
+                    popup.push('<a href="$APP_root/restricted/download/trajectory?gid=' + feature.properties.gid + '">Download originale Flugtrajektorie</a><br/>');
                 }
                 popup.push('</p>')
                 layer.bindPopup(popup.join(''));
