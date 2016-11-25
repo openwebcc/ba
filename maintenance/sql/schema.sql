@@ -17,6 +17,8 @@ BEGIN;
 
 
 DROP VIEW IF EXISTS view_lidar_meta;
+DROP TABLE IF EXISTS lidar_log;
+DROP SEQUENCE IF EXISTS lidar_log_id_seq;
 DROP TABLE IF EXISTS lidar_meta;
 DROP SEQUENCE IF EXISTS lidar_meta_gid_seq;
 
@@ -37,6 +39,20 @@ CREATE TABLE lidar_meta (
 GRANT SELECT ON lidar_meta TO GROUP web_group;
 GRANT SELECT, UPDATE ON lidar_meta_gid_seq TO GROUP intranet_group;
 GRANT SELECT, INSERT, UPDATE, DELETE ON lidar_meta TO GROUP intranet_group;
+
+
+CREATE TABLE lidar_log (
+    id SERIAL PRIMARY KEY NOT NULL,
+    user_id TEXT,
+    mb INTEGER,
+    fnames TEXT[],
+    geom_json TEXT,
+    tstamp TIMESTAMP DEFAULT NOW()
+);
+GRANT SELECT ON lidar_log TO GROUP web_group;
+GRANT SELECT, UPDATE ON lidar_log_id_seq TO GROUP intranet_group;
+GRANT SELECT, INSERT ON lidar_log TO GROUP intranet_group;
+
 
 CREATE OR REPLACE VIEW view_lidar_meta AS (
     SELECT gid,ptype,pname,cname,cdate,fname,fsize,points,info,srid,
