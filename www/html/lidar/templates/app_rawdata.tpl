@@ -98,6 +98,12 @@
             document.getElementById('APP_download_strips').style.display = "inline";
         });
 
+        // hide download buttons if digitized geometry has been deleted
+        map.on('draw:deletestop', function (evt) {
+            document.getElementById('APP_download_points').style.display = "none";
+            document.getElementById('APP_download_strips').style.display = "none";
+        });
+
         var lasFiles = L.geoJson(null, {
             onEachFeature: function (feature, layer) {
                 var popup = []
