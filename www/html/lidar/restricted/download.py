@@ -19,12 +19,17 @@ import Laser.Util.web
 
 APP_ROOT = '/data/lidar'
 
-def _log_files(req,dbh,base,files):
+def _log_files(req,dbh,base,files,last_id=None):
     """ log files downloaded by user """
-    dbh.execute("INSERT INTO lidar_log (user_id,files) VALUES (%s,%s) RETURNING id", (
-        base.get_user(),files
-    ))
-    return dbh.fetchone()['id']
+    if last_id:
+        dbh.execute("INSERT INTO lidar_log (id,user_id,files) VALUES (%s,%s,%s)", (
+            last_id,base.get_user(),files
+        ))
+    else:
+        dbh.execute("INSERT INTO lidar_log (user_id,files) VALUES (%s,%s) RETURNING id", (
+            base.get_user(),files
+        ))
+        return dbh.fetchone()['id']
 
 def index(req):
     """ provide empty startpage for now """
@@ -42,14 +47,17 @@ def lasfile(req, gid=None):
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         ipath = '%s/las/%s' % (util.path_to_campaign(cid),row['fname'])
-        opath = '%s/%s_%s' % (util.get_download_dir(),util.get_cid_as_prefix(cid),row['fname'])
+
+        # log rawdata file and get new subdirectory ID
+        last_id = _log_files(req,dbh,base,[ipath])
+
+        # ensure output path and define output filename
+        subdir = base.ensure_directory('%s/%s/' % (util.get_download_dir(),last_id))
+        opath = '%s/%s_%s' % (subdir,util.get_cid_as_prefix(cid),row['fname'])
 
         # execute command
         proc = Popen(['ln', '-s', ipath, opath], stdout=PIPE, stderr=PIPE)
         stdout, stderr = proc.communicate()
-
-        # log file
-        last_id = _log_files(req,dbh,base,[ipath])
 
         # fill template terms
         tpl.add_term('APP_subdir',last_id)
@@ -73,15 +81,18 @@ def trajectory(req, gid=None):
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         ipath = "%s/meta/%s.traj.txt" % (util.path_to_campaign(cid),row['fname'])
-        opath = '%s/%s_%s.traj.txt' % (util.get_download_dir(),util.get_cid_as_prefix(cid),row['fname'])
 
         if os.path.exists(ipath):
+            # log rawdata file and get new subdirectory ID
+            last_id =_log_files(req,dbh,base,[ipath])
+
+            # ensure output path and define output filename
+            subdir = base.ensure_directory('%s/%s/' % (util.get_download_dir(),last_id))
+            opath = '%s/%s_%s.traj.txt' % (subdir,util.get_cid_as_prefix(cid),row['fname'])
+
             # execute command
             proc = Popen(['ln', '-s', ipath, opath], stdout=PIPE, stderr=PIPE)
             stdout, stderr = proc.communicate()
-
-            # log file
-            last_id =_log_files(req,dbh,base,[ipath])
 
             # fill template terms
             tpl.add_term('APP_subdir',last_id)
@@ -108,8 +119,15 @@ def points(req, cid=None, extent=None):
     # split up campaign ID
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
+    # get a new subdirectory ID
+    dbh.execute("SELECT NEXTVAL('lidar_log_id_seq') AS id")
+    last_id = dbh.fetchone()['id']
+
+    # ensure output path
+    outdir = base.ensure_directory('%s/%s' % (util.get_download_dir(),last_id))
+
     # get las2las command
-    args = util.get_las2las_cmd(cid,extent)
+    args = util.get_las2las_cmd(cid,extent,outdir)
 
     if type(args) == str:
         # show errors
@@ -117,20 +135,20 @@ def points(req, cid=None, extent=None):
         return 'ERROR: %s' % args
     else:
         # prepare file-listings
-        files = []
+        files = [args[-1]]
         files_downloaded = [args[-1]]
 
-        # execute las2las command
-        proc = Popen(args, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = proc.communicate()
-
-        # show lasfiles involved
+        # add lasfiles involved
         for fname in open(args[2]).readlines():
             files.append(fname.rstrip())
             files_downloaded.append('... mit Punkten von %s' % fname.rstrip())
 
-        # log files
-        last_id =_log_files(req,dbh,base,files)
+        # log files with given subdirectory ID
+        _log_files(req,dbh,base,files,last_id)
+
+        # execute las2las command
+        proc = Popen(args, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = proc.communicate()
 
         # fill template terms
         tpl.add_term('APP_subdir',last_id)
@@ -153,8 +171,15 @@ def strips(req, cid=None, extent=None):
     # split up campaign ID
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
+    # get a new subdirectory ID
+    dbh.execute("SELECT NEXTVAL('lidar_log_id_seq') AS id")
+    last_id = dbh.fetchone()['id']
+
+    # ensure output path
+    outdir = base.ensure_directory('%s/%s' % (util.get_download_dir(),last_id))
+
     # get shell commands
-    cmds = util.get_lascopy_cmds(cid,extent)
+    cmds = util.get_lascopy_cmds(cid,extent,outdir)
 
     if type(cmds) == str:
         # show errors
@@ -173,8 +198,8 @@ def strips(req, cid=None, extent=None):
             files.append(args[2])
             files_downloaded.append(args[3])
 
-        # log files
-        last_id =_log_files(req,dbh,base,files)
+        # log files with given subdirectory ID
+        _log_files(req,dbh,base,files,last_id)
 
         # fill template terms
         tpl.add_term('APP_subdir',last_id)

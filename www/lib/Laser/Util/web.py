@@ -44,8 +44,8 @@ class impl:
         return [int(round(float(v))) for v in re.sub(r'[ ,]','#',box[4:-2]).split('#')]
 
     def get_download_dir(self):
-        """ return path to download directory """
-        return DOWNLOAD_DIR
+        """ return path to download directory with user directory """
+        return "%s/%s/lidar" % (DOWNLOAD_DIR,self.base.get_user())
 
     def create_cid(self, ptype='als', pname='hef', cdate='011011', cname='hef01'):
         """ return capaign ID """
@@ -63,7 +63,7 @@ class impl:
         """ return cid as prefix suited for filenames with underscore as default delimiter"""
         return re.sub(':',delimiter,cid)
 
-    def get_lascopy_cmds(self, cid=None, ext=None):
+    def get_lascopy_cmds(self, cid=None, ext=None, outdir=None):
         """ return copy commands for lasfiles of given campaign within extent """
 
         # split up campaign ID
@@ -85,7 +85,7 @@ class impl:
                 RAWDATA_DIR,row['ptype'],pname,row['cdate'],cname,row['fname']
             )
             opath = '%s/%s_%s' % (
-                DOWNLOAD_DIR,self.get_cid_as_prefix(cid),row['fname']
+                outdir,self.get_cid_as_prefix(cid),row['fname']
             )
             cmds.append(['ln','-s',ipath,opath])
 
@@ -94,7 +94,7 @@ class impl:
         else:
             return cmds
 
-    def get_las2las_cmd(self, cid=None, ext=None):
+    def get_las2las_cmd(self, cid=None, ext=None, outdir=None):
         """ transform extent in latlng to extent of campaign, create list with lasfiles to process and return las commandline args """
 
         # init vars
@@ -147,7 +147,7 @@ class impl:
         else:
             # create list with lasfiles to process
             tpath = '%s/%s_%s_%s_%s_%s.%s.files.txt' % (
-                DOWNLOAD_DIR,self.get_cid_as_prefix(cid),box_extent[0],box_extent[1],box_extent[2],box_extent[3],las_extension
+                outdir,self.get_cid_as_prefix(cid),box_extent[0],box_extent[1],box_extent[2],box_extent[3],las_extension
             )
             opath = re.sub('.files.txt','',tpath)
             o = open(tpath,'w')
