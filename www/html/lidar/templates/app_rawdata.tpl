@@ -91,32 +91,10 @@
             };
             document.getElementById('APP_download_points').style.display = "inline";
             document.getElementById('APP_download_strips').style.display = "inline";
-
-            // TODO: maybe we will need the code below sometime ... skip it for now ...
-            // select lines intersecting the rectangle
-            //bounds = layer.getBounds();
-            //geojson_layer.eachLayer(function (geom) {
-            //    var i,points;
-            //    points = geom.getLatLngs();
-            //    for (i = 0; i < points.length; i+= 1) {
-            //        if (bounds.contains(points[i])) {
-            //            geom.setStyle({
-            //                color: '#cfc'
-            //            });
-            //            break;
-            //        }
-            //    }
-            //});
         });
 
         var lasFiles = L.geoJson(null, {
-            // http://leafletjs.com/reference.html#geojson-style
-            //style: function(feature) {
-            //    // TODO: do we want to display thematic stuff like point density?
-            //    return { color: '#f00' };
-            //},
             onEachFeature: function (feature, layer) {
-                //alert(feature.properties)
                 var popup = []
                 popup.push('<h3>' + feature.properties.fname + '</h3>');
                 popup.push('<ul>');
