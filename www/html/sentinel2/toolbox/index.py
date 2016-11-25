@@ -25,6 +25,31 @@ import Laser.base
 import Laser.Util.web
 from Sat.sentinel2_aws import AWS
 
+def _link_scene(req,base,dbh,aws,attr):
+    """ link scene data """
+
+    # ensure tile-directory
+    source = "%s/%s" % (aws.get_basedir(),attr['tile'])
+    target = "%s/sentinel2/%s" % (base.get_download_dir(),attr['tile'])
+    tile_dir = base.ensure_directory(target)
+    _log_files(req,dbh,base.get_user(),source,target)
+
+    # link all metadata and previews for this tile
+    for subdir in ('metadata','preview'):
+        source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],subdir)
+        target = "%s/%s" % (tile_dir,subdir)
+        _log_files(req,dbh,base.get_user(),source,target)
+        if not os.path.exists(target):
+            os.system('ln -s %s %s' % (source,target) )
+
+    # link scene data subdirectory
+    source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],attr['scene'])
+    target = "%s/%s" % (tile_dir,attr['scene'])
+    if not os.path.exists(target):
+        os.system('ln -s %s %s' % (source,target) )
+        _log_files(req,dbh,base.get_user(),source,target)
+
+
 def _download_rawdata(req,base,dbh,aws,attr):
     """ get rawdata for scene """
     download = {
@@ -67,30 +92,8 @@ def _download_rawdata(req,base,dbh,aws,attr):
     mdb.aws_tileInfo.update({ "_scene" : attr['scene'] },{ "$set" : { "_downloaded" : True } })
     conn.close()
 
-    #
-    # provide data in users download area
-    #
-
-    # ensure tile-directory
-    source = "%s/%s" % (aws.get_basedir(),attr['tile'])
-    target = "%s/sentinel2/%s" % (base.get_download_dir(),attr['tile'])
-    tile_dir = base.ensure_directory(target)
-    _log_files(req,dbh,base.get_user(),source,target)
-
-    # link all metadata and previews for this tile
-    for subdir in ('metadata','preview'):
-        source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],subdir)
-        target = "%s/%s" % (tile_dir,subdir)
-        _log_files(req,dbh,base.get_user(),source,target)
-        if not os.path.exists(target):
-            os.system('ln -s %s %s' % (source,target) )
-
-    # link scene data subdirectory
-    source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],attr['scene'])
-    target = "%s/%s" % (tile_dir,attr['scene'])
-    if not os.path.exists(target):
-        os.system('ln -s %s %s' % (source,target) )
-        _log_files(req,dbh,base.get_user(),source,target)
+    # link scene data
+    _link_scene(req,base,dbh,aws,attr)
 
 
 def _convert_jpeg_to_tif(req,aws,attr,band):
@@ -389,9 +392,7 @@ def download(req, scene=None, image=None, quiet=True):
     else:
         if not images:
             # add to scenes of user
-            source = "%s/%s/%s" % (aws.get_basedir(),attr['tile'],attr['scene'])
-            target = "%s/sentinel2/%s/%s" % (base.get_download_dir(),attr['tile'],attr['scene'])
-            _log_files(req,dbh,base.get_user(),source,target)
+            _link_scene(req,base,dbh,aws,attr)
             req.write("INFO: subscribed to scene %s" % attr['scene'])
 
     # create additional RGB-image if requested
