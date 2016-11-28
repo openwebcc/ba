@@ -68,7 +68,6 @@
         map.addControl(new L.Control.Draw({
             draw : {
                 circle : false,
-                polygon : false,
                 polyline : false,
                 marker : false
             },
