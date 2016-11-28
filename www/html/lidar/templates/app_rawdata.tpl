@@ -88,18 +88,16 @@
             drawnItems.addLayer(layer);
 
             // activate download buttons
-            document.getElementById('APP_download_points').onclick = function (e) {
-                window.location = '$APP_root/restricted/download/points?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
-            };
-            document.getElementById('APP_download_strips').onclick = function (e) {
-                window.location = '$APP_root/restricted/download/strips?cid=$APP_cid;extent=' + sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
-            };
+            document.getElementById('APP_download_points').extent.value = sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
+            document.getElementById('APP_download_strips').extent.value = sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
             document.getElementById('APP_download_points').style.display = "inline";
             document.getElementById('APP_download_strips').style.display = "inline";
         });
 
         // hide download buttons if digitized geometry has been deleted
         map.on('draw:deletestop', function (evt) {
+            document.getElementById('APP_download_points').extent.value = "";
+            document.getElementById('APP_download_strips').extent.value = "";
             document.getElementById('APP_download_points').style.display = "none";
             document.getElementById('APP_download_strips').style.display = "none";
         });
@@ -163,8 +161,16 @@
   <table style="width:100%">
     <tr>
       <td>
-        <input id="APP_download_points" type="button" value="Download Punkte im Rechteck" onclick="" style="display:none;" />
-        <input id="APP_download_strips" type="button" value="Download Streifen die das Rechteck schneiden" onclick="" style="display:none;" />
+        <form id="APP_download_points" method="GET" action="$APP_root/restricted/download/points" style="display:none;">
+          <input type="hidden" name="cid" value="$APP_cid">
+          <input type="hidden" name="extent">
+          <input type="submit" value="Download Punkte im Rechteck" />
+        </form>
+        <form id="APP_download_strips" method="GET" action="$APP_root/restricted/download/strips" style="display:none;">
+          <input type="hidden" name="cid" value="$APP_cid">
+          <input type="hidden" name="extent">
+          <input type="submit" value="Download Streifen die das Rechteck schneiden" />
+        </form>
       </td>
       <td style="text-align:right;">
         <form method="GET" action="$APP_root/app.py/details">
