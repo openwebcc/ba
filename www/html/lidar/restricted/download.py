@@ -109,8 +109,8 @@ def trajectory(req, gid=None):
     return tpl.resolve_template('/home/institut/www/html/data/lidar/restricted/templates/download.tpl')
 
 
-def points(req, cid=None, extent=None):
-    """ get points for campaign within extent from strips intersecting extent """
+def points(req, cid=None, geom=None):
+    """ get points for campaign within bbox of geometry """
 
     # init application
     (base,dbh,tpl) = Laser.base.impl().init(req,user='intranet')
@@ -127,7 +127,7 @@ def points(req, cid=None, extent=None):
     outdir = base.ensure_directory('%s/%s' % (util.get_download_dir(),last_id))
 
     # get las2las command
-    args = util.get_las2las_cmd(cid,extent,outdir)
+    args = util.get_las2las_cmd(cid,geom,outdir)
 
     if type(args) == str:
         # show errors
@@ -161,8 +161,8 @@ def points(req, cid=None, extent=None):
     return tpl.resolve_template('/home/institut/www/html/data/lidar/restricted/templates/download.tpl')
 
 
-def strips(req, cid=None, extent=None):
-    """ get strips for campaign intersecting extent """
+def strips(req, cid=None, geom=None):
+    """ get strips for campaign intersecting geometry """
 
     # init application
     (base,dbh,tpl) = Laser.base.impl().init(req,user='intranet')
@@ -179,7 +179,7 @@ def strips(req, cid=None, extent=None):
     outdir = base.ensure_directory('%s/%s' % (util.get_download_dir(),last_id))
 
     # get shell commands
-    cmds = util.get_lascopy_cmds(cid,extent,outdir)
+    cmds = util.get_lascopy_cmds(cid,geom,outdir)
 
     if type(cmds) == str:
         # show errors

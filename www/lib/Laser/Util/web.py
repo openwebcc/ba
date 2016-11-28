@@ -17,28 +17,6 @@ class impl:
         self.points = None
 
     @classmethod
-    def extent2wktpoly(cls, ext=None):
-        """ create polygon coordinates from extent string 'XMIN,YMIN,XMAX,YMAX' """
-        if ext:
-            arr = ext.split(',')
-            ply = {
-                'xmin' : arr[0],
-                'ymin' : arr[1],
-                'xmax' : arr[2],
-                'ymax' : arr[3],
-            }
-            return "POLYGON((%s %s, %s %s, %s %s, %s %s, %s %s))" % (
-                ply['xmin'],ply['ymin'],
-                ply['xmin'],ply['ymax'],
-                ply['xmax'],ply['ymax'],
-                ply['xmax'],ply['ymin'],
-                ply['xmin'],ply['ymin'],
-            )
-        else:
-            # return polygon that lies clearly outside
-            return "POLYGON((0 0, 2 2, 1 1, 0 0))"
-
-    @classmethod
     def box2list(cls, box=None):
         """ return list with coordinates from PostGIS BOX(XMIN YMIN,XMAX YMAX) """
         return [int(round(float(v))) for v in re.sub(r'[ ,]','#',box[4:-2]).split('#')]
@@ -63,21 +41,20 @@ class impl:
         """ return cid as prefix suited for filenames with underscore as default delimiter"""
         return re.sub(':',delimiter,cid)
 
-    def get_lascopy_cmds(self, cid=None, ext=None, outdir=None):
-        """ return copy commands for lasfiles of given campaign within extent """
+    def get_lascopy_cmds(self, cid=None, geom=None, outdir=None):
+        """ return commands to link lasfiles of given campaign within geometry """
 
         # split up campaign ID
         [ptype,pname,cdate,cname] = self.parse_cid(cid)
 
         cmds = []
-        # get list of lasfiles interesecting extent
+        # get list of lasfiles interesecting geometry
         self.base.dbh.execute("""
             SELECT ptype,cdate,fname FROM view_meta
-            WHERE ST_Intersects(ST_GeomFromText(%s,4326),hull)
+            WHERE ST_Intersects(ST_SetSRID(ST_GeomFromGeoJSON(%s),4326),hull)
             AND ptype=%s AND pname=%s AND cdate=%s AND cname=%s
             ORDER BY fname""", (
-                self.extent2wktpoly(ext),
-                ptype,pname,cdate,cname
+                geom,ptype,pname,cdate,cname
             )
         )
         for row in self.base.dbh.fetchall():
@@ -90,37 +67,36 @@ class impl:
             cmds.append(['ln','-s',ipath,opath])
 
         if len(cmds) == 0:
-            return "no lasfiles found that intersect the extent"
+            return "no lasfiles found that intersect the geometry"
         else:
             return cmds
 
-    def get_las2las_cmd(self, cid=None, ext=None, outdir=None):
-        """ transform extent in latlng to extent of campaign, create list with lasfiles to process and return las commandline args """
+    def get_las2las_cmd(self, cid=None, geom=None, outdir=None):
+        """ return las2las command to clip points from lasfiles intersecting the bbox of the geometry """
 
         # init vars
         las_files = []
         cnt_points = 0
         box_extent = None
         las_extension = None
-        wkt_extent = self.extent2wktpoly(ext)
 
         # split up campaign ID
         [ptype,pname,cdate,cname] = self.parse_cid(cid)
 
-        # query lasfiles intersecting extent and define projected extent to use in las2las
+        # query lasfiles intersecting geometry and define projected geometry to use in las2las
         self.base.dbh.execute(
             """SELECT ptype,cdate,fname,sum(points) AS points,
                 ST_Extent(
                   ST_Transform(
-                    ST_GeomFromText(%s,4326),
+                    ST_SetSRID(ST_GeomFromGeoJSON(%s),4326),
                     srid
                   )
                 ) AS box_extent
                 FROM view_meta
-                WHERE ST_Intersects(ST_GeomFromText(%s,4326),hull) AND ptype=%s AND pname=%s AND cdate=%s AND cname=%s
+                WHERE ST_Intersects(ST_SetSRID(ST_GeomFromGeoJSON(%s),4326),hull) AND ptype=%s AND pname=%s AND cdate=%s AND cname=%s
                 GROUP BY ptype,cdate,fname
             """, (
-                wkt_extent,wkt_extent,
+                geom,geom,
                 ptype,pname,cdate,cname
             )
         )
@@ -143,7 +119,7 @@ class impl:
         if cnt_points > POINTS_LIMIT:
             return "the point limit of %s points to process for clipping has been execeed, please choose a smaller extent" % POINTS_LIMIT
         elif len(las_files) == 0:
-            return "no lasfiles found that intersect the extent"
+            return "no lasfiles found that intersect the bbox of the geometry"
         else:
             # create list with lasfiles to process
             tpath = '%s/%s_%s_%s_%s_%s.%s.files.txt' % (

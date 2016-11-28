@@ -87,17 +87,17 @@
 
             drawnItems.addLayer(layer);
 
-            // activate download buttons
-            document.getElementById('APP_download_points').extent.value = sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
-            document.getElementById('APP_download_strips').extent.value = sw.lng + ',' + sw.lat + ',' + ne.lng + ',' + ne.lat;
+            // set geometry and visibility for download buttons
+            document.getElementById('APP_download_points').geom.value = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)
+            document.getElementById('APP_download_strips').geom.value = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)
             document.getElementById('APP_download_points').style.display = "inline";
             document.getElementById('APP_download_strips').style.display = "inline";
         });
 
-        // hide download buttons if digitized geometry has been deleted
         map.on('draw:deletestop', function (evt) {
-            document.getElementById('APP_download_points').extent.value = "";
-            document.getElementById('APP_download_strips').extent.value = "";
+            // hide download buttons and reset geometry if digitized geometry has been deleted
+            document.getElementById('APP_download_points').geom.value = "";
+            document.getElementById('APP_download_strips').geom.value = "";
             document.getElementById('APP_download_points').style.display = "none";
             document.getElementById('APP_download_strips').style.display = "none";
         });
@@ -163,12 +163,12 @@
       <td>
         <form id="APP_download_points" method="GET" action="$APP_root/restricted/download/points" style="display:none;">
           <input type="hidden" name="cid" value="$APP_cid">
-          <input type="hidden" name="extent">
-          <input type="submit" value="Download Punkte im Rechteck" />
+          <input type="hidden" name="geom">
+          <input type="submit" value="Download Punkte im Hüllrechteck der Geometrie" />
         </form>
         <form id="APP_download_strips" method="GET" action="$APP_root/restricted/download/strips" style="display:none;">
           <input type="hidden" name="cid" value="$APP_cid">
-          <input type="hidden" name="extent">
+          <input type="hidden" name="geom">
           <input type="submit" value="Download Streifen die das Rechteck schneiden" />
         </form>
       </td>
