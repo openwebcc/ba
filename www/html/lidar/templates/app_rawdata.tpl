@@ -65,8 +65,32 @@
         map = new L.Map('map', {layers: [osm.basemap]});
         drawnItems = L.featureGroup().addTo(map);
 
+        var activateSubmitButton = function (id, hide) {
+            if (hide) {
+                document.getElementById(id).geom.value = "";
+                document.getElementById(id).style.display = "none";
+            } else {
+                document.getElementById(id).geom.value = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry);
+                document.getElementById(id).style.display = "inline";
+            }
+        };
+        var deactivateSubmitButton = function (id) {
+            // call activate function with hide set to true
+            activateSubmitButton(id,true);
+        };
+
         map.addControl(new L.Control.Draw({
             draw : {
+                polygon : {
+                    shapeOptions: {
+                        color: 'lime'
+                    }
+                },
+                rectangle : {
+                    shapeOptions: {
+                        color: 'lime'
+                    }
+                },
                 circle : false,
                 polyline : false,
                 marker : false
@@ -86,19 +110,15 @@
 
             drawnItems.addLayer(layer);
 
-            // set geometry and visibility for download buttons
-            document.getElementById('APP_download_points').geom.value = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)
-            document.getElementById('APP_download_strips').geom.value = JSON.stringify(drawnItems.toGeoJSON().features[0].geometry)
-            document.getElementById('APP_download_points').style.display = "inline";
-            document.getElementById('APP_download_strips').style.display = "inline";
+            // activate download buttons
+            activateSubmitButton('APP_download_points');
+            activateSubmitButton('APP_download_strips');
         });
 
         map.on('draw:deletestop', function (evt) {
-            // hide download buttons and reset geometry if digitized geometry has been deleted
-            document.getElementById('APP_download_points').geom.value = "";
-            document.getElementById('APP_download_strips').geom.value = "";
-            document.getElementById('APP_download_points').style.display = "none";
-            document.getElementById('APP_download_strips').style.display = "none";
+            // deactivate download buttons
+            deactivateSubmitButton('APP_download_points');
+            deactivateSubmitButton('APP_download_strips');
         });
 
         var lasFiles = L.geoJson(null, {
@@ -145,6 +165,37 @@
 
         // add scale bar
         L.control.scale({'imperial' : false}).addTo(map);
+
+        // upload area of interest in GeoJSON format
+        document.getElementById("uploadAOI").onchange = function () {
+            var reader, js_obj;
+            reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    // convert GeoJSON-string to Javascript object
+                    js_obj = JSON.parse(evt.target.result);
+
+                    // add it to the layer of draw items
+                    drawnItems.addLayer(L.geoJSON(js_obj, {
+                        'style' : function () {
+                            return {color: 'lime'};
+                        }
+                    }).getLayers()[0]);
+
+                    // look at AOI
+                    map.fitBounds(drawnItems.getBounds());
+
+                    // activate download buttons
+                    activateSubmitButton('APP_download_points');
+                    activateSubmitButton('APP_download_strips');
+
+                } catch (err) {
+                    alert('ERROR: ' + err);
+                }
+            };
+            // read GeoJSON file
+            reader.readAsText(this.files[0]);
+        };
     };
     </script>
 
@@ -189,6 +240,9 @@
   Projektion: <a href="http://spatialreference.org/ref/epsg/$APP_val_srid/">EPSG:$APP_val_srid</a> |
   Flugdatum: $APP_val_cdates $APP_val_year
   $APP_report
+</p>
+<p>
+  Area of interest auswählen: <input type="file" id="uploadAOI"> <span style="font-size:0.85em;">(Format: GeoJSON, EPSG:4326)</span>
 </p>
 
 <p style="text-align:right;font-size:0.9em;font-style:italic;"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a>
