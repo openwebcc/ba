@@ -89,7 +89,7 @@ class AWS:
         self.tile.utm_zone = tile[:2]
         self.tile.latitude_band = tile[2:3]
         self.tile.grid_square = tile[3:5]
-        self.tile.dir_rawdata = "%s/%s/%s" % (self.dir_rawdata,tile[:5],tile)
+        self.tile.dir_rawdata = "%s/%s" % (self.dir_rawdata,tile)
         self.tile.url_bucket = "%s/?delimiter=/&prefix=tiles/%s/%s/%s" % (
             self.url_download,
             self.tile.utm_zone,
