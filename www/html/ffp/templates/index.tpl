@@ -92,4 +92,8 @@ window.onload = function () {
 
 </form>
 
+<h3>Dokumentation</h3>
+<ul>
+    <li><a href="$APP_root/pdf/datenverfuegbarkeit_elsner_20170403.pdf">Datenverfügbarkeit</a> (Bernhard Elsner, 3.4.2017)</li>
+</ul>
 
