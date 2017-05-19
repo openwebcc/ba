@@ -10,9 +10,33 @@ window.onload = function () {
         var deactivate, dataset, i, nodes;
 
         deactivate = {
+            '101012_gletscher' : [
+                'select_m31',
+                'opt_dom_ftype_xyz',
+                'opt_dom_ftype_tif',
+                'opt_dgm_ftype_xyz',
+                'opt_dgm_ftype_tif',
+                'opt_iso_ftype_dxf',
+                'opt_oph_ftype_jpg',
+                'radio_ctype_iso',
+                'radio_ctype_oph',
+                'select_iso_ftype',
+                'select_oph_ftype',
+            ],
+            '101013_oetztal' : [
+                'select_m31',
+                'opt_dom_ftype_xyz',
+                'opt_dom_ftype_tif',
+                'opt_dgm_ftype_xyz',
+                'opt_dgm_ftype_tif',
+                'opt_iso_ftype_dxf',
+                'opt_oph_ftype_jpg',
+                'radio_ctype_iso',
+                'radio_ctype_oph',
+                'select_iso_ftype',
+                'select_oph_ftype',
+            ],
             '151025_dsr' : [
-                'opt_dom_ftype_asc',
-                'opt_dgm_ftype_asc',
                 'opt_iso_ftype_dxf',
                 'opt_oph_ftype_jpg',
                 'radio_ctype_iso',
@@ -51,12 +75,14 @@ window.onload = function () {
 
     <select name="dataset">
         <option value="090930_gesamt">Gesamtbefliegung 2006 - 2009 (1m)</option>
+        <option value="101012_gletscher">Aktualisierung Gletscher 2010 (1m)</option>
+        <option value="101013_oetztal">Aktualisierung Ötztal 2010 (1m)</option>
         <option value="151025_dsr">Befliegung Dauersiedlungsraum 2013 - 2015 (50cm)</option>
     </select>
 
     <select name="pname">
-        <option value="m28">M28</option>
-        <option value="m31">M31</option>
+        <option value="m28" id="select_m28">M28</option>
+        <option value="m31" id="select_m31">M31</option>
     </select>
 
     <p>
@@ -92,8 +118,16 @@ window.onload = function () {
 
 </form>
 
-<h3>Dokumentation</h3>
+<h3>Dokumente</h3>
 <ul>
     <li><a href="$APP_root/pdf/datenverfuegbarkeit_elsner_20170403.pdf">Datenverfügbarkeit</a> (Bernhard Elsner, 3.4.2017)</li>
+    <li><a href="$APP_root/pdf/2010_aktualisierung_uebersicht.pdf">Aktualisierung 2010: Übersicht (PDF)</a></li>
+    <li><a href="$APP_root/pdf/2010_aktualisierung_10-TopScanUIA-B02-Abschlussbericht.pdf">Aktualisierung 2010: Abschlussbericht (PDF)</a></li>
+    <li><a href="$APP_root/pdf/2010_aktualisierung_2009_AVT_alpS-Tirol_LS-Param01.pdf">Aktualisierung 2010: Scanparameter (PDF)</a></li>
 </ul>
 
+<h3>Links</h3>
+<ul>
+    <li><a href="https://www.tirol.gv.at/sicherheit/geoinformation/geodaten/laserscandaten/">Laserscandaten@Abteilung Geoinformation</a></li>
+    <li><a href="https://portal.tirol.gv.at/LBAWeb/luftbilduebersicht.show">Laser- &amp; Luftbildatlas Tirol</a></li>
+</ul>
