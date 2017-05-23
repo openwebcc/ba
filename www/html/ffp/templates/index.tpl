@@ -85,34 +85,33 @@ window.onload = function () {
         <option value="m31" id="select_m31">M31</option>
     </select>
 
-    <p>
-        <div class="ftype_dataset" id="radio_ctype_dom"><input type="radio" name="ctype" value="dom" checked> DOM</div>
-        <select name="dom_ftype" class="ftype_pulldown" id="select_dom_ftype">
-            <option id="opt_dom_ftype_xyz" value="xyz" selected>*.xyz.gz</option>
-            <option id="opt_dom_ftype_asc" value="asc">*.asc.gz</option>
-            <option id="opt_dom_ftype_tif" value="tif">*.tif</option>
-        </select>
-    </p>
-    <p>
-        <div class="ftype_dataset" id="radio_ctype_dgm"><input type="radio" name="ctype" value="dgm"> DGM</div>
-        <select name="dgm_ftype" class="ftype_pulldown" id="select_dgm_ftype">
-            <option id="opt_dgm_ftype_xyz" value="xyz" selected>*.xyz.gz</option>
-            <option id="opt_dgm_ftype_asc" value="asc">*.asc.gz</option>
-            <option id="opt_dgm_ftype_tif" value="tif">*.tif</option>
-        </select>
-    </p>
-    <p>
-        <div class="ftype_dataset" id="radio_ctype_iso"><input type="radio" name="ctype" value="iso"> ISO</div>
-        <select name="iso_ftype" selected class="ftype_pulldown" id="select_iso_ftype">
-            <option id="opt_iso_ftype_dxf" value="dxf" selected>*.dxf.gz</option>
-        </select>
-    </p>
-    <p>
-        <div class="ftype_dataset" id="radio_ctype_oph"><input type="radio" name="ctype" value="oph"> OPH</div>
-        <select name="oph_ftype" selected class="ftype_pulldown" id="select_oph_ftype">
-            <option id="opt_oph_ftype_jpg" value="jpg" selected>*.jpg</option>
-        </select>
-    </p>
+    <br />
+    <div class="ftype_dataset" id="radio_ctype_dom"><input type="radio" name="ctype" value="dom" checked> DOM</div>
+    <select name="dom_ftype" class="ftype_pulldown" id="select_dom_ftype">
+        <option id="opt_dom_ftype_xyz" value="xyz" selected>*.xyz.gz</option>
+        <option id="opt_dom_ftype_asc" value="asc">*.asc.gz</option>
+        <option id="opt_dom_ftype_tif" value="tif">*.tif</option>
+    </select>
+
+    <br />
+    <div class="ftype_dataset" id="radio_ctype_dgm"><input type="radio" name="ctype" value="dgm"> DGM</div>
+    <select name="dgm_ftype" class="ftype_pulldown" id="select_dgm_ftype">
+        <option id="opt_dgm_ftype_xyz" value="xyz" selected>*.xyz.gz</option>
+        <option id="opt_dgm_ftype_asc" value="asc">*.asc.gz</option>
+        <option id="opt_dgm_ftype_tif" value="tif">*.tif</option>
+    </select>
+
+    <br />
+    <div class="ftype_dataset" id="radio_ctype_iso"><input type="radio" name="ctype" value="iso"> ISO</div>
+    <select name="iso_ftype" selected class="ftype_pulldown" id="select_iso_ftype">
+        <option id="opt_iso_ftype_dxf" value="dxf" selected>*.dxf.gz</option>
+    </select>
+
+    <br />
+    <div class="ftype_dataset" id="radio_ctype_oph"><input type="radio" name="ctype" value="oph"> OPH</div>
+    <select name="oph_ftype" selected class="ftype_pulldown" id="select_oph_ftype">
+        <option id="opt_oph_ftype_jpg" value="jpg" selected>*.jpg</option>
+    </select>
 
     <input type="submit" value="Karte anzeigen &gt;&gt;">
 
