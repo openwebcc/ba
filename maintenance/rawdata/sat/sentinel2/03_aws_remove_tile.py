@@ -35,7 +35,7 @@ if __name__ == '__main__':
     mdb.aws_tileInfo.remove({'_name' : args.tile})
 
     if not args.quiet:
-        print "DELETE sentinel2.tilesMonitored OK"
+        print "DELETE sentinel2.aws_tilesMonitored OK"
         print "DELETE sentinel2.aws_tileInfo OK"
 
     conn.close()

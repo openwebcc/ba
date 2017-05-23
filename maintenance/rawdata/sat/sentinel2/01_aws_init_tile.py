@@ -37,7 +37,7 @@ if __name__ == '__main__':
     mdb.aws_tilesMonitored.remove({'tile' : args.tile})
     mdb.aws_tilesMonitored.insert({'tile' : args.tile,'description' : args.description})
     if not args.quiet:
-        print "UPDATE sentinel2.tilesMonitored OK"
+        print "UPDATE sentinel2.aws_tilesMonitored OK"
     conn.close()
 
     # remove existing content if needed
