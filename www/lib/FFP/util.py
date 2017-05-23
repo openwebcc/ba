@@ -18,6 +18,8 @@ class Config:
         self.leaflet_root = '/data/lib'
         self.dataset_title = {
             '090930_gesamt' : 'Gesamtbefliegung 2006 - 2009',
+            '101012_gletscher' : 'Aktualisierung Gletscher 2010 (1m)',
+            '101013_oetztal' : 'Aktualisierung Ötztal 2010 (1m)',
             '151025_dsr' : 'Befliegung Dauersiedlungsraum 2013 - 2015',
         }
 
