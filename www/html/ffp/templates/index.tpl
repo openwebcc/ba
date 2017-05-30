@@ -120,6 +120,10 @@ window.onload = function () {
 <h3>Dokumente</h3>
 <ul>
     <li><a href="$APP_root/pdf/datenverfuegbarkeit_elsner_20170403.pdf">Datenverfügbarkeit</a> (Bernhard Elsner, 3.4.2017)</li>
+    <li><a href="$APP_root/pdf/2006_2009_uebersicht_ALS_M28.pdf">Befliegung 2006-2009 - ALS Blattschnitt (M28) (PDF)</a></li>
+    <li><a href="$APP_root/pdf/2006_2009_uebersicht_ALS_M31.pdf">Befliegung 2006-2009 - ALS Blattschnitt (M31) (PDF)</a></li>
+    <li><a href="$APP_root/pdf/2006_2009_uebersicht_OPH_M28.pdf">Befliegung 2006-2009 - OPH Blattschnitt (M28) (PDF)</a></li>
+    <li><a href="$APP_root/pdf/2006_2009_uebersicht_OPH_M31.pdf">Befliegung 2006-2009 - OPH Blattschnitt (M31) (PDF)</a></li>
     <li><a href="$APP_root/pdf/2010_aktualisierung_uebersicht.pdf">Aktualisierung 2010: Übersicht (PDF)</a></li>
     <li><a href="$APP_root/pdf/2010_aktualisierung_10-TopScanUIA-B02-Abschlussbericht.pdf">Aktualisierung 2010: Abschlussbericht (PDF)</a></li>
     <li><a href="$APP_root/pdf/2010_aktualisierung_2009_AVT_alpS-Tirol_LS-Param01.pdf">Aktualisierung 2010: Scanparameter (PDF)</a></li>
