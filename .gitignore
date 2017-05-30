@@ -1,4 +1,24 @@
-*.pyc
+# do not expose access details
 www/lib/Laser/acl.py
+
+# ignore Sentinel2 preview images for web
 www/html/sentinel2/images/*
+
+# ignore rawdata directories
+/als
+/ffp
+/download
+/sat
+/tls
+/vec
+
+# ignore script logs
+/maintenance/scripts/als/logs
+
+# ignore development subdirectories
+*devel/
+
+# ignore compiled python scripts
+*.pyc
+
 
