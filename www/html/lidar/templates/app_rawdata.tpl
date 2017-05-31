@@ -219,7 +219,7 @@
         <form id="APP_download_strips" method="GET" action="$APP_root/restricted/download/strips" style="display:none;">
           <input type="hidden" name="cid" value="$APP_cid">
           <input type="hidden" name="geom">
-          <input type="submit" value="Download Streifen die das Rechteck schneiden" />
+          <input type="submit" value="Download Streifen die die Geometrie schneiden" />
         </form>
       </td>
       <td style="text-align:right;">
