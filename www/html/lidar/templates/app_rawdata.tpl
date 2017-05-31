@@ -17,31 +17,31 @@
     window.onload = function () {
         // set up map tile layer for OSM and geoland
         var osm = {
-            basemap : L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: "&copy; <a href='http://openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+            basemap : L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: "&copy; <a href='https://openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
                 maxZoom: 18
             })
         };
         var geoland = { // http://www.basemap.at/wmts/1.0.0/WMTSCapabilities.xml
-            geolandbasemap : L.tileLayer("//{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
+            geolandbasemap : L.tileLayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
                 subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                attribution : '<a href="http://www.basemap.at/" target="_blank">basemap.at</a>, <a href="http://creative commons.org/licenses/by/3.0/at/deed.de" target="_blank">CC-BY 3.0</a>'
+                attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
             }),
-            bmapoverlay : L.tileLayer("//{s}.wien.gv.at/basemap/bmapoverlay/normal/google3857/{z}/{y}/{x}.png", {
+            bmapoverlay : L.tileLayer("https://{s}.wien.gv.at/basemap/bmapoverlay/normal/google3857/{z}/{y}/{x}.png", {
                 subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                attribution : '<a href="http://www.basemap.at/" target="_blank">basemap.at</a>, <a href="http://creative commons.org/licenses/by/3.0/at/deed.de" target="_blank">CC-BY 3.0</a>'
+                attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
             }),
-            bmapgrau : L.tileLayer("//{s}.wien.gv.at/basemap/bmapgrau/normal/google3857/{z}/{y}/{x}.png", {
+            bmapgrau : L.tileLayer("https://{s}.wien.gv.at/basemap/bmapgrau/normal/google3857/{z}/{y}/{x}.png", {
                 subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                attribution : '<a href="http://www.basemap.at/" target="_blank">basemap.at</a>, <a href="http://creative commons.org/licenses/by/3.0/at/deed.de" target="_blank">CC-BY 3.0</a>'
+                attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
             }),
-            bmaphidpi : L.tileLayer("//{s}.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg", {
+            bmaphidpi : L.tileLayer("https://{s}.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg", {
                 subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                attribution : '<a href="http://www.basemap.at/" target="_blank">basemap.at</a>, <a href="http://creative commons.org/licenses/by/3.0/at/deed.de" target="_blank">CC-BY 3.0</a>'
+                attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
             }),
-            bmaporthofoto30cm : L.tileLayer("//{s}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg", {
+            bmaporthofoto30cm : L.tileLayer("https://{s}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg", {
                 subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                attribution : '<a href="http://www.basemap.at/" target="_blank">basemap.at</a>, <a href="http://creative commons.org/licenses/by/3.0/at/deed.de" target="_blank">CC-BY 3.0</a>'
+                attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
             })
         };
         var bozen = { // http://www.provinz.bz.it/informatik/kartografie/Geoportal.asp
@@ -53,10 +53,10 @@
             })
         };
         var norway = {  // http://kartverket.no/kart/gratis-kartdata/wms-tjenester/
-            statkart : L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
+            statkart : L.tileLayer('https://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
                 attribution: '&copy; <a href="http://kartverket.no/">Kartverket</a>'
             }),
-            statkartgray : L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2graatone&zoom={z}&x={x}&y={y}', {
+            statkartgray : L.tileLayer('https://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2graatone&zoom={z}&x={x}&y={y}', {
                 attribution: '&copy; <a href="http://kartverket.no/">Kartverket</a>'
             })
         };
