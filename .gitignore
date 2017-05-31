@@ -4,6 +4,9 @@ www/lib/Laser/acl.py
 # ignore Sentinel2 preview images for web
 www/html/sentinel2/images/*
 
+# ignore temporary metadata subdirectory
+www/html/sentinel2/metatmp/*
+
 # ignore rawdata directories
 /als
 /ffp
