@@ -42,37 +42,37 @@
 
             // define available tilesets
             tileSets = {
-                kartetirol_summer : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_base_summer/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
-                    attribution: '<a href="http://www.kartetirol.at/">www.kartetirol.at</a>'
+                kartetirol_summer : L.tileLayer("https://wmts.kartetirol.at/wmts/gdi_base_summer/GoogleMapsCompatible/{z}/{x}/{y}.jpeg80", {
+                    attribution: '<a href="https://www.kartetirol.at/">www.kartetirol.at</a>'
                 }),
-                kartetirol_winter : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_winter/GoogleMapsCompatible/{z}/{x}/{y}.png", {
-                    attribution: '<a href="http://www.kartetirol.at/">www.kartetirol.at</a>'
+                kartetirol_winter : L.tileLayer("https://wmts.kartetirol.at/wmts/gdi_winter/GoogleMapsCompatible/{z}/{x}/{y}.png", {
+                    attribution: '<a href="https://www.kartetirol.at/">www.kartetirol.at</a>'
                 }),
-                kartetirol_ortho : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_ortho/GoogleMapsCompatible/{z}/{x}/{y}.jpg", {
-                    attribution: '<a href="http://www.kartetirol.at/">www.kartetirol.at</a>'
+                kartetirol_ortho : L.tileLayer("https://wmts.kartetirol.at/wmts/gdi_ortho/GoogleMapsCompatible/{z}/{x}/{y}.jpg", {
+                    attribution: '<a href="https://www.kartetirol.at/">www.kartetirol.at</a>'
                 }),
-                kartetirol_anno : L.tileLayer("http://wmts.kartetirol.at/wmts/gdi_nomenklatur/GoogleMapsCompatible/{z}/{x}/{y}.png8", {
-                    attribution: '<a href="http://www.kartetirol.at/">www.kartetirol.at</a>'
+                kartetirol_anno : L.tileLayer("https://wmts.kartetirol.at/wmts/gdi_nomenklatur/GoogleMapsCompatible/{z}/{x}/{y}.png8", {
+                    attribution: '<a href="https://www.kartetirol.at/">www.kartetirol.at</a>'
                 }),
                 geoland_basemap : L.tileLayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
                     subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                    attribution : '<a href="http://www.basemap.at/">basemap.at</a>'
+                    attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
                 }),
                 geoland_overlay : L.tileLayer("https://{s}.wien.gv.at/basemap/bmapoverlay/normal/google3857/{z}/{y}/{x}.png", {
                     subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                    attribution : '<a href="http://www.basemap.at/">basemap.at</a>'
+                    attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
                 }),
                 geoland_grau : L.tileLayer("https://{s}.wien.gv.at/basemap/bmapgrau/normal/google3857/{z}/{y}/{x}.png", {
                     subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                    attribution : '<a href="http://www.basemap.at/">basemap.at</a>'
+                    attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
                 }),
                 geoland_hidpi : L.tileLayer("https://{s}.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg", {
                     subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                    attribution : '<a href="http://www.basemap.at/">basemap.at</a>'
+                    attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
                 }),
                 geoland_orthofoto30cm : L.tileLayer("https://{s}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg", {
                     subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-                    attribution : '<a href="http://www.basemap.at/">basemap.at</a>'
+                    attribution : '<a href="https://www.basemap.at/">basemap.at</a>'
                 })
             };
 
