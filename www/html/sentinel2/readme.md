@@ -1,7 +1,7 @@
 # Sentinel-2 Metadaten Geographie Innsbruck
 
 ## Weblink
-* [http://geo1.uibk.ac.at/data/sentinel2/](http://geo1.uibk.ac.at/data/sentinel2/)
+* [https://geo1.uibk.ac.at/data/sentinel2/](https://geo1.uibk.ac.at/data/sentinel2/)
 * [https://github.com/openwebcc/ba](https://github.com/openwebcc/ba)
 
 
