@@ -58,7 +58,7 @@ class impl:
         if os.path.exists(fpath):
             with codecs.open(fpath,'r','utf-8') as f:
                 template_string = f.read()
-        return template_string.encode('utf-8')
+        return template_string
 
     def resolve_template(self, fpath=None):
         """ safely resolve template with collected terms, set unknown terms to empty string """
