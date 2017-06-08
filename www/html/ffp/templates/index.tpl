@@ -3,48 +3,49 @@
 <title>FFP-Repository Geographie Innsbruck</title>
 <link rel="stylesheet" href="$APP_root/styles.css" />
 <script>
+var fixOptions;
+var deactivate = {
+    '101012_gletscher' : [
+        'select_m31',
+        'opt_dom_ftype_xyz',
+        'opt_dom_ftype_tif',
+        'opt_dgm_ftype_xyz',
+        'opt_dgm_ftype_tif',
+        'opt_iso_ftype_dxf',
+        'opt_oph_ftype_jpg',
+        'radio_ctype_iso',
+        'radio_ctype_oph',
+        'select_iso_ftype',
+        'select_oph_ftype',
+    ],
+    '101013_oetztal' : [
+        'select_m31',
+        'opt_dom_ftype_xyz',
+        'opt_dom_ftype_tif',
+        'opt_dgm_ftype_xyz',
+        'opt_dgm_ftype_tif',
+        'opt_iso_ftype_dxf',
+        'opt_oph_ftype_jpg',
+        'radio_ctype_iso',
+        'radio_ctype_oph',
+        'select_iso_ftype',
+        'select_oph_ftype',
+    ],
+    '151025_dsr' : [
+        'opt_iso_ftype_dxf',
+        'opt_oph_ftype_jpg',
+        'radio_ctype_iso',
+        'radio_ctype_oph',
+        'select_iso_ftype',
+        'select_oph_ftype',
+    ]
+};
 
 window.onload = function () {
+    var select = document.forms[0].dataset;
     // deactivate settings according to data availability
-    document.forms[0].dataset.onchange = function (evt) {
-        var deactivate, dataset, i, nodes;
-
-        deactivate = {
-            '101012_gletscher' : [
-                'select_m31',
-                'opt_dom_ftype_xyz',
-                'opt_dom_ftype_tif',
-                'opt_dgm_ftype_xyz',
-                'opt_dgm_ftype_tif',
-                'opt_iso_ftype_dxf',
-                'opt_oph_ftype_jpg',
-                'radio_ctype_iso',
-                'radio_ctype_oph',
-                'select_iso_ftype',
-                'select_oph_ftype',
-            ],
-            '101013_oetztal' : [
-                'select_m31',
-                'opt_dom_ftype_xyz',
-                'opt_dom_ftype_tif',
-                'opt_dgm_ftype_xyz',
-                'opt_dgm_ftype_tif',
-                'opt_iso_ftype_dxf',
-                'opt_oph_ftype_jpg',
-                'radio_ctype_iso',
-                'radio_ctype_oph',
-                'select_iso_ftype',
-                'select_oph_ftype',
-            ],
-            '151025_dsr' : [
-                'opt_iso_ftype_dxf',
-                'opt_oph_ftype_jpg',
-                'radio_ctype_iso',
-                'radio_ctype_oph',
-                'select_iso_ftype',
-                'select_oph_ftype',
-            ]
-        };
+    select.onchange = fixOptions = function () {
+        var nodes, dataset, i, pulldowns, fixSelectedIndex, j;
 
         // show all nodes
         nodes = document.forms[0].querySelectorAll('div,select,option');
@@ -56,14 +57,31 @@ window.onload = function () {
         }
 
         // hide nodes if needed
-        dataset = evt.target.options[evt.target.options.selectedIndex].value;
+        dataset = select.options[select.options.selectedIndex].value;
         if (deactivate.hasOwnProperty(dataset)) {
             for (i = 0; i < deactivate[dataset].length; i += 1) {
                 document.getElementById(deactivate[dataset][i]).style.opacity = "0.2";
                 document.getElementById(deactivate[dataset][i]).style.pointerEvents = "none";
             }
         }
+
+        // uncheck options that are not available and preselect next available option
+        pulldowns = document.forms[0].querySelectorAll('select');
+        for (i = 0; i < pulldowns.length; i += 1) {
+            fixSelectedIndex = false;
+            for (j = 0; j < pulldowns[i].options.length; j += 1) {
+                if (pulldowns[i].options[j].style.pointerEvents === "none") {
+                    fixSelectedIndex = true;
+                } else {
+                    if (fixSelectedIndex) {
+                        pulldowns[i].selectedIndex = j;
+                        break;
+                    }
+                }
+            }
+        }
     };
+    fixOptions();
 };
 
 </script>
