@@ -16,6 +16,7 @@
     * Geländemodel (DGM) nach Verfügbarkeit
     * Höhenlinien nach Verfügbarkeit
     * Orthophoto nach Verfügbarkeit (nur visuell)
+    * Flugstreifen mit Befliegungsdatum der DGM, DOM Kacheln als SHP
 * Karteninterface
     * Hintergrundkarten Tiris Grundkarte, basemap.at
     * Geometrie der Kacheln mit Popup Metadaten und Downloadlink
