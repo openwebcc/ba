@@ -75,6 +75,13 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
         if row['fname'][-4:] == '.tif':
             link_files.append("%s.tfw" % row['fname'][:-4])
 
+        # add flight strips for DGM and DOM if available
+        strips_tar_gz = "%s/%s/%s_%s/%s/%s_strips.tar.gz" % (
+            config.get_base_dir(),row['pname'],row['cdate'],row['cname'],row['ctype'],row['fname'][:9]
+        )
+        if row['ctype'] in ['dgm','dom'] and os.path.exists(strips_tar_gz):
+            link_files.append("%s_strips.tar.gz" % row['fname'][:9])
+
         # link
         for fname in link_files:
             os.system("ln -s %s/%s/%s_%s/%s/%s %s/%s_%s_%s_%s" % (
