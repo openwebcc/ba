@@ -194,8 +194,18 @@ def preview(req,tile=None, datefrom=None, dateto=None, cloudcoverage=None, datac
             class_preview = ""
 
         if not rss:
+            # get product-Info from JSON metadata file
+            prod_json = {}
+            prod_json_path = "%s/%s/metadata/%s_productInfo.json" % (
+                aws.get_basedir(),
+                rec['_scene'][:5],
+                rec['_scene']
+            )
+            with open(prod_json_path) as f:
+                prod_json = simplejson.loads(f.read())
+
             # provide scene details
-            tpl.append_to_term('APP_previews',"""
+            tpl.append_to_term('APP_previews',u"""
                 <div class="preview">
                   <h3>%s<br/>%s %s</h3>
                   <figure>
@@ -229,6 +239,11 @@ def preview(req,tile=None, datefrom=None, dateto=None, cloudcoverage=None, datac
                         <td>Toolbox:</td>
                         <td colspan="2">%s</td>
                       </tr>
+                      <tr>
+                        <td>data@scihub:</td>
+                        <td colspan="2"><a href="https://scihub.copernicus.eu/dhus/odata/v1/Products('%s')/$value">download full product</a><br/>
+                        <a href="https://scihub.copernicus.eu/userguide/1SelfRegistration">scihub account</a> nötig</td>
+                      </tr>
                       </table>
                     </figcaption>
                   </figure>
@@ -244,7 +259,8 @@ def preview(req,tile=None, datefrom=None, dateto=None, cloudcoverage=None, datac
                     aws.get_app_root(),rec['_scene'],
                     aws.get_app_root(),rec['_scene'],
                     aws.get_browse_url(),rec['path'],rec['path'],
-                    link_toolbox
+                    link_toolbox,
+                    prod_json['id']
             ))
         else:
             # provide RSS-feed for given query
