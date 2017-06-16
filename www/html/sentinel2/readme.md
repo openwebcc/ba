@@ -19,6 +19,7 @@
     * Link zur Szene auf Amazon S3
     * Downloadlink für Rohdaten der Szene
     * Toolbox Link für bereits downgeloadete Szenen
+    * Download Link zu Produkten im SENTINEL-SAFE-Format bei <a href="http://scihub.copernicus.eu">http://scihub.copernicus.eu</a>
     * RSS-Feed zum Abonnieren der Suche
 * Toolboxseite mit:
     * Vorschau der Szene
