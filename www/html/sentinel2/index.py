@@ -18,7 +18,7 @@ from pymongo import MongoClient
 from mod_python import apache
 from mod_python.util import redirect
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 import Laser.base
 import Laser.Util.web
 from Sat.sentinel2_aws import AWS

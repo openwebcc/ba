@@ -20,7 +20,7 @@ try:
 except:
     pass
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 import Laser.base
 import Laser.Util.web
 from Sat.sentinel2_aws import AWS
@@ -535,7 +535,7 @@ if __name__ == '__main__':
         print download(sys.stdout,args.scene,images,args.quiet)
 
         # set ownership of newly created scene directory
-        scene_dir = "/home/laser/rawdata/sat/sentinel2/%s/%s" % (args.scene[:5],args.scene)
+        scene_dir = "/home/rawdata/sat/sentinel2/%s/%s" % (args.scene[:5],args.scene)
         os.system("chown -R www-data:root %s" % scene_dir)
 
     elif args.remove:

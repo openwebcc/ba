@@ -11,8 +11,8 @@ class Config:
 
     def __init__(self):
         """ define globals """
-        self.base_dir = '/home/laser/rawdata/ffp'
-        self.download_dir = '/home/laser/rawdata/download/ffp'
+        self.base_dir = '/home/rawdata/ffp'
+        self.download_dir = '/home/rawdata/download/ffp'
         self.download_hours_available = 48
         self.app_root = '/data/ffp'
         self.leaflet_root = '/data/lib'

@@ -30,9 +30,9 @@ class AWS:
         """ define settings """
         self.quiet = quiet
         self.app_root = '/data/sentinel2'
-        self.dir_tmp = '/home/laser/rawdata/sat/sentinel2/tmp'
-        self.dir_rawdata = '/home/laser/rawdata/sat/sentinel2'
-        self.dir_webimages = '/home/laser/rawdata/www/html/sentinel2/images'
+        self.dir_tmp = '/home/rawdata/sat/sentinel2/tmp'
+        self.dir_rawdata = '/home/rawdata/sat/sentinel2'
+        self.dir_webimages = '/home/institut/rawdata/www/html/sentinel2/images'
         self.dir_gdalbin = '/usr/local/bin'
         self.url_download = 'http://sentinel-s2-l1c.s3.amazonaws.com'
         self.url_browse = 'http://sentinel-s2-l1c.s3-website.eu-central-1.amazonaws.com/#'

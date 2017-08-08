@@ -7,7 +7,7 @@
 import os
 import sys
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 import Laser.base
 import FFP.util
 

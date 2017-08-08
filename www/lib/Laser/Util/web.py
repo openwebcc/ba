@@ -7,7 +7,7 @@ import os
 import re
 
 POINTS_LIMIT = pow(2,32) - 1 # maximum number of points for LAS 1.0/1.1/1.2/1.3
-RAWDATA_DIR = '/home/laser/rawdata'
+RAWDATA_DIR = '/home/rawdata'
 DOWNLOAD_DIR = '/home/laser/rawdata/download'
 
 class impl:

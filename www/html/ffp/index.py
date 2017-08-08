@@ -11,7 +11,7 @@ import simplejson
 
 from datetime import datetime
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 import Laser.base
 import FFP.util
 

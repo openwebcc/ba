@@ -15,7 +15,7 @@ from mod_python import apache
 from subprocess import Popen
 from subprocess import PIPE
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 import Laser.base
 import Laser.Util.web
 
@@ -144,7 +144,7 @@ def details(req, gid=None):
         tpl.add_term('APP_jsondata', simplejson.dumps(json,sort_keys=True, indent=4 * ' ') )
 
         # show content of LASInfo files
-        info_txt = '/home/laser/rawdata/%s/%s/%s_%s/meta/%s' % (row['ptype'],row['pname'],row['cdate'],row['cname'],row['fname'])
+        info_txt = '/home/rawdata/%s/%s/%s_%s/meta/%s' % (row['ptype'],row['pname'],row['cdate'],row['cname'],row['fname'])
         if os.path.exists("%s.info.txt" % info_txt):
             with open("%s.info.txt" % info_txt) as f:
                 tpl.add_term('APP_lasinfo', f.read())

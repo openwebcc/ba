@@ -11,7 +11,7 @@ class Util:
     """ utilities to handle Sentinel-2 data """
     def __init__(self, base=None):
         """ init new utility object """
-        self.satdir = '/home/laser/rawdata/sat/sentinel2'
+        self.satdir = '/home/rawdata/sat/sentinel2'
 
     def parse_product(self,fname=None):
         """ parse product components from title of a .SAFE file. The name looks like:
