@@ -52,7 +52,7 @@ def lasfile(req, gid=None):
         last_id = _log_files(req,dbh,base,[ipath])
 
         # ensure output path and define output filename
-        subdir = base.ensure_directory('%s/%s/' % (util.get_download_dir(),last_id))
+        subdir = base.ensure_directory('%s/%s' % (util.get_download_dir(),last_id))
         opath = '%s/%s_%s' % (subdir,util.get_cid_as_prefix(cid),row['fname'])
 
         # execute command
@@ -87,7 +87,7 @@ def trajectory(req, gid=None):
             last_id =_log_files(req,dbh,base,[ipath])
 
             # ensure output path and define output filename
-            subdir = base.ensure_directory('%s/%s/' % (util.get_download_dir(),last_id))
+            subdir = base.ensure_directory('%s/%s' % (util.get_download_dir(),last_id))
             opath = '%s/%s_%s.traj.txt' % (subdir,util.get_cid_as_prefix(cid),row['fname'])
 
             # execute command
