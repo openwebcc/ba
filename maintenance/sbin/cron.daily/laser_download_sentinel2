@@ -3,6 +3,6 @@
 # download Sentinel-2 scenes from Sentinels Scientific Data Hub and create RGB and NDVI images
 #
 
-/usr/bin/python /home/laser/rawdata/maintenance/rawdata/sat/sentinel2/download_bands.py --quiet
-/usr/bin/python /home/laser/rawdata/maintenance/rawdata/sat/sentinel2/create_rgb_ndvi.py --quiet
+/usr/bin/python /home/institut/rawdata/maintenance/rawdata/sat/sentinel2/download_bands.py --quiet
+/usr/bin/python /home/institut/rawdata/maintenance/rawdata/sat/sentinel2/create_rgb_ndvi.py --quiet
 
