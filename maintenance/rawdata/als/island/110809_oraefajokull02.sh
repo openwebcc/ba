@@ -3,7 +3,7 @@
 # Öræfajökull, 9.8.2011, 26.8.2011, 27.8.2011
 #
 
-BASE=/home/laser/rawdata/als/island/110809_oraefajokull02
+BASE=/home/rawdata/als/island/110809_oraefajokull02
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/all

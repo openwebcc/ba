@@ -3,7 +3,7 @@
 # Hofsjökull, 13.10.2013, 14.10.2013
 #
 
-BASE=/home/laser/rawdata/als/island/131013_hofsjokull01
+BASE=/home/rawdata/als/island/131013_hofsjokull01
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/all

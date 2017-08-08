@@ -3,7 +3,7 @@
 # Vernagtferner, 19.8.2002
 #
 
-BASE=/home/laser/rawdata/als/vernagt/020819_vernagt01
+BASE=/home/rawdata/als/vernagt/020819_vernagt01
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/all

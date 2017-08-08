@@ -3,7 +3,7 @@
 # Inneres Reichenkar, Schrankar, 07.10.2010
 #
 
-BASE=/home/laser/rawdata/als/c4austria/101007_innreich_schrank
+BASE=/home/rawdata/als/c4austria/101007_innreich_schrank
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/ala

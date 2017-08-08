@@ -4,7 +4,7 @@
 #
 
 # Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/tls/bliggspitze/111003_bliggspitze01/{asc,las,doc,meta}
+mkdir -pv /home/rawdata/tls/bliggspitze/111003_bliggspitze01/{asc,las,doc,meta}
 
 # Rohdaten verschieben
-mv /mnt/netappa/Laser/tls/daten/111003_bliggspitze /home/laser/rawdata/tls/bliggspitze/111003_bliggspitze01/raw
+mv /mnt/netappa/Laser/tls/daten/111003_bliggspitze /home/rawdata/tls/bliggspitze/111003_bliggspitze01/raw

@@ -3,7 +3,7 @@
 # Engabreen 28.5.2002
 #
 
-BASE=/home/laser/rawdata/als/engabreen/020528_eng02
+BASE=/home/rawdata/als/engabreen/020528_eng02
 
 # convert to LAS
 cd $BASE/raw/kach/all

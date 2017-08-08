@@ -4,7 +4,7 @@
 #
 
 # Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/tls/schmirntal/100531_reissenschuh01/{asc,las,doc,meta}
+mkdir -pv /home/rawdata/tls/schmirntal/100531_reissenschuh01/{asc,las,doc,meta}
 
 # Rohdaten verschieben
-mv /mnt/netappa/Laser/tls/daten/160531_reissenschuh /home/laser/rawdata/tls/schmirntal/100531_reissenschuh01/raw
+mv /mnt/netappa/Laser/tls/daten/160531_reissenschuh /home/rawdata/tls/schmirntal/100531_reissenschuh01/raw

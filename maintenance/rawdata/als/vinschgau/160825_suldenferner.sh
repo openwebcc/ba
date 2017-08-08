@@ -3,7 +3,7 @@
 # Suldenferner, 25.8.2016
 #
 
-BASE=/home/laser/rawdata/als/vinschgau/160825_suldenferner
+BASE=/home/rawdata/als/vinschgau/160825_suldenferner
 
 # unpack ASCII rawdata and convert it to LAS
 cd $BASE/raw/str/all

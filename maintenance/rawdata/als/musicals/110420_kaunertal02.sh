@@ -3,7 +3,7 @@
 # Kaunertal 20.04.2011, 21.04.2011, 22.04.2011 und 23.04.2011
 #
 
-BASE=/home/laser/rawdata/als/musicals/110420_kaunertal02
+BASE=/home/rawdata/als/musicals/110420_kaunertal02
 
 # migrate LAS files
 cd $BASE/raw/str/las

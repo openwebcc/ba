@@ -3,7 +3,7 @@
 # Schmirntal & surrounding area (Land Tirol): 10.08.2008 to 09.09.2008 (29.08.2008 as main date))
 #
 
-BASE=/home/laser/rawdata/als/schmirn/080829_land1
+BASE=/home/rawdata/als/schmirn/080829_land1
 
 # migrate LAS files
 cd $BASE/raw/kach/las

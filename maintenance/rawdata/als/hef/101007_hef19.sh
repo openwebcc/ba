@@ -3,8 +3,8 @@
 # Hintereisferner 07.10.2010, 08.10.2010, 09.10.2010, 10.10.2010, 11.10.2010 und 12.10.2010
 # data is extracted from musicals/101007_kaunertal01
 
-BASE=/home/laser/rawdata/als/hef/101007_hef19
-BASE_MUSICALS=/home/laser/rawdata/als/musicals/101007_kaunertal01
+BASE=/home/rawdata/als/hef/101007_hef19
+BASE_MUSICALS=/home/rawdata/als/musicals/101007_kaunertal01
 TMPDIR=/tmp/hef19
 
 # copy trajectories and documentation
@@ -12,7 +12,7 @@ cp -avu $BASE_MUSICALS/bet/*.bet $BASE/bet/
 cp -avu $BASE_MUSICALS/doc/report.pdf $BASE/doc/report.pdf
 
 # get extent of HEF project polygon
-OGR_EXT=`ogrinfo /home/laser/rawdata/maintenance/util/aoi/hef_25832.geojson OGRGeoJSON -so | grep Extent`
+OGR_EXT=`ogrinfo /home/institut/rawdata/maintenance/util/aoi/hef_25832.geojson OGRGeoJSON -so | grep Extent`
 KEEP_XY=`echo $OGR_EXT | sed -e 's/[a-zA-Z:,\(\)\-]//g'`
 
 # clip data of musicals campaign on extent of HEF project extent
@@ -30,9 +30,9 @@ do
     else
         # clip on HEF project polygon and stor
         echo "clipping $LAS on project polygon ..."
-        python /home/laser/rawdata/maintenance/scripts/als/clip_lasfile.py \
+        python /home/institut/rawdata/maintenance/scripts/als/clip_lasfile.py \
             --lasfile $TMPDIR/$LAS \
-            --wktpoly /home/laser/rawdata/maintenance/util/aoi/hef_25832.wkt \
+            --wktpoly /home/institut/rawdata/maintenance/util/aoi/hef_25832.wkt \
             --outdir $BASE/las
 
         # remove temporary file

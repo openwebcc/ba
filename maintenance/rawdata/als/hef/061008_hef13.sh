@@ -3,7 +3,7 @@
 # Hintereisferner, 08.10.2006
 #
 
-BASE=/home/laser/rawdata/als/hef/061008_hef13
+BASE=/home/rawdata/als/hef/061008_hef13
 
 cd $BASE/raw/str/alf
 for GZ in `ls *.alf.gz`
@@ -24,7 +24,7 @@ do
 
     # merge .alf and .all files with a python script
     echo "creating $ALA (temporary) ..."
-    python /home/laser/rawdata/maintenance/scripts/als/merge_first_last.py --dist=0.1 --first=$ALF --last=$ALL --out=$ALA
+    python /home/institut/rawdata/maintenance/scripts/als/merge_first_last.py --dist=0.1 --first=$ALF --last=$ALL --out=$ALA
 
     # remove temporarily uncompressed .alf.gz and .all.gz files
     rm $ALF

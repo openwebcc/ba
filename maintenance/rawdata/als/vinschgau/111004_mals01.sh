@@ -3,7 +3,7 @@
 # Mals, 4.10.2011
 #
 
-BASE=/home/laser/rawdata/als/vinschgau/111004_mals01
+BASE=/home/rawdata/als/vinschgau/111004_mals01
 
 # unpack ASCII rawdata and convert it to LAS
 cd $BASE/raw/str/ala

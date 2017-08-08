@@ -4,8 +4,8 @@
 #
 
 # Ordnerstruktur erstellen
-mkdir -pv /home/laser/rawdata/tls/steinlehen/150928_steinlehen05/{asc,las,doc,meta,raw}
+mkdir -pv /home/rawdata/tls/steinlehen/150928_steinlehen05/{asc,las,doc,meta,raw}
 
 # Rohdaten verschieben
-mv /mnt/netappa/Laser/tls/daten/14xxxx_steinlehnen/2015_09_28_Steinlehnen.riproject /home/laser/rawdata/tls/steinlehen/150928_steinlehen05/raw/
+mv /mnt/netappa/Laser/tls/daten/14xxxx_steinlehnen/2015_09_28_Steinlehnen.riproject /home/rawdata/tls/steinlehen/150928_steinlehen05/raw/
 

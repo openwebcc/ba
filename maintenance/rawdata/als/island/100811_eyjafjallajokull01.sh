@@ -3,7 +3,7 @@
 # Eyjafjallajökull, 10.8.2010, 11.8.2010
 #
 
-BASE=/home/laser/rawdata/als/island/100811_eyjafjallajokull01
+BASE=/home/rawdata/als/island/100811_eyjafjallajokull01
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/all

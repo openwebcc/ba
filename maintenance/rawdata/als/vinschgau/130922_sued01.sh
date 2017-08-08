@@ -3,7 +3,7 @@
 # Vinschgau Süd, 22.9.2013
 #
 
-BASE=/home/laser/rawdata/als/vinschgau/130922_sued01
+BASE=/home/rawdata/als/vinschgau/130922_sued01
 
 # unpack ASCII rawdata and convert it to LAS
 cd $BASE/raw/str/ala

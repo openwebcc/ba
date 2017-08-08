@@ -3,7 +3,7 @@
 # Hochebenkar, Reichenkar, 03.10.2011
 #
 
-BASE=/home/laser/rawdata/als/c4austria/111003_hocheben_reich
+BASE=/home/rawdata/als/c4austria/111003_hocheben_reich
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/ala

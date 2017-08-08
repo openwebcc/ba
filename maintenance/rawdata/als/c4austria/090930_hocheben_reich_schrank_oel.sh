@@ -3,7 +3,7 @@
 # Äußeres Hochebenkar, Inneres Reichenkar, Schrankar, Ölgrube,  30.9.2009
 #
 
-BASE=/home/laser/rawdata/als/c4austria/090930_hocheben_reich_schrank_oel
+BASE=/home/rawdata/als/c4austria/090930_hocheben_reich_schrank_oel
 
 # fix date and coordinates of original .las files
 cd $BASE/raw/str/las

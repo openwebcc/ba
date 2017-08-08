@@ -3,7 +3,7 @@
 # Nachflug Montafon 05.10.2011
 #
 
-BASE=/home/laser/rawdata/als/montafon/111005_geo02
+BASE=/home/rawdata/als/montafon/111005_geo02
 
 cd $BASE/raw/str/ala
 for GZ in `ls *.all.gz`

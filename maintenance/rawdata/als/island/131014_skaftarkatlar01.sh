@@ -3,7 +3,7 @@
 # Skaftárkatlar, 14.10.2013
 #
 
-BASE=/home/laser/rawdata/als/island/131014_skaftarkatlar01
+BASE=/home/rawdata/als/island/131014_skaftarkatlar01
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/all

@@ -5,7 +5,7 @@
 # exact date of campaign is not know, according to Galos et al. 2015 it is "mid of september" - choose sat, october 1st 2005 for all files
 #
 
-BASE=/home/laser/rawdata/als/vinschgau/051001_vinschgau0506
+BASE=/home/rawdata/als/vinschgau/051001_vinschgau0506
 
 for SUBDIR in `echo "all xyz"`
 do

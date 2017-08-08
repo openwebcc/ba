@@ -6,7 +6,7 @@
 #       without translating x-coordinates by 600000 strips end up in centre of france ...
 #
 
-BASE=/home/laser/rawdata/als/envichange/090713_wipptal01
+BASE=/home/rawdata/als/envichange/090713_wipptal01
 
 # migrate LAS files
 cd $BASE/raw/str/las

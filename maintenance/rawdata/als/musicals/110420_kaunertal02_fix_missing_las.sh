@@ -3,7 +3,7 @@
 # rebuild two missing LAS files that could not be restored from external disk by merging .alf and .all files
 #
 
-BASE=/home/laser/rawdata/als/musicals/110420_kaunertal02
+BASE=/home/rawdata/als/musicals/110420_kaunertal02
 
 for FNAME in `echo L0117-1-110421_1_221_Kaunertal2011_UTM L0118-1-110421_1_221_Kaunertal2011_UTM`
 do
@@ -15,7 +15,7 @@ do
 
     # merge .alf and .all file
     echo "creating $BASE/raw/$FNAME.ala (temporary) ..."
-    python /home/laser/rawdata/maintenance/scripts/als/merge_first_last.py \
+    python /home/institut/rawdata/maintenance/scripts/als/merge_first_last.py \
         --dist=0.0 \
         --first=$BASE/raw/$FNAME.alf \
         --last=$BASE/raw/$FNAME.all \

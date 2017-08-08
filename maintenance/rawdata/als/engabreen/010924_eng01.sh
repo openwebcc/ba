@@ -3,7 +3,7 @@
 # Engabreen 24.9.2001
 #
 
-BASE=/home/laser/rawdata/als/engabreen/010924_eng01
+BASE=/home/rawdata/als/engabreen/010924_eng01
 
 # convert to LAS
 cd $BASE/raw/str/all

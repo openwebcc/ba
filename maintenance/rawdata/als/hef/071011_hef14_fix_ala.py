@@ -7,7 +7,7 @@ import re
 import os
 import sys
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 from Laser.Util import las
 
 if __name__ == '__main__':

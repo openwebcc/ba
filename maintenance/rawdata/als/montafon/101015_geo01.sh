@@ -3,7 +3,7 @@
 # Montafon 13.10.2010, 14.10.2010, 15.10.2010
 #
 
-BASE=/home/laser/rawdata/als/montafon/101015_geo01
+BASE=/home/rawdata/als/montafon/101015_geo01
 
 cd $BASE/raw/str/ala
 for GZ in `ls *.all.gz`

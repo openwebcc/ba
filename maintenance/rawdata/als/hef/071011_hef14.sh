@@ -3,7 +3,7 @@
 # Hintereisferner, 11.10.2007
 #
 
-BASE=/home/laser/rawdata/als/hef/071011_hef14
+BASE=/home/rawdata/als/hef/071011_hef14
 
 cd $BASE/raw/bad/ala
 for GZ in `ls *.ala.gz`
@@ -20,7 +20,7 @@ do
 
     # clean return number syntax in .ala file with a python script
     echo "cleaning $ALA ..."
-    python /home/laser/rawdata/maintenance/rawdata/als/hef/071011_hef14_fix_ala.py --ala=$ALA.tmp --out=$ALA
+    python /home/institut/rawdata/maintenance/rawdata/als/hef/071011_hef14_fix_ala.py --ala=$ALA.tmp --out=$ALA
 
     # remove temporarily uncompressed .ala.gz file
     rm $ALA.tmp

@@ -3,7 +3,7 @@
 # Hintereisferner, 03.09.2013
 #
 
-BASE=/home/laser/rawdata/als/hef/130903_hef23
+BASE=/home/rawdata/als/hef/130903_hef23
 
 # unpack ASCII rawdata and convert it to LAS
 cd $BASE/raw/str/ala

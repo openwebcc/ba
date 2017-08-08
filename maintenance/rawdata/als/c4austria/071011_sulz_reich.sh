@@ -3,7 +3,7 @@
 # Sulztalferner, Reichenkar, 11.10.2007
 #
 
-BASE=/home/laser/rawdata/als/c4austria/071011_sulz_reich
+BASE=/home/rawdata/als/c4austria/071011_sulz_reich
 
 # convert ASCII rawdata to LAS
 cd $BASE/raw/str/all
