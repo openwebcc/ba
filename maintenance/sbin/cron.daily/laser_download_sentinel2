@@ -3,5 +3,5 @@
 # download Sentinel-2 metadata from AWS
 #
 
-/usr/bin/python /home/laser/rawdata/maintenance/rawdata/sat/sentinel2/02_aws_get_metadata.py --days 7 --quiet
+/usr/bin/python /home/institut/rawdata/maintenance/rawdata/sat/sentinel2/02_aws_get_metadata.py --days 7 --quiet
 
