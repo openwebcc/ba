@@ -3,12 +3,12 @@
 # (re)create metadata for a given campaign
 # force rebuilding of existing metadata by passing "rebuild" as commandline argument
 #
-# Usage: sh /home/laser/rawdata/maintenance/create_metadata.sh CAMPAIGNDIR {rebuild}
+# Usage: sh /home/institut/rawdata/maintenance/create_metadata.sh CAMPAIGNDIR {rebuild}
 # Batch: process all campaigns in a given project directory with:
-#        find /home/laser/rawdata/als/PROJECT/ -mindepth 1 -maxdepth 1 -type d -exec sh /home/laser/rawdata/maintenance/create_metadata.sh {} rebuild \;
+#        find /home/rawdata/als/PROJECT/ -mindepth 1 -maxdepth 1 -type d -exec sh /home/institut/rawdata/maintenance/create_metadata.sh {} rebuild \;
 #
 
-SCRIPTDIR=/home/laser/rawdata/maintenance/scripts/als
+SCRIPTDIR=/home/institut/rawdata/maintenance/scripts/als
 
 if [ -z "$1" ]; then 
     echo "Usage: sh $0 CAMPAIGNDIR"

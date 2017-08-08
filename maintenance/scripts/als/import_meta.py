@@ -10,7 +10,7 @@ import sys
 import argparse
 
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 import Laser.base
 import Laser.Util.las
 
@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     import argparse
     parser = argparse.ArgumentParser(description='parse metadata and import to PostgreSQL')
-    parser.add_argument('--startdir',dest='startdir', default='/home/laser/rawdata/als', help='path to starting directory')
+    parser.add_argument('--startdir',dest='startdir', default='/home/rawdata/als', help='path to starting directory')
     args = parser.parse_args()
 
     args.startdir = args.startdir.rstrip('/')
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         else:
             continue
 
-        # define project type, campaign name and date from directory path (e.g. /home/laser/rawdata/als/hef/011011_hef01/meta)
+        # define project type, campaign name and date from directory path (e.g. /home/rawdata/als/hef/011011_hef01/meta)
         parts = dirpath.split("/")
         cdate = parts[-2].split("_")[0]             # 011011
         cname = '_'.join(parts[-2].split("_")[1:])  # hef01 or even suedtirol_2005_2006
@@ -84,7 +84,7 @@ if __name__ == '__main__':
             # add geometry for hull and trajectory if any
             if parser.has_wkt_geometry('hull'):
                 if parser.get_wkt_geometry('hull') == "":
-                    print "WARNING: /home/laser/rawdata/%s/%s/%s_%s/las/%s with gid=%s has empty hull geometry" % (
+                    print "WARNING: /home/rawdata/%s/%s/%s_%s/las/%s with gid=%s has empty hull geometry" % (
                         ptype,pname,cdate,cname,fname[:-9],last_gid
                     )
                 else:

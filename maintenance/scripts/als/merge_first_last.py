@@ -10,7 +10,7 @@ import sys
 
 from math import sqrt
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 from Laser.Util import las
 
 def lines_are_identical(curr=None,prev=None):

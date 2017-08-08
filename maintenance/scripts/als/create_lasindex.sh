@@ -3,14 +3,14 @@
 # create index for LAS files in subdir las/
 #
 # Usage: sh create_lasindex.sh LASFILE <rebuild>
-# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/laser/rawdata/maintenance/scripts/als/create_lasindex.sh {} \; &
-# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/laser/rawdata/maintenance/scripts/als/create_lasindex.sh {} rebuild \; &
+# Batch: find /home/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/institut/rawdata/maintenance/scripts/als/create_lasindex.sh {} \; &
+# Batch: find /home/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/institut/rawdata/maintenance/scripts/als/create_lasindex.sh {} rebuild \; &
 #
 
 #
 # handle logging
 #
-LOG=/home/laser/rawdata/maintenance/scripts/als/logs/times_lasindex.csv
+LOG=/home/institut/rawdata/maintenance/scripts/als/logs/times_lasindex.csv
 if [ ! -f "$LOG" ]; then
     echo "file;task;real;user;sys" > $LOG
 fi

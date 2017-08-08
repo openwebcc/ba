@@ -3,8 +3,8 @@
 # get WKT boundaries of LAS files in subdir las/ from bounding box in corresponding meta/*.info.txt files
 #
 # Usage: /bin/bash get_hull_bbox.sh FILENAME <rebuild>
-# Batch: find /home/laser/rawdata/als/vogis -wholename "*/las/*.la[sz]" -exec /bin/bash /home/laser/rawdata/maintenance/scripts/als/get_hull_bbox.sh {} \; &
-# Batch: find /home/laser/rawdata/als/vogis -wholename "*/las/*.la[sz]" -exec /bin/bash /home/laser/rawdata/maintenance/scripts/als/get_hull_bbox.sh {} rebuild \; &
+# Batch: find /home/rawdata/als/vogis -wholename "*/las/*.la[sz]" -exec /bin/bash /home/institut/rawdata/maintenance/scripts/als/get_hull_bbox.sh {} \; &
+# Batch: find /home/rawdata/als/vogis -wholename "*/las/*.la[sz]" -exec /bin/bash /home/institut/rawdata/maintenance/scripts/als/get_hull_bbox.sh {} rebuild \; &
 #
 
 #

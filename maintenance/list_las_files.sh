@@ -3,10 +3,10 @@
 # get filesize, last modified and number of points for each LAS/LAZ file
 #
 
-CSV=/home/laser/rawdata/maintenance/scripts/als/logs/list_las_files.csv
+CSV=/home/institut/rawdata/maintenance/scripts/als/logs/list_las_files.csv
 echo "path;bytes;lastmod;point_type;points" > $CSV
 
-for LASPATH in `find /home/laser/rawdata/ -wholename "*/las/*.la[sz]" | grep -v "/raw/"`
+for LASPATH in `find /home/rawdata/ -wholename "*/las/*.la[sz]" | grep -v "/raw/"`
 do
     # set LAS/LAZ name and meta directory
     LASNAME=`basename $LASPATH`

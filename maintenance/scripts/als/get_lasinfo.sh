@@ -3,14 +3,14 @@
 # get info of LAS files in subdir las/
 #
 # Usage: sh get_lasinfo.sh LASFILE <rebuild>
-# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/laser/rawdata/maintenance/scripts/als/get_lasinfo.sh {} \; &
-# Batch: find /home/laser/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/laser/rawdata/maintenance/scripts/als/get_lasinfo.sh {} rebuild \; &
+# Batch: find /home/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/institut/rawdata/maintenance/scripts/als/get_lasinfo.sh {} \; &
+# Batch: find /home/rawdata/als/ -wholename "*/las/*.la[sz]" -exec sh /home/institut/rawdata/maintenance/scripts/als/get_lasinfo.sh {} rebuild \; &
 #
 
 #
 # handle logging
 #
-CSV=/home/laser/rawdata/maintenance/scripts/als/logs/get_lasinfo.csv
+CSV=/home/institut/rawdata/maintenance/scripts/als/logs/get_lasinfo.csv
 if [ ! -f "$CSV" ]; then
     echo "file;task;real;user;sys" > $CSV
 fi

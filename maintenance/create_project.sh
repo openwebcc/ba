@@ -31,18 +31,18 @@ if test "$PTYPE" = "als"; then
     echo "going als"
     for DIR in `echo "raw las bet doc meta"`
     do
-        mkdir -pv /home/laser/rawdata/$PTYPE/$PDIR/$PNAME/$DIR
+        mkdir -pv /home/rawdata/$PTYPE/$PDIR/$PNAME/$DIR
     done
-    sh set_perms.sh /home/laser/rawdata/$PTYPE/$PDIR/$PNAME
+    sh set_perms.sh /home/rawdata/$PTYPE/$PDIR/$PNAME
 
 elif test "$PTYPE" = "tls"; then
     # create TLS-data skeleton
     echo "going tls"
     for DIR in `echo "raw las reg doc meta"`
     do
-        mkdir -pv /home/laser/rawdata/$PTYPE/$PDIR/$PNAME/$DIR
+        mkdir -pv /home/rawdata/$PTYPE/$PDIR/$PNAME/$DIR
     done
-    sh set_perms.sh /home/laser/rawdata/$PTYPE/$PDIR/$PNAME
+    sh set_perms.sh /home/rawdata/$PTYPE/$PDIR/$PNAME
 
 else
     echo "'$PTYPE' is not a valid project type"

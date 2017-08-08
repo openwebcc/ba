@@ -2,7 +2,7 @@
 #
 # clip a LAS-file on a WKT-polygon
 #
-# Usage: find /tmp/hef19 -wholename "*/las/*.las" -exec python /home/laser/rawdata/maintenance/scripts/als/clip_lasfile.py --lasfile {} --wktpoly /home/laser/rawdata/maintenance/rawdata/als/hef/util/hef_projectpolygon.wkt --outdir /home/laser/rawdata/als/hef/101007_hef19/las/ \;
+# Usage: find /tmp/hef19 -wholename "*/las/*.las" -exec python /home/institut/rawdata/maintenance/scripts/als/clip_lasfile.py --lasfile {} --wktpoly /home/institut/rawdata/maintenance/rawdata/als/hef/util/hef_projectpolygon.wkt --outdir /home/rawdata/als/hef/101007_hef19/las/ \;
 #
 
 import os
@@ -12,7 +12,7 @@ from shapely.wkt import loads
 from shapely.geometry.point import Point
 from liblas import file as lasfile
 
-CSV_PATH = '/home/laser/rawdata/maintenance/scripts/als/logs/clip_lasfile.csv'
+CSV_PATH = '/home/institut/rawdata/maintenance/scripts/als/logs/clip_lasfile.csv'
 
 def read_wkt(fpath=None):
     """ read WKT-polygon and return it as geometry """
