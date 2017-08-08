@@ -14,7 +14,7 @@ import simplejson
 from xml.dom.minidom import parseString
 from time import sleep
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 from Sat.sentinel import Util
 
 

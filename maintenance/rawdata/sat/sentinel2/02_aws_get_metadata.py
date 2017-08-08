@@ -15,7 +15,7 @@ from datetime import date, timedelta
 import pymongo
 from pymongo import MongoClient
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 from Sat.sentinel2_aws import AWS
 
 if __name__ == '__main__':

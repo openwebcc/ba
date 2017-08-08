@@ -8,7 +8,7 @@ import sys
 import os
 import re
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 from Sat.sentinel import Util
 
 # set defaults

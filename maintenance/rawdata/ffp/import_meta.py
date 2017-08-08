@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-sys.path.append('/home/laser/rawdata/www/lib')
+sys.path.append('/home/institut/rawdata/www/lib')
 import Laser.base
 
 
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     ptype = 'ffp'
 
     # find data
-    for dirpath, dirnames, filenames in os.walk('/home/laser/rawdata/ffp'):
+    for dirpath, dirnames, filenames in os.walk('/home/rawdata/ffp'):
         for fname in filenames:
             # split up directory path on slash
             parts_dir = dirpath.split('/')
