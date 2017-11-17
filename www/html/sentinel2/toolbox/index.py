@@ -522,6 +522,8 @@ if __name__ == '__main__':
     parser.add_argument('--quiet', dest='quiet', action="store_true", default=False, help='run quietly (shows actual downloads only)')
     args = parser.parse_args()
 
+    aws = AWS()
+
     images = []
     if args.rgb:
         images.append('rgb')
@@ -535,7 +537,7 @@ if __name__ == '__main__':
         print download(sys.stdout,args.scene,images,args.quiet)
 
         # set ownership of newly created scene directory
-        scene_dir = "/home/rawdata/sat/sentinel2/%s/%s" % (args.scene[:5],args.scene)
+        scene_dir = "%s/%s/%s" % (aws.get_basedir(),args.scene[:5],args.scene)
         os.system("chown -R www-data:root %s" % scene_dir)
 
     elif args.remove:
