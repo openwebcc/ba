@@ -14,6 +14,7 @@ class impl:
         self.req = None
         self.dbh = None
         self.tpl = None
+        self.commandline = False
         self.download_base = '/home/laser/rawdata/download'
 
     def init(self, req=None, mimetype='text/html', dbname='geo', user='web'):
@@ -24,7 +25,10 @@ class impl:
 
         # set mimetype for request if any
         if self.req:
-            self.req.content_type = mimetype
+            if not type(self.req) == file:
+                self.req.content_type = mimetype
+            else:
+                self.commandline = True
 
         # init new database connection
         self.dbh = Laser.db.impl(self)
@@ -37,10 +41,13 @@ class impl:
 
     def get_user(self):
         """ return logged in apache2 user if any, anonymous otherwise """
-        if self.req and self.req.user:
+        if not self.commandline and self.req and self.req.user:
             return self.req.user
         else:
-            return 'anonymous'
+            if self.commandline:
+                return 'klaus'
+            else:
+                return 'anonymous'
 
     def get_download_dir(self):
         """ return absolute path to download directory of logged in user """
