@@ -140,8 +140,7 @@ def details(req, gid=None):
             tpl.add_term('APP_val_%s' % col, row[col])
 
         # show JSON notation
-        json = simplejson.loads(row['info'])
-        tpl.add_term('APP_jsondata', simplejson.dumps(json,sort_keys=True, indent=4 * ' ') )
+        tpl.add_term('APP_jsondata', simplejson.dumps(row['info'],sort_keys=True, indent=4 * ' ') )
 
         # show content of LASInfo files
         info_txt = '/home/rawdata/%s/%s/%s_%s/meta/%s' % (row['ptype'],row['pname'],row['cdate'],row['cname'],row['fname'])
