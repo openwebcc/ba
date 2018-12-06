@@ -158,6 +158,8 @@ class lasinfo:
                     elif parts[0] == 'bounding box was repaired.':
                         # tell user to re-run lasinfo as header has been updated and content in .info might not be correct anymore
                         print "RE-RUN sh /home/institut/rawdata/maintenance/scripts/als/get_lasinfo.sh %s rebuild" % self.meta['file']['las']
+                    elif parts[0].startswith("lasinfo ("):
+                        pass
                     else:
                         pass
                         print "TODO", parts, '(%s)' % f.name
