@@ -35,6 +35,7 @@ def index(req):
                    round(sum(fsize)/1000/1000,0) AS mb,sum(points) AS points,round(avg(density),2) AS density,
                    srid,sensor
                    FROM view_lidar_meta
+                   WHERE ptype = 'als'
                    GROUP BY ptype,pname,cdate,cname,srid,sensor
                    ORDER BY ptype,pname,cdate
                    """)
