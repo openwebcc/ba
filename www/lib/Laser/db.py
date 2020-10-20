@@ -16,14 +16,14 @@ class impl:
         self.base = base
         self.connected = False
 
-    def connect(self, dbname='geo', user='web'):
+    def connect(self, dbname='institut', user='web'):
         """connect to db as user with password"""
         credentials = get_credentials()
 
         if user in credentials:
             try:
                 # connect
-                self.conn = psycopg2.connect("dbname=%s port=5434 user=%s password=%s" % (dbname, user, credentials[user]))
+                self.conn = psycopg2.connect("dbname=%s port=5432 user=%s password=%s" % (dbname, user, credentials[user]))
                 self.conn.set_isolation_level(0)    # autocommit
                 self.curs = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
                 self.connected = True

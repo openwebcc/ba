@@ -1,5 +1,6 @@
 BEGIN;
 
+SET SCHEMA 'laser';
 DELETE FROM ffp_tiles;
 
 -- INSERT tiles for M28, M31

@@ -17,7 +17,7 @@ class impl:
         self.commandline = False
         self.download_base = '/home/laser/rawdata/download'
 
-    def init(self, req=None, mimetype='text/html', dbname='geo', user='web'):
+    def init(self, req=None, mimetype='text/html', dbname='institut', user='web'):
         """ initialize laser application """
 
         # set request

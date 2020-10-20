@@ -34,7 +34,7 @@ def index(req):
     dbh.execute("""SELECT ptype,pname,cdate,cname,count(fname) AS lasfiles,
                    round(sum(fsize)/1000/1000,0) AS mb,sum(points) AS points,round(avg(density),2) AS density,
                    srid,sensor
-                   FROM view_lidar_meta
+                   FROM laser.view_lidar_meta
                    WHERE ptype = 'als'
                    GROUP BY ptype,pname,cdate,cname,srid,sensor
                    ORDER BY ptype,pname,cdate
@@ -72,7 +72,7 @@ def rawdata(req, cid=None):
     dbh.execute("""SELECT ptype,pname,cdate,cname,srid,sensor,
                    count(fname) AS files, round(sum(fsize)/1000/1000,0) AS mb,
                    sum(points) AS points,round(avg(density),2) AS density
-                   FROM view_lidar_meta
+                   FROM laser.view_lidar_meta
                    WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
                    GROUP BY ptype,pname,cdate,cname,srid,sensor""",
                     (ptype,pname,cdate,cname)
@@ -88,7 +88,7 @@ def rawdata(req, cid=None):
     # query campaign date(s)
     cdates = []
     dbh.execute("""SELECT info->>'file_year' AS year,info->>'file_doy' AS doy
-                   FROM view_lidar_meta
+                   FROM laser.view_lidar_meta
                    WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
                    GROUP BY ptype,pname,cdate,cname,year,doy
                    ORDER BY year,doy""",
@@ -100,7 +100,7 @@ def rawdata(req, cid=None):
     tpl.add_term('APP_val_cdates', ', '.join(cdates))
 
     # query LAS-files
-    dbh.execute("""SELECT gid,fname,round(fsize/1000/1000,1) AS mb FROM view_lidar_meta
+    dbh.execute("""SELECT gid,fname,round(fsize/1000/1000,1) AS mb FROM laser.view_lidar_meta
                    WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
                    ORDER BY fname""",
                     (ptype,pname,cdate,cname)
@@ -135,7 +135,7 @@ def details(req, gid=None):
 
     # get details data
     dbh.execute("""SELECT gid,ptype,pname,cdate,cname,fname,round(fsize/1000,0) AS kb,info
-                    FROM view_lidar_meta WHERE gid=%s""", (gid,))
+                    FROM laser.view_lidar_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
         for col in 'gid,ptype,pname,cdate,cname,fname,kb,info'.split(','):
             tpl.add_term('APP_val_%s' % col, row[col])
@@ -189,7 +189,7 @@ def geom(req, cid=None):
     # query simplified trajectories or hulls
     dbh.execute("""SELECT gid,fname,fsize,points,COALESCE (ST_AsGeoJSON(ST_Simplify(traj,%s),7),ST_AsGeoJSON(ST_Simplify(hull,%s),7)) AS geom,
                    CASE WHEN traj IS NOT NULL THEN TRUE ELSE FAlSE END AS has_traj
-                   FROM view_lidar_meta WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
+                   FROM laser.view_lidar_meta WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s
                    """, (SIMPLIFY_DEG,SIMPLIFY_DEG,ptype,pname,cdate,cname))
     for row in dbh.fetchall():
         if not row['geom']:

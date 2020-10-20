@@ -22,11 +22,11 @@ APP_ROOT = '/data/lidar'
 def _log_files(req,dbh,base,files,last_id=None):
     """ log files downloaded by user """
     if last_id:
-        dbh.execute("INSERT INTO lidar_log (id,user_id,files) VALUES (%s,%s,%s)", (
+        dbh.execute("INSERT INTO laser.lidar_log (id,user_id,files) VALUES (%s,%s,%s)", (
             last_id,base.get_user(),files
         ))
     else:
-        dbh.execute("INSERT INTO lidar_log (user_id,files) VALUES (%s,%s) RETURNING id", (
+        dbh.execute("INSERT INTO laser.lidar_log (user_id,files) VALUES (%s,%s) RETURNING id", (
             base.get_user(),files
         ))
         return dbh.fetchone()['id']
@@ -43,7 +43,7 @@ def lasfile(req, gid=None):
     (base,dbh,tpl) = Laser.base.impl().init(req,user='intranet')
     util = Laser.Util.web.impl(base)
 
-    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_lidar_meta WHERE gid=%s""", (gid,))
+    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM laser.view_lidar_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         ipath = '%s/las/%s' % (util.path_to_campaign(cid),row['fname'])
@@ -77,7 +77,7 @@ def trajectory(req, gid=None):
     (base,dbh,tpl) = Laser.base.impl().init(req,user='intranet')
     util = Laser.Util.web.impl(base)
 
-    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM view_lidar_meta WHERE gid=%s""", (gid,))
+    dbh.execute("""SELECT ptype,pname,cdate,cname,fname FROM laser.view_lidar_meta WHERE gid=%s""", (gid,))
     for row in dbh.fetchall():
         cid = util.create_cid(row['ptype'],row['pname'],row['cdate'],row['cname'])
         ipath = "%s/meta/%s.traj.txt" % (util.path_to_campaign(cid),row['fname'])
@@ -120,7 +120,7 @@ def points(req, cid=None, geom=None):
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
     # get a new subdirectory ID
-    dbh.execute("SELECT NEXTVAL('lidar_log_id_seq') AS id")
+    dbh.execute("SELECT NEXTVAL('laser.lidar_log_id_seq') AS id")
     last_id = dbh.fetchone()['id']
 
     # ensure output path
@@ -172,7 +172,7 @@ def strips(req, cid=None, geom=None):
     [ptype,pname,cdate,cname] = util.parse_cid(cid)
 
     # get a new subdirectory ID
-    dbh.execute("SELECT NEXTVAL('lidar_log_id_seq') AS id")
+    dbh.execute("SELECT NEXTVAL('laser.lidar_log_id_seq') AS id")
     last_id = dbh.fetchone()['id']
 
     # ensure output path

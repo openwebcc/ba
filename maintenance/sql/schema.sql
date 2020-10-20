@@ -15,6 +15,7 @@ BEGIN;
 -- GRANT intranet_group TO intranet;
 --
 
+SET SCHEMA laser;
 
 DROP VIEW IF EXISTS view_lidar_meta;
 DROP TABLE IF EXISTS lidar_log;

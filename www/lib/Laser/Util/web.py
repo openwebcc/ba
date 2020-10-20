@@ -50,7 +50,7 @@ class impl:
         cmds = []
         # get list of lasfiles interesecting geometry
         self.base.dbh.execute("""
-            SELECT ptype,cdate,fname FROM view_meta
+            SELECT ptype,cdate,fname FROM laser.view_meta
             WHERE ST_Intersects(ST_SetSRID(ST_GeomFromGeoJSON(%s),4326),hull)
             AND ptype=%s AND pname=%s AND cdate=%s AND cname=%s
             ORDER BY fname""", (
@@ -92,7 +92,7 @@ class impl:
                     srid
                   )
                 ) AS box_extent
-                FROM view_meta
+                FROM laser.view_meta
                 WHERE ST_Intersects(ST_SetSRID(ST_GeomFromGeoJSON(%s),4326),hull) AND ptype=%s AND pname=%s AND cdate=%s AND cname=%s
                 GROUP BY ptype,cdate,fname
             """, (

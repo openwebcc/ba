@@ -25,7 +25,7 @@ $APP_lasinfo
 <pre>
 $APP_jsondata
 
-<strong>Quelle</strong>: Spalte info in Datenbankview view_lidar_meta
+<strong>Quelle</strong>: Spalte info in Datenbankview laser.view_lidar_meta
 </pre>
 
 <p style="text-align:right;font-size:0.9em;font-style:italic;"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a>

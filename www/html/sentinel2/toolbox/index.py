@@ -226,23 +226,23 @@ def _create_ndsi_image(req,base,dbh,aws,attr):
 
 def _log_files(req,dbh,user_id,source,target):
     """ log files for user """
-    dbh.execute("DELETE FROM sentinel2_files WHERE user_id=%s AND source=%s AND target=%s", (user_id,source,target) )
-    dbh.execute("""INSERT INTO sentinel2_files (user_id,source,target,tstamp) VALUES (%s,%s,%s,NOW())""", (
+    dbh.execute("DELETE FROM laser.sentinel2_files WHERE user_id=%s AND source=%s AND target=%s", (user_id,source,target) )
+    dbh.execute("""INSERT INTO laser.sentinel2_files (user_id,source,target,tstamp) VALUES (%s,%s,%s,NOW())""", (
         user_id,source,target
     ))
 
 def _unlog_files(req,dbh,user_id,source=None,target=None):
     """ remove files for user """
     if source:
-        dbh.execute("DELETE FROM sentinel2_files WHERE user_id=%s AND source ~ %s", (user_id,source) )
+        dbh.execute("DELETE FROM laser.sentinel2_files WHERE user_id=%s AND source ~ %s", (user_id,source) )
     elif target:
-        dbh.execute("DELETE FROM sentinel2_files WHERE user_id=%s AND target ~ %s", (user_id,target) )
+        dbh.execute("DELETE FROM laser.sentinel2_files WHERE user_id=%s AND target ~ %s", (user_id,target) )
     else:
         pass
 
 def _log_task(req,base,dbh,task,scene):
     """ log toolbox action """
-    dbh.execute("INSERT INTO sentinel2_log (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
+    dbh.execute("INSERT INTO laser.sentinel2_log (user_id,task,scene,tstamp) VALUES (%s,%s,%s,NOW())", (
         base.get_user(),task,scene
     ))
 
@@ -263,7 +263,7 @@ def index(req, scene=None):
     acl = {}
     user_id = base.get_user()
     scene_files = []
-    dbh.execute("SELECT user_id,target FROM sentinel2_files WHERE target ~ %s", (attr['scene'],) )
+    dbh.execute("SELECT user_id,target FROM laser.sentinel2_files WHERE target ~ %s", (attr['scene'],) )
     for row in dbh.fetchall():
         if not row['user_id'] in acl:
             acl[row['user_id']] = {
@@ -453,7 +453,7 @@ def remove(req, scene=None, image=None, quiet=True):
         else:
             # get other owners of scene
             owners_notme = []
-            dbh.execute("SELECT DISTINCT user_id FROM sentinel2_files WHERE source ~ %s AND user_id != %s", (
+            dbh.execute("SELECT DISTINCT user_id FROM laser.sentinel2_files WHERE source ~ %s AND user_id != %s", (
                 attr['dir_root'],base.get_user()
             ))
             for row in dbh.fetchall():
@@ -486,7 +486,7 @@ def remove(req, scene=None, image=None, quiet=True):
         else:
             # get other owners of image
             owners_notme = []
-            dbh.execute("SELECT DISTINCT user_id FROM sentinel2_files WHERE source=%s AND user_id != %s", (
+            dbh.execute("SELECT DISTINCT user_id FROM laser.sentinel2_files WHERE source=%s AND user_id != %s", (
                 attr["img_%s" % image],base.get_user()
             ))
             for row in dbh.fetchall():

@@ -39,7 +39,7 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
         ids.append(int(id))
     elif geom:
         # query ids of tiles intersecting geometry
-        dbh.execute("""SELECT id FROM view_ffp_tiles WHERE pname=%s AND cdate=%s AND cname=%s AND ctype=%s AND ftype=%s
+        dbh.execute("""SELECT id FROM laser.view_ffp_tiles WHERE pname=%s AND cdate=%s AND cname=%s AND ctype=%s AND ftype=%s
                         AND ST_Intersects(ST_GeomFromGeoJSON(%s),geom)""", (
             pname,cdate,cname,ctype,ftype,geom
         ))
@@ -50,7 +50,7 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
         pass
 
     # log agreement and get ID for subdirectory to link tiles to
-    dbh.execute("INSERT INTO ffp_agreements (user_id,person,project,pname,cdate,cname,ctype,ftype,fname,geom_json,tiles,tstamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NOW()) RETURNING id", (
+    dbh.execute("INSERT INTO laser.ffp_agreements (user_id,person,project,pname,cdate,cname,ctype,ftype,fname,geom_json,tiles,tstamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NOW()) RETURNING id", (
         req.user if req.user else 'anonymous',
         kwargs.get('person'),
         kwargs.get('project'),
@@ -66,7 +66,7 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
 
     # create softlinks to tiles
     download_size = 0
-    dbh.execute("SELECT pname,cdate,cname,ctype,fname,fsize FROM view_ffp_tiles WHERE id IN %s", (tuple(ids),) )
+    dbh.execute("SELECT pname,cdate,cname,ctype,fname,fsize FROM laser.view_ffp_tiles WHERE id IN %s", (tuple(ids),) )
     for row in dbh.fetchall():
         # take care that worldfiles (.jgw, .tfw) are linked as well
         link_files = [ row['fname'] ]
@@ -95,7 +95,7 @@ def index(req,id=None,geom=None,pname=None,cdate=None,cname=None,ctype=None,ftyp
 
     # UPDATE download size in agreement
     download_size = int((download_size/(1000*1000)))
-    dbh.execute("UPDATE ffp_agreements SET mb=%s WHERE id=%s" % (download_size,subdir) )
+    dbh.execute("UPDATE laser.ffp_agreements SET mb=%s WHERE id=%s" % (download_size,subdir) )
 
     # finish
     dbh.close()

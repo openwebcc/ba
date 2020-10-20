@@ -67,7 +67,7 @@ def tiles(req,dataset='090930_gesamt',pname='m31',ctype='dom',**kwargs):
     tpl.add_term('VAL_ftype',ftype)
 
     # get geometry of tiles
-    dbh.execute("""SELECT id,fname,fsize,fdate,tile,ST_AsGeoJSON(geom) AS geom FROM view_ffp_tiles
+    dbh.execute("""SELECT id,fname,fsize,fdate,tile,ST_AsGeoJSON(geom) AS geom FROM laser.view_ffp_tiles
                     WHERE pname=%s AND cdate=%s AND cname=%s AND ctype=%s AND ftype=%s
                 """, (
         pname,cdate,cname,ctype,ftype

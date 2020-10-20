@@ -42,7 +42,7 @@ if __name__ == '__main__':
         ptype = parts[-4]                           # als
 
         # clean up existing content in db
-        dbh.execute("DELETE FROM lidar_meta WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s", (
+        dbh.execute("DELETE FROM laser.lidar_meta WHERE ptype=%s AND pname=%s AND cdate=%s AND cname=%s", (
             ptype,pname,cdate,cname
         ))
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
             meta = parser.get_db_metadata()
 
             # INSERT metadata
-            dbh.execute("INSERT INTO lidar_meta (ptype,pname,cname,cdate,fname,fsize,points,srid,info) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING gid", (
+            dbh.execute("INSERT INTO laser.lidar_meta (ptype,pname,cname,cdate,fname,fsize,points,srid,info) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING gid", (
                 ptype,pname,
                 cname,cdate,
                 meta['file_name'],meta['file_size'],
@@ -88,17 +88,17 @@ if __name__ == '__main__':
                         ptype,pname,cdate,cname,fname[:-9],last_gid
                     )
                 else:
-                    dbh.execute("UPDATE lidar_meta SET hull=ST_GeomFromText('%s') WHERE gid=%s" % (parser.get_wkt_geometry('hull'),last_gid) )
+                    dbh.execute("UPDATE laser.lidar_meta SET hull=ST_GeomFromText('%s') WHERE gid=%s" % (parser.get_wkt_geometry('hull'),last_gid) )
             if parser.has_wkt_geometry('traj'):
-                dbh.execute("UPDATE lidar_meta SET traj=ST_GeomFromText('%s') WHERE gid=%s" % (parser.get_wkt_geometry('traj'),last_gid) )
+                dbh.execute("UPDATE laser.lidar_meta SET traj=ST_GeomFromText('%s') WHERE gid=%s" % (parser.get_wkt_geometry('traj'),last_gid) )
 
         # add missing SRID to vogis data (http://spatialreference.org/ref/epsg/mgi-austria-gk-west/)
         if pname == 'vogis':
-            dbh.execute("UPDATE lidar_meta SET srid=31254 WHERE pname='vogis'")
+            dbh.execute("UPDATE laser.lidar_meta SET srid=31254 WHERE pname='vogis'")
 
         # control gid of first strip Hintereisferner 2001 for direct access to examples in thesis
         if pname == 'hef' and cdate == '011011':
-            dbh.execute("UPDATE lidar_meta SET gid=1000 WHERE gid IN (SELECT gid FROM lidar_meta WHERE cdate='011011' ORDER BY fname LIMIT 1)")
+            dbh.execute("UPDATE laser.lidar_meta SET gid=1000 WHERE gid IN (SELECT gid FROM laser.lidar_meta WHERE cdate='011011' ORDER BY fname LIMIT 1)")
 
     # finish
     dbh.close()

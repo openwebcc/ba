@@ -4,6 +4,8 @@ BEGIN;
 -- create PostgreSQL schema for FFP application
 --
 
+SET SCHEMA 'laser';
+
 DROP VIEW IF EXISTS view_ffp_tiles;
 DROP TABLE IF EXISTS ffp_agreements;
 DROP TABLE IF EXISTS ffp_meta;

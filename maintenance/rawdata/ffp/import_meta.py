@@ -18,7 +18,7 @@ if __name__ == '__main__':
     (base,dbh,tpl) = Laser.base.impl().init(req=None,user='intranet')
 
     # clean up existing content in database
-    dbh.execute("DELETE FROM ffp_meta")
+    dbh.execute("DELETE FROM laser.ffp_meta")
 
     # set common project type
     ptype = 'ffp'
@@ -66,7 +66,7 @@ if __name__ == '__main__':
             tile = int(re.sub('-','',parts_file[0]))
 
             # INSERT record
-            dbh.execute("INSERT INTO ffp_meta (ptype,pname,cdate,cname,ctype,fname,ftype,fdate,fsize,tile) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
+            dbh.execute("INSERT INTO laser.ffp_meta (ptype,pname,cdate,cname,ctype,fname,ftype,fdate,fsize,tile) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
                 ptype,pname,cdate,cname,ctype,fname,ftype,fdate,fsize,tile
             ))
 
