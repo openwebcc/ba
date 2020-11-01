@@ -15,7 +15,8 @@ class impl:
         self.dbh = None
         self.tpl = None
         self.commandline = False
-        self.download_base = '/home/laser/rawdata/download'
+        #self.download_base = '/home/laser/rawdata/download'
+        self.download_base = '/home/institut/rawdata/download'
 
     def init(self, req=None, mimetype='text/html', dbname='institut', user='web'):
         """ initialize laser application """
