@@ -150,7 +150,7 @@ window.onload = function () {
 <h3>Links</h3>
 <ul>
     <li><a href="https://www.tirol.gv.at/sicherheit/geoinformation/geodaten/laserscandaten/">Laserscandaten@Abteilung Geoinformation</a></li>
-    <li><a href="https://portal.tirol.gv.at/LBAWeb/luftbilduebersicht.show">Laser- &amp; Luftbildatlas Tirol</a></li>
+    <li><a href="https://lba.tirol.gv.at/public/karte.xhtml">Laser- &amp; Luftbildatlas Tirol</a></li>
 </ul>
 
 <p style="text-align:right;font-size:0.9em;font-style:italic;"><a href="https://github.com/openwebcc/ba">GitHub-Repository</a>
