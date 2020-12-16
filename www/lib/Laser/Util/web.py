@@ -5,6 +5,8 @@
 
 import os
 import re
+from datetime import datetime
+from datetime import timedelta
 
 POINTS_LIMIT = pow(2,32) - 1 # maximum number of points for LAS 1.0/1.1/1.2/1.3
 RAWDATA_DIR = '/home/rawdata'
@@ -16,6 +18,8 @@ class impl:
         """ init web utility class """
         self.base = base
         self.points = None
+        self.crontab_minutes = 17
+        self.download_hours_available = 24
 
     @classmethod
     def box2list(cls, box=None):
@@ -41,6 +45,20 @@ class impl:
     def get_cid_as_prefix(self, cid, delimiter='_'):
         """ return cid as prefix suited for filenames with underscore as default delimiter"""
         return re.sub(':',delimiter,cid)
+
+    def get_download_files_ready(self):
+        """ return approximated time (HH:MM) that download will be ready """
+        hh = int(datetime.strftime(datetime.today(),"%H"))
+        mm = int(datetime.strftime(datetime.today(),"%M"))
+
+        if mm > self.crontab_minutes:
+            hh += 1
+        return "%s:%s" % (hh, self.crontab_minutes)
+
+    def get_download_hours_available(self):
+        """ return number of hours that data will be available """
+        return self.download_hours_available
+
 
     def get_lascopy_cmds(self, cid=None, geom=None, outdir=None):
         """ return commands to link lasfiles of given campaign within geometry """

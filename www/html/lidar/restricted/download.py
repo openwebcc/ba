@@ -67,6 +67,8 @@ def lasfile(req, gid=None):
     dbh.close()
     tpl.add_term('APP_root',APP_ROOT)
     tpl.add_term('APP_user',base.get_user())
+    tpl.add_term('APP_files_ready',util.get_download_files_ready())
+    tpl.add_term('APP_hours_available',util.get_download_hours_available())
     return tpl.resolve_template('/home/institut/www/html/data/lidar/restricted/templates/download.tpl')
 
 
@@ -106,6 +108,8 @@ def trajectory(req, gid=None):
     dbh.close()
     tpl.add_term('APP_root',APP_ROOT)
     tpl.add_term('APP_user',base.get_user())
+    tpl.add_term('APP_files_ready',util.get_download_files_ready())
+    tpl.add_term('APP_hours_available',util.get_download_hours_available())
     return tpl.resolve_template('/home/institut/www/html/data/lidar/restricted/templates/download.tpl')
 
 
@@ -158,6 +162,8 @@ def points(req, cid=None, geom=None):
     dbh.close()
     tpl.add_term('APP_root',APP_ROOT)
     tpl.add_term('APP_user',base.get_user())
+    tpl.add_term('APP_files_ready',util.get_download_files_ready())
+    tpl.add_term('APP_hours_available',util.get_download_hours_available())
     return tpl.resolve_template('/home/institut/www/html/data/lidar/restricted/templates/download.tpl')
 
 
@@ -209,5 +215,7 @@ def strips(req, cid=None, geom=None):
     dbh.close()
     tpl.add_term('APP_root',APP_ROOT)
     tpl.add_term('APP_user',base.get_user())
+    tpl.add_term('APP_files_ready',util.get_download_files_ready())
+    tpl.add_term('APP_hours_available',util.get_download_hours_available())
     return tpl.resolve_template('/home/institut/www/html/data/lidar/restricted/templates/download.tpl')
 

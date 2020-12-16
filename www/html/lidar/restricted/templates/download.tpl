@@ -11,31 +11,7 @@ $APP_files
 </pre>
 
 <h3>Zugang zu den Daten</h3>
-<ul>
-    <li>Windows:
-<pre>
-Netzlaufwerk verbinden
-\\geo1\download\$APP_user\lidar\$APP_subdir
-User: geo1\$APP_user
-Pass: *******
-</pre>
-    </li>
-    <li>Linux:
-<pre>
-# mount
-mkdir /tmp/$APP_subdir
-sudo mount -t cifs -o username=$APP_user,passwd=******* //geo1.uibk.ac.at/download/$APP_user/lidar/$APP_subdir /tmp/$APP_subdir
-
-# umount
-sudo umount /tmp/$APP_subdir
-rmdir /tmp/$APP_subdir
-
-</pre>
-    </li>
-</ul>
-
-<h3>Verfügbarkeit</h3>
-<p>Die bereitgestellten Daten werden in 24 Stunden automatisch wieder gelöscht.</p>
+<p>Die Daten sind am Laser-Laufwerk im Verzeichnis <code>/data/download/$APP_user/lidar/$APP_subdir</code> ab ~$APP_files_ready Uhr für $APP_hours_available Stunden verfügbar
 
 <hr/>
 
