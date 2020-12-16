@@ -5,6 +5,8 @@
 #
 
 import sys
+from datetime import datetime
+from datetime import timedelta
 
 class Config:
     """ utility module for Forschungsfestplatte metadata application """
@@ -13,7 +15,8 @@ class Config:
         """ define globals """
         self.base_dir = '/home/rawdata/ffp'
         self.download_dir = '/home/rawdata/download/ffp'
-        self.download_hours_available = 48
+        self.crontab_minutes = 17
+        self.download_hours_available = 24
         self.app_root = '/data/ffp'
         self.leaflet_root = '/data/lib'
         self.dataset_title = {
@@ -30,6 +33,15 @@ class Config:
     def get_download_dir(self):
         """ return full path to download directory """
         return self.download_dir
+
+    def get_download_files_ready(self):
+        """ return approximated time (HH:MM) that download will be ready """
+        hh = int(datetime.strftime(datetime.today(),"%H"))
+        mm = int(datetime.strftime(datetime.today(),"%M"))
+
+        if mm > self.crontab_minutes:
+            hh += 1
+        return "%s:%s" % (hh, self.crontab_minutes)
 
     def get_download_hours_available(self):
         """ return number of hours that data will be available """
