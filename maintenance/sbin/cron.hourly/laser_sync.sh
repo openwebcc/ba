@@ -1,10 +1,13 @@
 #!/bin/sh
 #
-# sync temporary data from downloadarea to laser drive
+# sync temporary data from download area to laser drive
 #
 
 SOURCE=$1
-TARGET=`echo $1 | sed "s#/home/institut/rawdata#/mnt/netappa/Laser/data#g"`
-TARGET=`echo $TARGET | sed -r "s/[0-9]+$//g"`
+SUBDIR=`echo $1 | sed "s#/home/institut/rawdata#/mnt/netappa/Laser/data#g"`
+TARGET=`echo $SUBDIR | sed -r "s/[0-9]+$//g"`
 
-cp -vruL $SOURCE $TARGET
+echo "creating $SUBDIR ..."
+cp -ruL $SOURCE $TARGET
+find $SUBDIR -type f -printf "%f (%kK)\n"
+echo
