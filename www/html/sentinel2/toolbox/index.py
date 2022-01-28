@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: UTF-8 -*-
 #
 # download rawdata for Sentinel-2 tiles from Amazon S3 (http://sentinel-pds.s3-website.eu-central-1.amazonaws.com/)
